@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -20,6 +23,9 @@ public class User {
     private String email;
     @OneToOne(mappedBy = "user", orphanRemoval = true,cascade = CascadeType.ALL)
     private Statistics statistics;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true,cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private List<UserReading> myReadings = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -59,5 +65,13 @@ public class User {
 
     public void setStatistics(Statistics statistics) {
         this.statistics = statistics;
+    }
+
+    public List<UserReading> getMyReadings() {
+        return myReadings;
+    }
+
+    public void setMyReadings(List<UserReading> myReadings) {
+        this.myReadings = myReadings;
     }
 }
