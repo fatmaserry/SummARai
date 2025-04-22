@@ -1,6 +1,7 @@
 package com.summarai.summarai.controller;
 import com.summarai.summarai.dto.RegisterDto;
 import com.summarai.summarai.dto.UserDto;
+import com.summarai.summarai.model.UserReading;
 import com.summarai.summarai.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,21 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getAllUsers(){
         return ResponseEntity.ok(userService.findAll());
     }
+    // admin method
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id){
         return userService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+    // will  be adjusted based on current logging user
+//    @GetMapping("/currentUser/{id}")
+//    public ResponseEntity<UserDto> getUserById(){
+//        return userService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+//    }
+    // will  be adjusted based on current logging user
+
+    @GetMapping("/readings/{id}")
+    public ResponseEntity<UserReading> getReadings(@PathVariable Long id){
+        return ResponseEntity.ok(userService.getReadings(id));
     }
     @PostMapping("")
     public ResponseEntity<?> addUser(@Validated @RequestBody RegisterDto registerDto){
