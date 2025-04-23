@@ -18,15 +18,15 @@ export default function HomePage() {
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6">
       <div className="text-center space-y-2">
-        <h3 className="text-3xl font-semibold text-white">مكتبة SummARai لتلخيص الكتب العربية</h3>
-        <h3 className="text-3xl font-semibold text-white">اكثر من الف كتاب تم تلخيصهم بدقة بواسطة الذكاء الاصطناعي</h3>
+        <h3 className="text-lg xl:text-3xl font-semibold text-white">مكتبة SummARai لتلخيص الكتب العربية</h3>
+        <h3 className="text-lg xl:text-3xl font-semibold text-white">اكثر من الف كتاب تم تلخيصهم بدقة بواسطة الذكاء الاصطناعي</h3>
       </div>
 
-      <div className="w-full max-w-4xl mx-auto mt-6 relative">
-        <div ref={prevRef} className="swiper-button-prev absolute -left-12 top-1/2 transform -translate-y-1/2 z-10">
+      <div className="w-full h-full max-w-4xl mx-auto mt-6 relative">
+        <div ref={prevRef} className="swiper-button-prev absolute -left-12 bottom-0 transform z-10">
           <ion-icon name="arrow-back-outline"></ion-icon>
         </div>
-        <div ref={nextRef} className="swiper-button-next absolute -right-12 top-1/2 transform -translate-y-1/2 z-10">
+        <div ref={nextRef} className="swiper-button-next absolute -right-12 bottom-0 transform z-10">
           <ion-icon name="arrow-forward-outline"></ion-icon>
         </div>
 

@@ -35,12 +35,9 @@ export default function Sidebar({
       />
 
       <aside
-        className={`
-          h-full z-20 bg-[#141627] transition-transform duration-300
-          fixed right-0 md:static md:translate-x-0
-          ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}
-          w-64 md:w-auto
-        `}
+        className={`fixed right-0 h-full w-64 z-20 bg-[#141627] transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         <nav className="h-full flex flex-col shadow-sm">
           <SidebarContext.Provider value={{ isSidebarOpen }}>
