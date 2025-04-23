@@ -5,10 +5,8 @@ import PropTypes from "prop-types";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  // State to hold the authentication token
   const [token, setToken_] = useState(localStorage.getItem("token"));
 
-  // Function to set the authentication token
   const setToken = (newToken) => {
     setToken_(newToken);
   };
@@ -23,18 +21,22 @@ const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Memoized value of the authentication context
+  // Function to check if user is logged in
+  const isLoggedIn = useMemo(() => !!token, [token]);
+
   const contextValue = useMemo(
     () => ({
       token,
       setToken,
+      isLoggedIn,
     }),
     [token]
   );
 
-  // Provide the authentication context to the children components
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

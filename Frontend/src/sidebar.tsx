@@ -25,21 +25,32 @@ export default function Sidebar({
   onMobileToggle,
 }: SidebarProps) {
   return (
-    <aside
-      className={`h-full fixed md:static top-0 right-0 transition-all duration-300 z-20 ${
-        isSidebarOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
-      }`}
-    >
-      <nav
-        className={`h-full flex flex-col bg-[#141627]  shadow-sm transition-all duration-300 ${
-          isSidebarOpen ? "w-64" : "w-15"
+    <>
+      {/* Mobile Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-10 transition-opacity duration-300 md:hidden ${
+          isSidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
+        onClick={() => onMobileToggle(false)}
+      />
+
+      <aside
+        className={`
+          h-full z-20 bg-[#141627] transition-transform duration-300
+          fixed right-0 md:static md:translate-x-0
+          ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}
+          w-64 md:w-auto
+        `}
       >
-        <SidebarContext.Provider value={{ isSidebarOpen }}>
-          <ul className="flex flex-col w-full items-center px-3">{children}</ul>
-        </SidebarContext.Provider>
-      </nav>
-    </aside>
+        <nav className="h-full flex flex-col shadow-sm">
+          <SidebarContext.Provider value={{ isSidebarOpen }}>
+            <ul className="flex flex-col items-start px-2 space-y-2 min-w-[64px]">
+              {children}
+            </ul>
+          </SidebarContext.Provider>
+        </nav>
+      </aside>
+    </>
   );
 }
 
@@ -70,7 +81,7 @@ export function SidebarItem({ icon, text, active, alert }: SidebarItemProps) {
             } ${(icon as React.ReactElement).props.className || ""}`,
           })}
         <span
-          className={`overflow-hidden transition-all ${
+          className={`overflow-hidden transition-all text-base ${
             isSidebarOpen ? "w-full block" : "hidden"
           }`}
         >
