@@ -2,11 +2,10 @@ package com.summarai.summarai.mapper;
 
 import com.summarai.summarai.dto.BookDto;
 import com.summarai.summarai.model.Book;
-import com.summarai.summarai.model.Genre;
 import org.mapstruct.Mapper;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface BookMapper {

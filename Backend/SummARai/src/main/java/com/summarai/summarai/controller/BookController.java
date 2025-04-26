@@ -1,23 +1,23 @@
 package com.summarai.summarai.controller;
 
 import com.summarai.summarai.dto.BookDto;
-import com.summarai.summarai.dto.GenreDto;
-import com.summarai.summarai.dto.UserDto;
-import com.summarai.summarai.model.Book;
+
+import com.summarai.summarai.dto.BookSearchRequest;
 import com.summarai.summarai.service.BookService;
 import com.summarai.summarai.service.GenreService;
 import com.summarai.summarai.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/book")
+@RequestMapping("/books")
 public class BookController {
     @Autowired
     private BookService bookService;
@@ -25,17 +25,43 @@ public class BookController {
     private GenreService genreService;
     @Autowired
     private UserService userService;
-    @GetMapping("/allbooks")
-    private List<BookDto> getAllBooks(){
-        return bookService.findAll();
+
+    @GetMapping()
+    public ResponseEntity<Page<BookDto>> getAllBooks( Pageable pageable){
+        Page<BookDto> books =  bookService.getAllBooks(pageable);
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
-    @GetMapping("/allgenres")
-    private List<GenreDto> getAllGenres(){
-        return genreService.findAll();
+
+    @GetMapping("/{book_id}")
+    public ResponseEntity<BookDto> getBookById(@PathVariable Long book_id){
+        return bookService.getBookById(  book_id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-    @GetMapping("/allusers")
-    private List<UserDto> getAllUsers(){
-        return userService.findAll();
+    @GetMapping(params = "title")
+    public ResponseEntity<Page<BookDto>> getBooksByTitle(@RequestParam  String title,Pageable pageable){
+        Page<BookDto> books =  bookService.getBooksByTitle(title, pageable);
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
+
+    @GetMapping(params = "author")
+    public ResponseEntity<Page<BookDto>> getBooksByAuthor(@RequestParam String author, Pageable pageable){
+        Page<BookDto> books =  bookService.getBooksByAuthor(author, pageable);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+    @PostMapping("/search")
+    public ResponseEntity<Page<BookDto>> search(@RequestBody BookSearchRequest criteria, Pageable pageable){
+        Page<BookDto> books =  bookService.searchBooks(criteria, pageable);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
+//    @GetMapping("/allGenres")
+//    private List<GenreDto> getAllGenres(){
+//        return genreService.getAllGenres();
+//    }
+//    @GetMapping("/allusers")
+//    private List<UserDto> getAllUsers(){
+//        return userService.getAllUsers();
+//    }
 
 }

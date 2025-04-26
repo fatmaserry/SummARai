@@ -13,8 +13,16 @@ public class BookDto {
 
     private List<GenreDto> genres;
     private String about;
+    private String image_url;
     private AuthorDto author;
 
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
 
     public AuthorDto getAuthor() {
         return author;
@@ -49,6 +57,7 @@ public class BookDto {
     public void setAbout(String about) {
         this.about = about;
     }
+
     public List<GenreDto> getGenres() {
         return genres;
     }
