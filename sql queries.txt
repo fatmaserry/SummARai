@@ -1,0 +1,68 @@
+use summarai;
+insert into book values('book2')
+INSERT INTO `summarai`.`genre`
+(
+`description`)
+VALUES
+('horror'
+),('action'),('comedy');
+
+INSERT INTO `summarai`.`author`
+(
+`description`,
+`name`)
+VALUES
+(
+'gamed mooot',
+'abdelbasit hamouda'),('nice writer','ahmed adwia');
+
+INSERT INTO `summarai`.`book`
+(
+`about`,
+`title`,`author_id`)
+VALUES
+(
+'intersting story',
+'zikola land',1),('intersting story 2','zikola land 2',2);
+
+
+INSERT INTO `summarai`.`book_genre`
+(`book_id`,
+`genre_id`)
+VALUES
+(1,
+2);
+INSERT INTO `summarai`.`statistics`
+(
+`day_streak`,
+`max_streak`,
+`total_reading_days`,
+`user_id`)
+VALUES
+(2,
+5,
+23,
+1),
+(4,
+10,
+56,
+2);
+
+INSERT INTO `summarai`.`user`
+(
+`email`,
+`name`,
+`password`)
+VALUES
+(
+'abdelrahmangomaa3005@gmail.com',
+'abdelrahman',
+'1234'),(
+'momenmostafa@gmail.com',
+'momen',
+'1234');
+
+select * from user
+
+
+select *  from book
