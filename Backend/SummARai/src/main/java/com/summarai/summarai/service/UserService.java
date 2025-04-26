@@ -1,4 +1,6 @@
 package com.summarai.summarai.service;
+
+
 import com.summarai.summarai.dto.RegisterDto;
 import com.summarai.summarai.dto.UserDto;
 import com.summarai.summarai.mapper.RegisterMapper;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
 @Service
 //@AllArgsConstructor
 public class UserService {
@@ -46,5 +47,4 @@ public class UserService {
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
-
 }

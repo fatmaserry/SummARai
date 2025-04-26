@@ -1,21 +1,23 @@
 package com.summarai.summarai.service;
 
 import com.summarai.summarai.dto.BookDto;
-import com.summarai.summarai.mapper.BookMapper;
-import com.summarai.summarai.model.Book;
-import com.summarai.summarai.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import com.summarai.summarai.dto.BookSearchRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
-@Service
-public class BookService {
-    @Autowired
-    private BookRepository bookRepository;
-    @Autowired
-    private BookMapper bookMapper;
-    public List<BookDto> findAll(){
-        return bookMapper.toDtos(bookRepository.findAll());
-    }
+public interface BookService {
+    public Page<BookDto> getAllBooks(Pageable pageable);
+
+    public Optional<BookDto> getBookById(Long id);
+
+    public Page<BookDto> getBooksByAuthor(String author, Pageable pageable);
+
+    public Page<BookDto> getBooksByTitle(String title, Pageable pageable);
+
+    public Page<BookDto> searchBooks(BookSearchRequest criteria, Pageable pageable);
 }
