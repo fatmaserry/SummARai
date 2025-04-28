@@ -3,6 +3,8 @@ import com.summarai.summarai.dto.RegisterDto;
 import com.summarai.summarai.dto.UserDto;
 import com.summarai.summarai.model.UserReading;
 import com.summarai.summarai.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/user")
 // lombok annotations aren't working in this project (don't know why)
 //@AllArgsConstructor
+//@Tag(name = "user controller", description = "endpoints")
 public class UserController {
     private final UserService userService;
 
@@ -25,6 +28,7 @@ public class UserController {
 
     // available for admins only
     @GetMapping("/allusers")
+//    @Operation(summary = "get all users", description = "return a list of users")
     public ResponseEntity<List<UserDto>> getAllUsers(){
         return ResponseEntity.ok(userService.findAll());
     }
@@ -44,6 +48,7 @@ public class UserController {
     public ResponseEntity<UserReading> getReadings(@PathVariable Long id){
         return ResponseEntity.ok(userService.getReadings(id));
     }
+    @Operation(summary = "add a user")
     @PostMapping("")
     public ResponseEntity<?> addUser(@Validated @RequestBody RegisterDto registerDto){
         return ResponseEntity.ok(userService.addUser(registerDto));
@@ -58,7 +63,6 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok("deleted");
     }
-
 
 
 }

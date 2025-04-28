@@ -49,7 +49,7 @@ public class BookServiceImpl implements BookService {
         Specification<Book> spec = Specification.where(null);
 
         if (criteria.getAuthor() != null && !criteria.getAuthor().isEmpty()) {
-            spec = spec.and(BookSpecs.authorEquals(criteria.getAuthor()));
+            spec = spec.and(BookSpecs.authorContains(criteria.getAuthor()));
         }
         if (criteria.getTitle() != null && !criteria.getTitle().isEmpty()) {
             spec = spec.and(BookSpecs.titleContains(criteria.getTitle()));

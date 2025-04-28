@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BookSpecs {
 
-    public static Specification<Book> authorEquals(String author) {
+    public static Specification<Book> authorContains(String author) {
         return (root, query, cb) ->
                 cb.like(root.get("author").get("name"), "%" + author.toLowerCase() + "%");
     }

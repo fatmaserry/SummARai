@@ -11,10 +11,13 @@ import java.util.List;
 
 @Service
 public class GenreServiceImpl implements GenreService {
-    @Autowired
-    private GenreRepository genreRepository;
-    @Autowired
-    private GenreMapper genreMapper;
+    private final GenreRepository genreRepository;
+    private final  GenreMapper genreMapper;
+    public GenreServiceImpl(GenreRepository genreRepository, GenreMapper genreMapper) {
+        this.genreRepository = genreRepository;
+        this.genreMapper = genreMapper;
+    }
+
     public List<GenreDto> getAllGenres() {
         return genreMapper.toDtos(genreRepository.findAll());
     }
