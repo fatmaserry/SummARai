@@ -1,10 +1,12 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
-
+import "swiper/css/pagination";
+import DropFileInput from "../components/DropFileInput.jsx";
+import { AuthContext } from "../provider/auth/authProvider";
 import slide_image_1 from "/assets/images/الساموراي.png";
 import slide_image_2 from "/assets/images/الاثار الاسلامية.png";
 import slide_image_3 from "/assets/images/الفرزدق.png";
@@ -14,19 +16,37 @@ import slide_image_5 from "/assets/images/مصر و الشام.png";
 export default function HomePage() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const { isLoggedIn } = useContext(AuthContext);
+  // const [swiperRef, setSwiperRef] = useState(null);
+
+  // const append = () => {
+  //   swiperRef.appendSlide(
+  //     '<div class="swiper-slide">Slide ' + ++appendNumber + '</div>'
+  //   );
+  // };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6">
       <div className="text-center space-y-2">
-        <h3 className="text-lg xl:text-3xl font-semibold text-white">مكتبة SummARai لتلخيص الكتب العربية</h3>
-        <h3 className="text-lg xl:text-3xl font-semibold text-white">اكثر من الف كتاب تم تلخيصهم بدقة بواسطة الذكاء الاصطناعي</h3>
+      <h3 className="text-2xl font-semibold text-white">
+          مكتبة SummARai لتلخيص الكتب العربية
+        </h3>
+        <h3 className="text-2xl font-semibold text-white">
+          اكثر من الف كتاب تم تلخيصهم بدقة بواسطة الذكاء الاصطناعي
+        </h3>
       </div>
 
-      <div className="w-full h-full max-w-4xl mx-auto mt-6 relative">
-        <div ref={prevRef} className="swiper-button-prev absolute -left-12 bottom-0 transform z-10">
+      <div className="w-full max-w-4xl mx-auto mt-6 mb-16 relative">
+        <div
+          ref={prevRef}
+          className="swiper-button-prev absolute -left-12 top-1/2 transform -translate-y-1/2 z-10"
+        >
           <ion-icon name="arrow-back-outline"></ion-icon>
         </div>
-        <div ref={nextRef} className="swiper-button-next absolute -right-12 bottom-0 transform z-10">
+        <div
+          ref={nextRef}
+          className="swiper-button-next absolute -right-12 top-1/2 transform -translate-y-1/2 z-10"
+        >
           <ion-icon name="arrow-forward-outline"></ion-icon>
         </div>
 
@@ -53,12 +73,142 @@ export default function HomePage() {
           modules={[EffectCoverflow, Navigation]}
           className="swiper_container"
         >
-          {[slide_image_1, slide_image_2, slide_image_3, slide_image_4, slide_image_5].map((img, idx) => (
+          {[
+            slide_image_1,
+            slide_image_2,
+            slide_image_3,
+            slide_image_4,
+            slide_image_5,
+          ].map((img, idx) => (
             <SwiperSlide key={idx}>
               <img src={img} alt={`slide_image_${idx + 1}`} />
             </SwiperSlide>
           ))}
         </Swiper>
+      </div>
+
+      {isLoggedIn ?(
+        <><h2 className="text-2xl font-semibold text-white text-center mb-4">
+          يمكنك اضافة كتابك وتلخيصه
+        </h2><div className="flex justify-center items-center min-h-[60vh]">
+            <div className="box w-full max-w-md">
+              <div className="border-2 border-dashed border-[#765CDE] rounded-xl p-6 text-center text-white">
+                <DropFileInput
+                  onFileChange={(files) => onFileChange(files)}
+                  multiple={false} />
+              </div>
+              <button className="mt-4 bg-[#765CDE] text-white py-1.5 px-4 rounded-md text-sm mx-auto block">
+                لخص
+              </button>
+            </div>
+          </div></>
+      ):null
+
+      }
+
+      <div className="summaries">
+        <h3 className="text-2xl font-semibold text-white text-center mt-12 mb-8">
+          القي نظرة على ملخصاتنا
+        </h3>
+        <div className="litrature_swiper mb-16">
+          <h4 className="text-lg font-semibold text-white text-right m-4">
+            ملخصات في الأدب
+          </h4>
+          <Swiper
+            // onSwiper={setSwiperRef}
+            onSwiper={(swiper) => {
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }}
+            slidesPerView={4}
+            spaceBetween={5}
+            navigation={true}
+            modules={[Navigation]}
+            className="mySwiper swiper_small"
+          >
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+          </Swiper>
+        </div>
+        <div className="history_swiper mb-16">
+          <h4 className="text-lg font-semibold text-white text-right m-4">
+            ملخصات في التاريخ
+          </h4>
+          <Swiper
+            // onSwiper={setSwiperRef}
+            onSwiper={(swiper) => {
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }}
+            slidesPerView={4}
+            spaceBetween={5}
+            navigation={true}
+            modules={[Navigation]}
+            className="mySwiper swiper_small"
+          >
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+          </Swiper>
+        </div>
+        <div className="story_swiper mb-16">
+          <h4 className="text-lg font-semibold text-white text-right m-4">
+            ملخصات روايات
+          </h4>
+          <Swiper
+            // onSwiper={setSwiperRef}
+            onSwiper={(swiper) => {
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }}
+            slidesPerView={4}
+            spaceBetween={5}
+            navigation={true}
+            modules={[Navigation]}
+            className="mySwiper swiper_small"
+          >
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={slide_image_1} />
+            </SwiperSlide>
+          </Swiper>
+        </div>
       </div>
     </div>
   );

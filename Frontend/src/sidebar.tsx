@@ -1,12 +1,11 @@
-import { MoreVertical, ChevronLast, ChevronFirst } from "lucide-react";
 import React, { useContext, createContext, useState } from "react";
-import { Menu } from "./components/Icons";
 interface SidebarItemProps {
   icon?: React.ReactNode;
   text: string;
   active?: boolean;
   alert?: boolean;
   children?: React.ReactNode;
+  onClick?: () => void;
 }
 
 interface SidebarProps {
@@ -51,11 +50,12 @@ export default function Sidebar({
   );
 }
 
-export function SidebarItem({ icon, text, active, alert }: SidebarItemProps) {
+export function SidebarItem({ icon, text, active, alert, onClick }: SidebarItemProps) {
   const { isSidebarOpen } = useContext(SidebarContext);
 
   return (
     <li
+      onClick={onClick}
       className={`
                 relative flex items-center py-2 px-2 my-1
                 font-medium rounded-md cursor-pointer

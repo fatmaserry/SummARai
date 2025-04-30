@@ -3,6 +3,9 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../pages/Login";
 import Logout from "../pages/Logout";
+import Profile from "../pages/Profile";
+import Search from "../pages/Search";
+import Readings from "../pages/Readings";
 import Layout from "../layout";
 import Home from "../pages/Home";
 
@@ -11,22 +14,6 @@ const Routes = () => {
 
   // Non-authenticated routes
   const routesForPublic = [
-    {
-      path: "/service",
-      element: (
-        <Layout>
-          <div>Service Page</div>
-        </Layout>
-      ),
-    },
-    {
-      path: "/about-us",
-      element: (
-        <Layout>
-          <div>About Us</div>
-        </Layout>
-      ),
-    },
     {
       path: "/",
       element: (
@@ -53,7 +40,15 @@ const Routes = () => {
       children: [
         {
           path: "/profile",
-          element: <div>User Profile</div>,
+          element: <Profile />,
+        },
+        {
+          path: "/Readings",
+          element: <Readings />,
+        },
+        {
+          path: "/Search",
+          element: <Search />,
         },
         {
           path: "/logout",
