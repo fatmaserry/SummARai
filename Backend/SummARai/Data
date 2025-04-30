@@ -1,0 +1,37 @@
+INSERT INTO genre (description) VALUES
+('Historical Fiction'),
+('Philosophy'),
+('Short Stories'),
+('Science Fiction'),
+('Magical Realism');
+
+INSERT INTO author (name, description) VALUES
+('Naguib Mahfouz', 'Egyptian writer and Nobel Laureate known for the Cairo Trilogy.'),
+('Taha Hussein', 'Renowned Egyptian intellectual and literary critic, known as the Dean of Arabic Literature.'),
+('Yusuf Idris', 'Egyptian writer known for his short stories and plays reflecting everyday Egyptian life.'),
+('Anis Mansour', 'Egyptian author and journalist famous for his philosophical and humorous writing.'),
+('Ahmed Khaled Tawfik', 'Egyptian author and pioneer of horror and science fiction literature in the Arab world.');
+
+
+INSERT INTO book (title, about, author_id) VALUES
+('Palace Walk', 'The first novel in the Cairo Trilogy, exploring family life in early 20th-century Egypt.', 1),
+('The Days', 'An autobiographical novel that recounts Taha Hussein’s early life and blindness.', 2),
+('The Cheapest Nights', 'A collection of short stories portraying the struggles of the poor in Cairo.', 3),
+('Around the World in 200 Days', 'A travel memoir exploring different cultures with philosophical reflections.', 4),
+('Utopia', 'A dystopian novel set in future Egypt, highlighting class divides and societal collapse.', 5);
+
+INSERT INTO book_genre (book_id, genre_id) VALUES
+(1, 1),  -- Palace Walk -> Historical Fiction
+(2, 2),  -- The Days -> Philosophy
+(3, 3),  -- The Cheapest Nights -> Short Stories
+(4, 2),  -- Around the World in 200 Days -> Philosophy
+(5, 4),  -- Utopia -> Science Fiction
+(5, 2);  -- Utopia -> Philosophy (multi-genre example)
+
+UPDATE book SET image_url = 'https://drive.google.com/uc?export=view&id=1AOd1BP51FjBWAy9L-ksuiTWjrKCJkGfj' WHERE id = 1;
+UPDATE book SET image_url = 'https://drive.google.com/uc?export=view&id=1AkJQXhBLg6B_6VE3BMMHC9ez2aEFMw0N' WHERE id = 2;
+UPDATE book SET image_url = 'https://drive.google.com/uc?export=view&id=1eNzJsCho93UGM_6CkrXR26Jjk6m2VmRs' WHERE id = 3;
+UPDATE book SET image_url = 'https://drive.google.com/uc?export=view&id=1KoFaBMZQMGkj8wtbKmLRmGKs7d9CdSCF' WHERE id = 4;
+UPDATE book SET image_url = 'https://drive.google.com/uc?export=view&id=1yaZu-s2YAOo_6iyopJTWW6PoL7mY2RpJ' WHERE id = 5;
+
+
