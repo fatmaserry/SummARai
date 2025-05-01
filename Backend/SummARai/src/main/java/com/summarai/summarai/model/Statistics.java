@@ -1,7 +1,6 @@
 package com.summarai.summarai.model;
 
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -9,7 +8,6 @@ import java.util.Date;
 @Table
 public class Statistics {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
     private Long dayStreak;
@@ -18,9 +16,21 @@ public class Statistics {
 //    private Date currentYear;
     @Column
     private Long totalReadingDays;
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(optional = false)
+    @MapsId
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
+
+    public Statistics() {
+
+    }
+    public Statistics(User user) {
+        this.user = user;
+        this.setMaxStreak(0L);
+        this.setTotalReadingDays(0L);
+        this.setDayStreak(0L);
+    }
+
     @PostLoad
     private void updateStreak(){
         this.setMaxStreak(Math.max(maxStreak,dayStreak));

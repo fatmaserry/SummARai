@@ -1,11 +1,8 @@
 package com.summarai.summarai.dto;
 
 public class StatisticsDto {
-
     private Long id;
-
     private Long dayStreak;
-
     private Long maxStreak;
     private Long totalReadingDays;
 

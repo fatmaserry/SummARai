@@ -9,14 +9,16 @@ import com.summarai.summarai.model.User;
 import com.summarai.summarai.model.UserReading;
 import com.summarai.summarai.repository.ReadingsRepository;
 import com.summarai.summarai.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 public interface UserService {
-    public List<UserDto> findAll();
+    public Page<UserDto> findAll(Pageable pageable);
     public Optional<UserDto> findById(Long id);
     public Optional<UserDto> addUser(RegisterDto registerDto);
-    public UserReading getReadings(Long id);
+    public List<UserReading> getReadings(Long id);
     public void deleteUser(Long id);
 }

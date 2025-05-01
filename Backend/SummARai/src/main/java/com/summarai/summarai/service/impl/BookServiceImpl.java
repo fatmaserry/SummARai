@@ -7,6 +7,7 @@ import com.summarai.summarai.mapper.BookMapper;
 import com.summarai.summarai.model.Book;
 import com.summarai.summarai.repository.BookRepository;
 import com.summarai.summarai.service.BookService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +19,14 @@ import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
-    @Autowired
-    private BookRepository bookRepository;
-    @Autowired
-    private BookMapper bookMapper;
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
+
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper) {
+        this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
+    }
+
     public Page<BookDto> getAllBooks( Pageable pageable){
         Page<Book> books = bookRepository.findAll(pageable);
         return books.map(bookMapper::toDto);

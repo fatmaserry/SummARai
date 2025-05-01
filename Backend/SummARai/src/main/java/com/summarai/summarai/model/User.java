@@ -25,7 +25,8 @@ public class User {
     private Statistics statistics;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true,cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-    private List<UserReading> myReadings = new ArrayList<>();
+    private List<UserReading> myReadings;
+
 
     public Long getId() {
         return id;
@@ -64,6 +65,13 @@ public class User {
     }
 
     public void setStatistics(Statistics statistics) {
+        if (statistics == null) {
+            if (this.statistics != null) {
+                this.statistics.setUser(null);
+            }
+        } else {
+            statistics.setUser(this);
+        }
         this.statistics = statistics;
     }
 

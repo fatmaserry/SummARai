@@ -1,27 +1,41 @@
 package com.summarai.summarai.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
+import java.util.Locale;
 
 @Entity
-@Table
+@Table(name = "user_reading")
 public class UserReading {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private UserReadingId id;
 
     @ManyToOne(fetch = FetchType.EAGER)  // Still lazy by default
     @JoinColumn(name = "summary_id")
+    @MapsId("summary_id") // it references the id of this table as the user id
     private BookSummary bookSummary;
 
-    @ManyToOne()  // Still lazy by default
+    @ManyToOne(fetch = FetchType.EAGER)  // Still lazy by default
     @JoinColumn(name = "user_id")
+    @MapsId("user_id") // it references the id of this table as the user id
     private User user;
 
-    public Long getId() {
+    @CreationTimestamp
+    @Column(updatable = false,insertable = false)
+    private Date creation_date;
+
+
+    public Date getCreation_date() {
+        return creation_date;
+    }
+
+    public UserReadingId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UserReadingId id) {
         this.id = id;
     }
 

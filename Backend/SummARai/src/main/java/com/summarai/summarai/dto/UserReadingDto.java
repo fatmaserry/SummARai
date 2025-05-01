@@ -1,17 +1,21 @@
 package com.summarai.summarai.dto;
 
+import com.summarai.summarai.model.UserReadingId;
+
 public class UserReadingDto {
-    private Long id;
+    private UserReadingId id;
 
     private BookSummaryDto bookSummary;
 
-    public Long getId() {
+    public UserReadingId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UserReadingId id) {
         this.id = id;
     }
+
+
 
     public BookSummaryDto getBookSummary() {
         return bookSummary;
