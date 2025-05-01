@@ -21,6 +21,19 @@ class OCRService:
     def __init__(self, api_key):
         self.client = Mistral(api_key=api_key)
 
+    def clean_text(self,text):
+        # Remove Images tags
+        text = re.sub(r'!\[.*?\]\(.*?\)', '', text)
+        # 1. Remove consecutive dots (2 or more)
+        text = re.sub(r'\.{2,}', '', text)
+        # 2. Remove # followed by digits
+        text =re.sub(r'#\s*\d+', '', text)
+        # 3. Remove -, *, ", «, or »
+        text = re.sub(r'[-*"«»]', '', text)
+        # 4. Replace each endline with a space
+        text = re.sub(r'\n', ' ', text)
+        return text
+
     async def process_pdf(self, file: UploadFile) -> str:
         uploaded_pdf = self.client.files.upload(
             file={
@@ -41,10 +54,9 @@ class OCRService:
         )
         ret = ""
         for page in ocr_response.pages:
+            # Remove latex
             temp = LatexNodes2Text().latex_to_text(page.markdown)
-            temp = re.sub(r'!\[.*?\]\(.*?\)', '', temp)
-            # temp = temp.replace("\n", " ")
-            ret += temp
+            ret += self.clean_text(temp)
 
         return ret
 
