@@ -18,7 +18,7 @@ public class Genre {
 
     @ManyToMany(mappedBy = "genres",fetch = FetchType.LAZY)
     @JsonIgnore
-    private  List<Book> books;
+    private  List<BookSummary> summaries;
     @Column
     private String description;
 
@@ -30,12 +30,12 @@ public class Genre {
         this.id = id;
     }
 
-    public List<Book> getBooks() {
-        return books;
+    public List<BookSummary> getSummaries() {
+        return summaries;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    public void setSummaries(List<BookSummary> summaries) {
+        this.summaries = summaries;
     }
 
     public String getDescription() {

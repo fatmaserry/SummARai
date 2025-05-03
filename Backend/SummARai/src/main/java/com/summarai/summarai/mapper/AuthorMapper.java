@@ -1,9 +1,7 @@
 package com.summarai.summarai.mapper;
 
 import com.summarai.summarai.dto.AuthorDto;
-import com.summarai.summarai.dto.BookDto;
 import com.summarai.summarai.model.Author;
-import com.summarai.summarai.model.Book;
 import org.mapstruct.Mapper;
 
 import java.util.List;

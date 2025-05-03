@@ -1,12 +1,6 @@
 package com.summarai.summarai.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.summarai.summarai.model.Book;
-import jakarta.persistence.*;
-
-import java.util.List;
-
 public class GenreDto {
 
     private Long id;

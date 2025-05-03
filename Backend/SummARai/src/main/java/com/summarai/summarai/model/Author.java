@@ -19,7 +19,7 @@ public class Author {
     @Column
     private String description;
     @OneToMany(mappedBy = "author",fetch = FetchType.LAZY)
-    private Set<Book> books = new HashSet<>();
+    private Set<BookSummary> summaries = new HashSet<>();
 
 
     public Long getId() {

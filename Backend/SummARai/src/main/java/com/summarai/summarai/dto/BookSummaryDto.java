@@ -1,43 +1,50 @@
 package com.summarai.summarai.dto;
 
-public class BookSummaryDto {
-    private Long id;
+import com.summarai.summarai.model.Author;
+import com.summarai.summarai.model.Genre;
+import jakarta.persistence.*;
 
-    private BookDto book;
+import java.util.HashSet;
+import java.util.Set;
 
-    private Long numOfPages ;
+public class BookSummaryDto extends SummaryDto{
+    private String about;
 
-    private String summaryPath;
+    private Set<GenreDto> genres = new HashSet<>();
 
-    public Long getId() {
-        return id;
+    private Author author;
+
+    private String image_url ;
+
+    public String getAbout() {
+        return about;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAbout(String about) {
+        this.about = about;
     }
 
-    public BookDto getBook() {
-        return book;
+    public Set<GenreDto> getGenres() {
+        return genres;
     }
 
-    public void setBook(BookDto book) {
-        this.book = book;
+    public void setGenres(Set<GenreDto> genres) {
+        this.genres = genres;
     }
 
-    public Long getNumOfPages() {
-        return numOfPages;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setNumOfPages(Long numOfPages) {
-        this.numOfPages = numOfPages;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
-    public String getSummaryPath() {
-        return summaryPath;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setSummaryPath(String summaryPath) {
-        this.summaryPath = summaryPath;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 }

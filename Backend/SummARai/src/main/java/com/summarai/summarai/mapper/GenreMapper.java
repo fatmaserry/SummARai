@@ -1,13 +1,10 @@
 package com.summarai.summarai.mapper;
 
-import com.summarai.summarai.dto.BookDto;
 import com.summarai.summarai.dto.GenreDto;
-import com.summarai.summarai.model.Book;
 import com.summarai.summarai.model.Genre;
 import org.mapstruct.Mapper;
 
 import java.util.List;
-import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface GenreMapper {

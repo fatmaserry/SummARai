@@ -1,56 +1,54 @@
 package com.summarai.summarai.model;
 
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
-import javax.annotation.processing.Generated;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table
-public class BookSummary {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "book_id")
-    private Book book;
+@DiscriminatorValue("BOOK")
+public class BookSummary extends Summary {
+    @Column
+    private String about;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "book_genre",
+            joinColumns = @JoinColumn(name = "summary_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private Set<Genre> genres = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
 
     @Column
-    private Long numOfPages ;
+    private String image_url ;
 
-    @Column
-    private String summaryPath;
-
-    public Long getId() {
-        return id;
+    public String getAbout() {
+        return about;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAbout(String about) {
+        this.about = about;
     }
 
-    public Book getBook() {
-        return book;
+    public Set<Genre> getGenres() {
+        return genres;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
     }
 
-    public Long getNumOfPages() {
-        return numOfPages;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setNumOfPages(Long numOfPages) {
-        this.numOfPages = numOfPages;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
-
-    public String getSummaryPath() {
-        return summaryPath;
+    public String getImage_url() {
+        return image_url;
     }
-
-    public void setSummaryPath(String summaryPath) {
-        this.summaryPath = summaryPath;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 }
