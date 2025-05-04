@@ -1,5 +1,6 @@
 package com.summarai.summarai.dto;
 
+import com.summarai.summarai.model.Role;
 import com.summarai.summarai.model.Statistics;
 import jakarta.persistence.*;
 
@@ -8,10 +9,19 @@ public class UserDto {
 
     private String name;
     private String password;
+    private Role role;
 
     private String email;
 
     private StatisticsDto statistics;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public Long getId() {
         return id;
