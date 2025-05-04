@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,11 @@ public class User {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true,cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     private List<UserReading> myReadings;
+
+    @Column
+    private Role role;
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
 
     public Long getId() {
@@ -81,5 +86,12 @@ public class User {
 
     public void setMyReadings(List<UserReading> myReadings) {
         this.myReadings = myReadings;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

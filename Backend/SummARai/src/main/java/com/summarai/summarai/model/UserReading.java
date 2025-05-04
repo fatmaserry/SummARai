@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
-import java.util.Locale;
 
 @Entity
 @Table(name = "user_reading")
@@ -15,7 +14,7 @@ public class UserReading {
     @ManyToOne(fetch = FetchType.EAGER)  // Still lazy by default
     @JoinColumn(name = "summary_id")
     @MapsId("summary_id") // it references the id of this table as the user id
-    private BookSummary bookSummary;
+    private Summary summary;
 
     @ManyToOne(fetch = FetchType.EAGER)  // Still lazy by default
     @JoinColumn(name = "user_id")
@@ -39,12 +38,12 @@ public class UserReading {
         this.id = id;
     }
 
-    public BookSummary getBookSummary() {
-        return bookSummary;
+    public Summary getSummary() {
+        return summary;
     }
 
-    public void setBookSummary(BookSummary bookSummary) {
-        this.bookSummary = bookSummary;
+    public void setSummary(Summary summary) {
+        this.summary = summary;
     }
 
     public User getUser() {
