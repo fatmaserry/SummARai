@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -7,6 +7,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import DropFileInput from "../components/DropFileInput.jsx";
 import { AuthContext } from "../provider/auth/authProvider";
+import { fetchAllBooks } from "../api/booksApi.js";
+import SummarySlider from "../components/SummarySlider";
 import slide_image_1 from "/assets/images/الساموراي.png";
 import slide_image_2 from "/assets/images/الاثار الاسلامية.png";
 import slide_image_3 from "/assets/images/الفرزدق.png";
@@ -17,18 +19,38 @@ export default function HomePage() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const { isLoggedIn } = useContext(AuthContext);
-  // const [swiperRef, setSwiperRef] = useState(null);
+  const [groupedBooks, setGroupedBooks] = useState({});
 
-  // const append = () => {
-  //   swiperRef.appendSlide(
-  //     '<div class="swiper-slide">Slide ' + ++appendNumber + '</div>'
-  //   );
-  // };
+  useEffect(() => {
+    fetchAllBooks()
+      .then(books => {
+        const grouped = books.reduce((acc, book) => {
+          book.genres.forEach(genre => {
+            const genreName = genre.description;
+            if (!acc[genreName]) acc[genreName] = [];
+            acc[genreName].push(book);
+          });
+          return acc;
+        }, {});
+        setGroupedBooks(grouped);
+      })
+      .catch(err => console.error("Failed to fetch books:", err));
+  }, []);
+  
+  const genreTranslations = {
+    "Philosophy": "الفلسفة",
+    "Historical Fiction": "الروايات التاريخية",
+    "Short Stories": "القصص القصيرة",
+    "Science Fiction": "الخيال العلمي",
+    
+  };
+  
+  
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6">
       <div className="text-center space-y-2">
-      <h3 className="text-2xl font-semibold text-white">
+        <h3 className="text-2xl font-semibold text-white">
           مكتبة SummARai لتلخيص الكتب العربية
         </h3>
         <h3 className="text-2xl font-semibold text-white">
@@ -87,128 +109,81 @@ export default function HomePage() {
         </Swiper>
       </div>
 
-      {isLoggedIn ?(
-        <><h2 className="text-2xl font-semibold text-white text-center mb-4">
-          يمكنك اضافة كتابك وتلخيصه
-        </h2><div className="flex justify-center items-center min-h-[60vh]">
+      {isLoggedIn ? (
+        <>
+          <h2 className="text-2xl font-semibold text-white text-center mb-4">
+            يمكنك اضافة كتابك وتلخيصه
+          </h2>
+          <div className="flex justify-center items-center min-h-[60vh]">
             <div className="box w-full max-w-md">
               <div className="border-2 border-dashed border-[#765CDE] rounded-xl p-6 text-center text-white">
                 <DropFileInput
                   onFileChange={(files) => onFileChange(files)}
-                  multiple={false} />
+                  multiple={false}
+                />
               </div>
               <button className="mt-4 bg-[#765CDE] text-white py-1.5 px-4 rounded-md text-sm mx-auto block">
                 لخص
               </button>
             </div>
-          </div></>
-      ):null
-
-      }
+          </div>
+        </>
+      ) : null}
 
       <div className="summaries">
         <h3 className="text-2xl font-semibold text-white text-center mt-12 mb-8">
           القي نظرة على ملخصاتنا
         </h3>
-        <div className="litrature_swiper mb-16">
-          <h4 className="text-lg font-semibold text-white text-right m-4">
-            ملخصات في الأدب
-          </h4>
-          <Swiper
-            // onSwiper={setSwiperRef}
-            onSwiper={(swiper) => {
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
-            slidesPerView={4}
-            spaceBetween={5}
-            navigation={true}
-            modules={[Navigation]}
-            className="mySwiper swiper_small"
-          >
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-          </Swiper>
-        </div>
-        <div className="history_swiper mb-16">
-          <h4 className="text-lg font-semibold text-white text-right m-4">
-            ملخصات في التاريخ
-          </h4>
-          <Swiper
-            // onSwiper={setSwiperRef}
-            onSwiper={(swiper) => {
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
-            slidesPerView={4}
-            spaceBetween={5}
-            navigation={true}
-            modules={[Navigation]}
-            className="mySwiper swiper_small"
-          >
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-          </Swiper>
-        </div>
-        <div className="story_swiper mb-16">
-          <h4 className="text-lg font-semibold text-white text-right m-4">
-            ملخصات روايات
-          </h4>
-          <Swiper
-            // onSwiper={setSwiperRef}
-            onSwiper={(swiper) => {
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
-            slidesPerView={4}
-            spaceBetween={5}
-            navigation={true}
-            modules={[Navigation]}
-            className="mySwiper swiper_small"
-          >
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-          </Swiper>
-        </div>
+        {/* {[
+          {
+            title: "ملخصات في الأدب",
+            className: "litrature_swiper",
+            images: [
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+            ],
+          },
+          {
+            title: "ملخصات في التاريخ",
+            className: "history_swiper",
+            images: [
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+            ],
+          },
+          {
+            title: "ملخصات روايات",
+            className: "story_swiper",
+            images: [
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+              slide_image_1,
+            ],
+          },
+        ].map((section, index) => (
+          <SummarySlider
+            key={index}
+            title={section.title}
+            images={section.images}
+            className={section.className}
+          />
+        ))} */}
+        {Object.entries(groupedBooks).map(([genre, books], idx) => (
+          <SummarySlider
+            key={idx}
+            title={`ملخصات في ${genreTranslations[genre] || genre}`}
+            images={books.map(book => book.image_url)}
+            className={`genre_slider_${idx}`}
+          />
+        ))}
       </div>
     </div>
   );
