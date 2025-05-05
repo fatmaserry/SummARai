@@ -4,7 +4,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../pages/Login";
 import Logout from "../pages/Logout";
 import Profile from "../pages/Profile";
-import Search from "../pages/Search";
+import SearchBooks from "../pages/Search";
 import Readings from "../pages/Readings";
 import Layout from "../layout";
 import Home from "../pages/Home";
@@ -48,7 +48,7 @@ const Routes = () => {
         },
         {
           path: "/Search",
-          element: <Search />,
+          element: <SearchBooks />,
         },
         {
           path: "/logout",

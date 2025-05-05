@@ -33,19 +33,11 @@ export default function HomePage() {
           return acc;
         }, {});
         setGroupedBooks(grouped);
+        console.log("Grouped books:", grouped);
       })
       .catch(err => console.error("Failed to fetch books:", err));
   }, []);
-  
-  const genreTranslations = {
-    "Philosophy": "الفلسفة",
-    "Historical Fiction": "الروايات التاريخية",
-    "Short Stories": "القصص القصيرة",
-    "Science Fiction": "الخيال العلمي",
-    
-  };
-  
-  
+
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6">
@@ -179,7 +171,7 @@ export default function HomePage() {
         {Object.entries(groupedBooks).map(([genre, books], idx) => (
           <SummarySlider
             key={idx}
-            title={`ملخصات في ${genreTranslations[genre] || genre}`}
+            title={`ملخصات في ${ genre}`}
             images={books.map(book => book.image_url)}
             className={`genre_slider_${idx}`}
           />
