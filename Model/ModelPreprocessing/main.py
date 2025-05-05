@@ -1,11 +1,8 @@
 from fastapi import FastAPI, UploadFile
-import os
-from pathlib import Path
 from mistralai import Mistral
 import re
 from pylatexenc.latex2text import LatexNodes2Text
 from transformers import AutoTokenizer
-#from camel_tools.tokenizers.sentences import SentenceTokenizer
 import spacy
 
 tokenizer = AutoTokenizer.from_pretrained("aubmindlab/bert-base-arabertv02")
@@ -15,6 +12,12 @@ nlp = spacy.blank('ar')
 nlp.add_pipe('sentencizer')
 
 app = FastAPI()
+
+# Tokenize and count tokens
+def get_tokens(text):
+  tokens = tokenizer(text, return_tensors="pt").input_ids
+  token_count = tokens.shape[1]
+  return token_count
 
 
 class OCRService:
@@ -85,10 +88,23 @@ class OCRService:
 
 
     # using spacy library
-    async def chunk_using_spacy(self,text, max_sentences=5):
+    async def chunk_using_spacy(self,text):
         doc = nlp(text)
-        sentences = [sent.text for sent in doc.sents]
-        return [' '.join(sentences[i:i + max_sentences]) for i in range(0, len(sentences), max_sentences)]
+        cur = ""
+        ret = []
+        tot = 0
+        for sent in doc.sents:
+            cur += sent.text
+            s = get_tokens(cur)
+            if s >= 800:
+                tot += s
+                ret.append(cur)
+                cur = ""
+        if cur != "":
+            ret.append(cur)
+            tot += get_tokens(cur)
+        print(tot)
+        return ret
 
 
 ocr_service = OCRService(api_key=API_KEY)
@@ -124,17 +140,18 @@ async def get_chunk_sentences(file: UploadFile):
 
 
 @app.post("/chunk-spacy")
-async def get_chunk_sentences_spacy(file: UploadFile):
-    text = await ocr_service.process_pdf(file)
+async def get_chunk_sentences_spacy(text):
+    # text = await ocr_service.process_pdf(file)
     temp = await ocr_service.chunk_using_spacy(text)
     return {
         "first": temp[0],
         "second": temp[1],
         "third": temp[2],
-        "fourth": temp[3],
-        "fifth": temp[4],
-        "sixth": temp[5],
-        "size": len(temp)
+        # "fourth": temp[3],
+        # "fifth": temp[4],
+        # "sixth": temp[5],
+        "f": get_tokens(temp[0]),
+        "s": get_tokens(temp[1]),
+        "t": get_tokens(temp[2]),
+        # "frth": get_tokens(temp[3])
     }
-
-
