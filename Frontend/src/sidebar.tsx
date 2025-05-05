@@ -5,6 +5,7 @@ interface SidebarItemProps {
   active?: boolean;
   alert?: boolean;
   children?: React.ReactNode;
+  className?: string;
   onClick?: () => void;
 }
 
@@ -34,8 +35,8 @@ export default function Sidebar({
       />
 
       <aside
-        className={`fixed right-0 h-full w-64 z-20 bg-[#141627] transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed right-0 h-full z-20 bg-[#141627] transition-all duration-300 ${
+          isSidebarOpen ? "w-64" : "w-fit"
         }`}
       >
         <nav className="h-full flex flex-col shadow-sm">
@@ -50,7 +51,14 @@ export default function Sidebar({
   );
 }
 
-export function SidebarItem({ icon, text, active, alert, onClick }: SidebarItemProps) {
+export function SidebarItem({
+  icon,
+  text,
+  active,
+  alert,
+  className,
+  onClick,
+}: SidebarItemProps) {
   const { isSidebarOpen } = useContext(SidebarContext);
 
   return (
@@ -78,9 +86,9 @@ export function SidebarItem({ icon, text, active, alert, onClick }: SidebarItemP
             } ${(icon as React.ReactElement).props.className || ""}`,
           })}
         <span
-          className={`overflow-hidden transition-all text-base ${
-            isSidebarOpen ? "w-full block" : "hidden"
-          }`}
+          className={`overflow-hidden transition-all duration-200 text-base ${
+            isSidebarOpen ? "w-full opacity-100" : "hidden w-0 opacity-0"
+          } ${className}`}
         >
           {text}
         </span>

@@ -2,12 +2,12 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 // import useAuth from "../provider/auth/useAuth";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../pages/Login";
-import Logout from "../pages/Logout";
 import Profile from "../pages/Profile";
 import SearchBooks from "../pages/Search";
 import Readings from "../pages/Readings";
 import Layout from "../layout";
 import Home from "../pages/Home";
+import Signup from "../pages/Signup";
 
 const Routes = () => {
   // const { token } = useAuth();
@@ -25,6 +25,10 @@ const Routes = () => {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "/register",
+      element: <Signup />,
     },
   ];
 
@@ -49,10 +53,6 @@ const Routes = () => {
         {
           path: "/Search",
           element: <SearchBooks />,
-        },
-        {
-          path: "/logout",
-          element: <Logout />,
         },
       ],
     },

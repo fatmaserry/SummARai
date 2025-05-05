@@ -7,7 +7,7 @@ const SummarySlider = ({ title, images, className }) => {
   
   return (
     <div className={`${className} mb-16`}>
-      <h4 className="text-lg font-semibold text-white text-right m-4">
+      <h4 className="text-xl font-semibold text-white text-right m-4">
         {title}
       </h4>
       <Swiper

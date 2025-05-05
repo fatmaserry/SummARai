@@ -1,20 +1,26 @@
 import React, { useContext, useState } from "react";
 import Sidebar from "./sidebar";
-import { Home, Profile, BookOpen, Search, Menu } from "./components/Icons";
+import { Home, Profile, BookOpen, Search, Menu, Logout } from "./components/Icons";
 import { SidebarItem } from "./sidebar";
 import { AuthContext } from "./provider/auth/authProvider";
-import { useLocation, useNavigate } from "react-router-dom";
-interface LayoutProps {
-  children: React.ReactNode;
-}
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "./provider/auth/useAuth";
 
-const Layout = ({ children }: LayoutProps) => {
+
+const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
+  const { setToken } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleLogout = () => {
+    setToken();
+    navigate("/", { replace: true });
   };
 
   return (
@@ -27,12 +33,12 @@ const Layout = ({ children }: LayoutProps) => {
         {isLoggedIn ? (
           <h1 className="text-xl font-bold">مرحبا بك</h1>
         ) : (
-          <button
-            onClick={() => alert("Registration button clicked!")}
-            className="px-4 py-2 bg-[#4E3693] text-sm rounded-lg hover:bg-[#765CDE] transition-colors"
+          <Link
+            to="/login"
+            className="text-white underline text-base"
           >
             تسجيل دخول
-          </button>
+          </Link>
         )}
 
         <div className="flex items-center gap-4">
@@ -63,43 +69,53 @@ const Layout = ({ children }: LayoutProps) => {
           />
           {isLoggedIn ? (
             <>
-              <SidebarItem
-                icon={<BookOpen />}
-                text="القراءات السابقة"
-                active={location.pathname === "/Readings"}
-                onClick={() => navigate("/Readings")}
-              />
-              <SidebarItem
-                icon={<Search />}
-                text="بحث"
-                active={location.pathname === "/Search"}
-                onClick={() => navigate("/Search")}
-              />
-              <SidebarItem
-                icon={<Profile />}
-                text="الصفحة الشخصية"
-                active={location.pathname === "/Profile"}
-                onClick={() => navigate("/Profile")}
-              />
+              <div>
+                <SidebarItem
+                  icon={<BookOpen />}
+                  text="القراءات السابقة"
+                  active={location.pathname === "/Readings"}
+                  onClick={() => navigate("/Readings")}
+                />
+                <SidebarItem
+                  icon={<Search />}
+                  text="بحث"
+                  active={location.pathname === "/Search"}
+                  onClick={() => navigate("/Search")}
+                />
+                <SidebarItem
+                  icon={<Profile />}
+                  text="الصفحة الشخصية"
+                  active={location.pathname === "/Profile"}
+                  onClick={() => navigate("/Profile")}
+                />
+              </div>
+
+              <div>
+                <SidebarItem
+                  icon={<Logout />}
+                  text="تسجيل خروج"
+                  onClick={handleLogout}
+                />
+              </div>
             </>
           ) : (
             <SidebarItem
               icon={<Profile />}
               text="إنشاء حساب جديد"
-              active={location.pathname === "/login"}
-              onClick={() => navigate("/login")}
+              active={location.pathname === "/register"}
+              onClick={() => navigate("/register")}
             />
           )}
         </Sidebar>
 
         {/* Main Content */}
-        <main className="flex-1 bg-[#141627] overflow-y-auto p-4">
+        <main className="flex-1 bg-[#141627] overflow-y-auto p-4 scrollbar-hide">
           {children}
         </main>
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#141627] text-base text-[#6E7493] text-center p-4 w-full">
+      <footer className="bg-[#141627] text-sm text-[#6E7493] text-center p-4 w-full">
         حقوق النشر © 2025 - جميع الحقوق محفوظة
       </footer>
     </div>

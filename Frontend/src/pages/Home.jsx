@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import DropFileInput from "../components/DropFileInput.jsx";
 import { AuthContext } from "../provider/auth/authProvider";
-import { fetchAllBooks } from "../api/booksApi.js";
+import { fetchAllBooks } from "../api/summary/get-summaries.ts";
 import SummarySlider from "../components/SummarySlider";
 import slide_image_1 from "/assets/images/الساموراي.png";
 import slide_image_2 from "/assets/images/الاثار الاسلامية.png";
@@ -122,7 +122,7 @@ export default function HomePage() {
         </>
       ) : null}
 
-      <div className="summaries">
+      <div className="summaries max-w-7xl mx-auto">
         <h3 className="text-2xl font-semibold text-white text-center mt-12 mb-8">
           القي نظرة على ملخصاتنا
         </h3>

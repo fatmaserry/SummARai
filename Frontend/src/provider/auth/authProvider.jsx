@@ -6,9 +6,14 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token"));
+  const [user, setUser_] = useState(JSON.parse(localStorage.getItem("user")));
 
   const setToken = (newToken) => {
     setToken_(newToken);
+  };
+
+  const setUser = (newUser) => {
+    setUser_(newUser);
   };
 
   useEffect(() => {
@@ -18,19 +23,22 @@ const AuthProvider = ({ children }) => {
     } else {
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("token");
+      setUser(null);
     }
   }, [token]);
 
   // Function to check if user is logged in
-  const isLoggedIn = useMemo(() => !!token, [token]);
+  const isLoggedIn = useMemo(() => !!token, [token, user]);
 
   const contextValue = useMemo(
     () => ({
       token,
       setToken,
       isLoggedIn,
+      user,
+      setUser,
     }),
-    [token]
+    [token, user]
   );
 
   return (

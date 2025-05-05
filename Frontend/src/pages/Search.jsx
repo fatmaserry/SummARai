@@ -4,7 +4,7 @@ import {
   getBooksByTitle,
   getBooksByAuthor,
   searchBooks,
-} from "../api/booksApi";
+} from "../api/summary/get-summaries";
 
 export default function SearchBooks() {
   const options = ["الكتاب", "المؤلف", "النوع"];
@@ -52,6 +52,7 @@ export default function SearchBooks() {
         };
         response = await searchBooks(body);
       }
+      console.log(response)
       setResults(response?.data?.content || []);
       setHasSearched(true); // Set to true after search is performed
     } catch (error) {
