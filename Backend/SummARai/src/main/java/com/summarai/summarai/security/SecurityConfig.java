@@ -31,19 +31,31 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers("/api/auth/register", "/api/auth/login")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
+        return http
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/confirm",
+                                "/api/auth/login"
+                        ).permitAll() // Allow public access
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+                .build();
+//        http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .
+//                .authorizeHttpRequests(req ->
+//                        req.requestMatchers("/api/auth/register", "/api/auth/login","/api/auth/confirm")
+//                                .permitAll()
+//                                .anyRequest()
+//                                .authenticated()
+//                )
+//                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+//                .authenticationProvider(authenticationProvider)
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//
+//        return http.build();
 
 //                .authorizeHttpRequests(req ->
 //                        req.requestMatchers("/api/auth/**")

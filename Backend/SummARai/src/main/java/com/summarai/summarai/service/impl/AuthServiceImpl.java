@@ -2,12 +2,16 @@ package com.summarai.summarai.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.summarai.summarai.dto.UserDto;
+import com.summarai.summarai.email.EmailSender;
+import com.summarai.summarai.email.EmailService;
 import com.summarai.summarai.mapper.UserDetailsMapper;
 import com.summarai.summarai.mapper.UserMapper;
 import com.summarai.summarai.model.Token;
 import com.summarai.summarai.model.User;
+import com.summarai.summarai.model.VerificationToken;
 import com.summarai.summarai.repository.TokenRepository;
 import com.summarai.summarai.repository.UserRepository;
+import com.summarai.summarai.repository.VerificationTokenRepository;
 import com.summarai.summarai.security.AuthenticationResponse;
 import com.summarai.summarai.security.JwtService;
 import com.summarai.summarai.service.AuthService;
@@ -22,6 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -32,9 +39,11 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final TokenRepository tokenRepository;
     private final UserDetailsMapper userDetailsMapper;
+    private final EmailSender emailService;
+    private final VerificationTokenRepository verificationTokenRepository;
 
 
-    public AuthServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, TokenRepository tokenRepository, UserDetailsMapper userDetailsMapper) {
+    public AuthServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, TokenRepository tokenRepository, UserDetailsMapper userDetailsMapper, EmailService emailService, VerificationTokenRepository verificationTokenRepository) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
@@ -42,16 +51,28 @@ public class AuthServiceImpl implements AuthService {
         this.userMapper = userMapper;
         this.tokenRepository = tokenRepository;
         this.userDetailsMapper = userDetailsMapper;
+        this.emailService = emailService;
+        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     public AuthenticationResponse register(UserDto request) {
+        String email = request.getEmail();
+        System.out.println(email);
         if (repository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
         User user = userMapper.toEntity(request);
+        user.setEnabled(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         var savedUser = repository.save(user);
+
+        String verificationToken = UUID.randomUUID().toString();
+        saveVerificationToken(savedUser, verificationToken);
+
+
+        String confirmationLink = "http://localhost:8080/api/auth/confirm?token=" + verificationToken;
+        emailService.send(request.getEmail(), buildEmail(user.getName(), confirmationLink));
 
         var userDetails = userDetailsMapper.userToUserDetails(savedUser);
         var jwtToken = jwtService.generateToken(userDetails);
@@ -64,6 +85,42 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    public String buildEmail(String name, String link) {
+        return """
+        <div style="font-family: Arial, sans-serif;">
+            <h2>Email Confirmation</h2>
+            <p>Hi %s,</p>
+            <p>Please click the button below to verify your email:</p>
+            <a href="%s" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none;">
+                Verify Email
+            </a>
+            <p>This link will expire in 15 minutes.</p>
+        </div>
+        """.formatted(name, link);
+    }
+
+    private void saveVerificationToken(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUser(user);
+        verificationToken.setExpiryDate(Instant.now().plus(15, ChronoUnit.MINUTES));
+        verificationTokenRepository.save(verificationToken); // Save to DB
+    }
+
+    public void confirmToken(String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+
+        if (verificationToken.getExpiryDate().isBefore(Instant.now())) {
+            throw new RuntimeException("Token expired");
+        }
+
+        User user = verificationToken.getUser();
+        user.setEnabled(true);
+        repository.save(user);
+
+        verificationTokenRepository.delete(verificationToken);
+    }
     public AuthenticationResponse login(UserDto request) {
         try {
             authenticationManager.authenticate(
@@ -74,6 +131,9 @@ public class AuthServiceImpl implements AuthService {
             );
             var user = repository.findByEmail(request.getEmail())
                     .orElseThrow();
+            if(!user.isEnabled()){
+                throw new RuntimeException("Account not verified. Please check your email.");
+            }
             var jwtToken = jwtService.generateToken(userDetailsMapper.userToUserDetails(user));
             var refreshToken = jwtService.generateRefreshToken(userDetailsMapper.userToUserDetails(user));
             revokeAllUserTokens(user);
@@ -87,7 +147,6 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Authentication failed: " + ex.getMessage());
         }
     }
-
     private void saveUserToken(com.summarai.summarai.model.User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
