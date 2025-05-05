@@ -18,7 +18,7 @@ public class AuthController {
     public AuthController(AuthServiceImpl authServiceImpl) {
         this.authServiceImpl = authServiceImpl;
     }
-
+    // to verify user got to http://localhost:1080/#/
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
