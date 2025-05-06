@@ -1,8 +1,8 @@
 package com.summarai.summarai.security;
 
 import com.summarai.summarai.dto.UserDto;
-import com.summarai.summarai.mapper.UserDetailsMapper;
 import com.summarai.summarai.mapper.UserMapper;
+import com.summarai.summarai.model.User;
 import com.summarai.summarai.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,18 +17,18 @@ import java.util.Optional;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final UserDetailsMapper userDetailsMapper;
 
-    public UserDetailsServiceImpl(UserRepository userRepository, UserMapper userMapper, UserDetailsMapper userDetailsMapper) {
+
+    public UserDetailsServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.userDetailsMapper = userDetailsMapper;
+
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<com.summarai.summarai.model.User> user = userRepository.findByEmail(username);
+        Optional<User> user = userRepository.findByEmail(username);
         if (user.isPresent()) {
-            return userDetailsMapper.userToUserDetails(user.get());
+            return user.get();
         }
         else{
             throw new UsernameNotFoundException(username);

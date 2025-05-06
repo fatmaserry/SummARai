@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.summarai.summarai.dto.UserDto;
 import com.summarai.summarai.email.EmailSender;
 import com.summarai.summarai.email.EmailService;
-import com.summarai.summarai.mapper.UserDetailsMapper;
 import com.summarai.summarai.mapper.UserMapper;
 import com.summarai.summarai.model.Token;
 import com.summarai.summarai.model.User;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,19 +36,17 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
     private final TokenRepository tokenRepository;
-    private final UserDetailsMapper userDetailsMapper;
     private final EmailSender emailService;
     private final VerificationTokenRepository verificationTokenRepository;
 
 
-    public AuthServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, TokenRepository tokenRepository, UserDetailsMapper userDetailsMapper, EmailService emailService, VerificationTokenRepository verificationTokenRepository) {
+    public AuthServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, TokenRepository tokenRepository,  EmailService emailService, VerificationTokenRepository verificationTokenRepository) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.userMapper = userMapper;
         this.tokenRepository = tokenRepository;
-        this.userDetailsMapper = userDetailsMapper;
         this.emailService = emailService;
         this.verificationTokenRepository = verificationTokenRepository;
     }
@@ -74,9 +70,9 @@ public class AuthServiceImpl implements AuthService {
         String confirmationLink = "http://localhost:8080/api/auth/confirm?token=" + verificationToken;
         emailService.send(request.getEmail(), buildEmail(user.getName(), confirmationLink));
 
-        var userDetails = userDetailsMapper.userToUserDetails(savedUser);
-        var jwtToken = jwtService.generateToken(userDetails);
-        var refreshToken = jwtService.generateRefreshToken(userDetails);
+//        var userDetails = userDetailsMapper.userToUserDetails(savedUser);
+        var jwtToken = jwtService.generateToken(savedUser);
+        var refreshToken = jwtService.generateRefreshToken(savedUser);
         saveUserToken(savedUser, jwtToken);
 
         return AuthenticationResponse.builder()
@@ -117,7 +113,13 @@ public class AuthServiceImpl implements AuthService {
 
         User user = verificationToken.getUser();
         user.setEnabled(true);
-        repository.save(user);
+
+        var savedUser = repository.save(user);
+
+        var jwtToken = jwtService.generateToken(savedUser);
+        var refreshToken = jwtService.generateRefreshToken(savedUser);
+        revokeAllUserTokens(user);
+        saveUserToken(savedUser, jwtToken);
 
         verificationTokenRepository.delete(verificationToken);
     }
@@ -134,8 +136,8 @@ public class AuthServiceImpl implements AuthService {
             if(!user.isEnabled()){
                 throw new RuntimeException("Account not verified. Please check your email.");
             }
-            var jwtToken = jwtService.generateToken(userDetailsMapper.userToUserDetails(user));
-            var refreshToken = jwtService.generateRefreshToken(userDetailsMapper.userToUserDetails(user));
+            var jwtToken = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
             revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
             return AuthenticationResponse.builder()
@@ -185,7 +187,7 @@ public class AuthServiceImpl implements AuthService {
                     .orElseThrow();
             if (jwtService.validateToken(refreshToken)) {
 
-                var accessToken = jwtService.generateToken(userDetailsMapper.userToUserDetails(user));
+                var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
                 var authResponse = AuthenticationResponse.builder()

@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -35,12 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response
             , FilterChain filterChain)
             throws ServletException, IOException {
+
         String token = getJwtTokenFromRequest(request);
+
         if (StringUtils.hasText(token) && jwtService.validateToken(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            String username = jwtService.getUsernameFromToken(token);
+                String username = jwtService.getUsernameFromToken(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails
                         , null, userDetails.getAuthorities());
+
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -48,7 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getJwtTokenFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        // not null checked
+        String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
