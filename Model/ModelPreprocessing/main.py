@@ -19,6 +19,83 @@ def get_tokens(text):
   token_count = tokens.shape[1]
   return token_count
 
+class ChunkingSerive:
+    def __init__(self):
+        pass
+
+    # Not efficient, chunks are split according to number of tokens without respect to ending of a sentence
+    async def chunk_by_max_tokens(self, text: str, max_tokens=1024):
+        words = text.split()
+        chunks = []
+        chunk = []
+        token_count = 0
+        for word in words:
+            tokens = tokenizer.tokenize(word)
+            if token_count + len(tokens) > max_tokens:
+                chunks.append(' '.join(chunk))
+                chunk = []
+                token_count = 0
+            chunk.append(word)
+            token_count += len(tokens)
+        if chunk:
+            chunks.append(' '.join(chunk))
+        return chunks
+
+    # Very good, but not always efficient especially with dialogues
+    async def chunk_by_sentences(self, text, max_sentences=5):
+        sentences = re.split(r'(?<=[.؟!])\s+', text)
+        return [' '.join(sentences[i:i + max_sentences]) for i in range(0, len(sentences), max_sentences)]
+
+    # using spacy library
+    async def chunk_using_spacy(self, text):
+        doc = nlp(text)
+        cur = ""
+        ret = []
+        tot = 0
+        for sent in doc.sents:
+            cur += sent.text
+            s = get_tokens(cur)
+            if s >= 800:
+                tot += s
+                ret.append(cur)
+                cur = ""
+        if cur != "":
+            ret.append(cur)
+            tot += get_tokens(cur)
+        print(tot)
+        return ret
+
+
+    async def overlapping_chunking(self, text, chunk_size=800, overlap=100):
+
+        doc = nlp(text)
+        sentences = list(doc.sents)
+        ret = []
+        i = 0
+
+        while i < len(sentences):
+            cur_chunk = []
+            token_count = 0
+            j = i
+            # Add sentences until token count exceeds chunk_size
+            while j < len(sentences) and token_count < chunk_size:
+                sent_text = sentences[j].text
+                cur_chunk.append(sent_text)
+                token_count += get_tokens(sent_text)
+                j += 1
+
+            ret.append(' '.join(cur_chunk))
+            if j >= len(sentences):
+                break
+            # Overlap
+            token_count = 0
+            while j >= 0 and token_count < overlap:
+                sent_text = sentences[j].text
+                token_count += get_tokens(sent_text)
+                j -= 1
+            i = j
+
+        return ret
 
 class OCRService:
     def __init__(self, api_key):
@@ -63,52 +140,12 @@ class OCRService:
 
         return ret
 
-    # Not efficient, chunks are split according to number of tokens without respect to ending of a sentence
-    async def chunk_by_max_tokens(self, text: str, max_tokens=1024):
-        words = text.split()
-        chunks = []
-        chunk = []
-        token_count = 0
-        for word in words:
-            tokens = tokenizer.tokenize(word)
-            if token_count + len(tokens) > max_tokens:
-                chunks.append(' '.join(chunk))
-                chunk = []
-                token_count = 0
-            chunk.append(word)
-            token_count += len(tokens)
-        if chunk:
-            chunks.append(' '.join(chunk))
-        return chunks
 
-    # Very good, but not always efficient especially with dialogues
-    async def chunk_by_sentences(self, text, max_sentences=5):
-        sentences = re.split(r'(?<=[.؟!])\s+', text)
-        return [' '.join(sentences[i:i + max_sentences]) for i in range(0, len(sentences), max_sentences)]
-
-
-    # using spacy library
-    async def chunk_using_spacy(self,text):
-        doc = nlp(text)
-        cur = ""
-        ret = []
-        tot = 0
-        for sent in doc.sents:
-            cur += sent.text
-            s = get_tokens(cur)
-            if s >= 800:
-                tot += s
-                ret.append(cur)
-                cur = ""
-        if cur != "":
-            ret.append(cur)
-            tot += get_tokens(cur)
-        print(tot)
-        return ret
 
 
 ocr_service = OCRService(api_key=API_KEY)
 
+chunking = ChunkingSerive()
 
 @app.post("/full-text")
 async def get_full_text(file: UploadFile):
@@ -119,7 +156,7 @@ async def get_full_text(file: UploadFile):
 @app.post("/chunk-tokens")
 async def get_chunk_tokens(file: UploadFile):
     text = await ocr_service.process_pdf(file)
-    temp = await ocr_service.chunk_by_max_tokens(text)
+    temp = await chunking.chunk_by_max_tokens(text)
     return {
         "chunks": temp[0],
         "size": len(temp)
@@ -129,7 +166,7 @@ async def get_chunk_tokens(file: UploadFile):
 @app.post("/chunk-sentences")
 async def get_chunk_sentences(file: UploadFile):
     text = await ocr_service.process_pdf(file)
-    temp = await ocr_service.chunk_by_sentences(text)
+    temp = await chunking.chunk_by_sentences(text)
     return {
         "chunks": temp[3],
         "ch": temp[4],
@@ -142,16 +179,19 @@ async def get_chunk_sentences(file: UploadFile):
 @app.post("/chunk-spacy")
 async def get_chunk_sentences_spacy(text):
     # text = await ocr_service.process_pdf(file)
-    temp = await ocr_service.chunk_using_spacy(text)
+    temp = await chunking.chunk_using_spacy(text)
     return {
         "first": temp[0],
         "second": temp[1],
-        "third": temp[2],
-        # "fourth": temp[3],
-        # "fifth": temp[4],
-        # "sixth": temp[5],
         "f": get_tokens(temp[0]),
         "s": get_tokens(temp[1]),
-        "t": get_tokens(temp[2]),
-        # "frth": get_tokens(temp[3])
     }
+
+@app.post("/overlappingChunking")
+async def get_chunk_sentences_spacy(file : UploadFile):
+    text = await ocr_service.process_pdf(file)
+    temp = await chunking.overlapping_chunking(text)
+    response = {}
+    for i in range(len(temp)):
+        response[i] = temp[i]
+    return response
