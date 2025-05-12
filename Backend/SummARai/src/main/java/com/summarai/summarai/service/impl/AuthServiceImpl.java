@@ -137,6 +137,7 @@ public class AuthServiceImpl implements AuthService {
             if(!user.isEnabled()){
                 throw new RuntimeException("Account not verified. Please check your email.");
             }
+            UserDto retUser = userMapper.toDto(user);
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
             revokeAllUserTokens(user);
@@ -144,6 +145,7 @@ public class AuthServiceImpl implements AuthService {
             return AuthenticationResponse.builder()
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
+                    .user(retUser)
                     .build();
         } catch (AuthenticationException ex) {
             ex.printStackTrace();
