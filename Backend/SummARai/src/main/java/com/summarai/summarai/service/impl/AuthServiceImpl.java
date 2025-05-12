@@ -58,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email already exists");
         }
 
+
         User user = userMapper.toEntity(request);
         user.setEnabled(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -66,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
         String verificationToken = UUID.randomUUID().toString();
         saveVerificationToken(savedUser, verificationToken);
 
-
+        // remember to remove user if not verified email
         String confirmationLink = "http://localhost:8080/api/auth/confirm?token=" + verificationToken;
         emailService.send(request.getEmail(), buildEmail(user.getName(), confirmationLink));
 
