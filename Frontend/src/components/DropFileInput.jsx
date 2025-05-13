@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
-
+import toast from "react-hot-toast";
 import "./drop-file-input.css";
 
 import { ImageConfig } from "../components/ImageConfig.js";
@@ -16,10 +16,12 @@ const DropFileInput = (props) => {
 
   const onFileDrop = (e) => {
     const newFile = e.target.files[0];
-    if (newFile) {
+    if (newFile && newFile.type === "application/pdf") {
       const updatedList = [newFile];
       setFileList(updatedList);
       props.onFileChange(updatedList);
+    }else{
+      toast.error("الرجاء تحميل ملف PDF فقط");
     }
   };
 
@@ -48,7 +50,7 @@ const DropFileInput = (props) => {
               او <span className="text-[#765CDE] underline">تصفح ملفاتك</span>
             </p>
           </div>
-          <input type="file" onChange={onFileDrop} />
+          <input type="file" accept="application/pdf" onChange={onFileDrop} />
         </div>
       )}
 
