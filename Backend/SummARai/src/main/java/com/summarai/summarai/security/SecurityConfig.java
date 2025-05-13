@@ -35,14 +35,59 @@ public class SecurityConfig {
     }
 
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http
+//                .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(
+//                                "/api/auth/register",
+//                                "/api/auth/confirm",
+//                                "/api/auth/login"
+//                        ).permitAll() // Allow public access
+//                        .anyRequest().authenticated()
+//                )
+//                .build();
+////        http
+////                .csrf(AbstractHttpConfigurer::disable)
+////                .
+////                .authorizeHttpRequests(req ->
+////                        req.requestMatchers("/api/auth/register", "/api/auth/login","/api/auth/confirm")
+////                                .permitAll()
+////                                .anyRequest()
+////                                .authenticated()
+////                )
+////                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+////                .authenticationProvider(authenticationProvider)
+////                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+////
+////        return http.build();
+//
+////                .authorizeHttpRequests(req ->
+////                        req.requestMatchers("/api/auth/**")
+////                                .permitAll()
+////                                .anyRequest()
+////                                .permitAll()//authenticated()
+////                )
+////                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+////                .authenticationProvider(authenticationProvider)
+////                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+////        return http.build();
+//
+//
+//
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Add this
+                )
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/auth/**","/api/books/**").permitAll()
+                        .anyRequest().authenticated()//
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -54,7 +99,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // or "*" for all origins
+        configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:1080")); // or "*" for all origins
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
