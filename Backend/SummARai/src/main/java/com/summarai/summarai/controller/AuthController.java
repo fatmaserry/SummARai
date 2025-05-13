@@ -6,10 +6,7 @@ import com.summarai.summarai.service.impl.AuthServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -21,8 +18,7 @@ public class AuthController {
     public AuthController(AuthServiceImpl authServiceImpl) {
         this.authServiceImpl = authServiceImpl;
     }
-
-
+    // to verify user got to http://localhost:1080/#/
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody UserDto request
@@ -34,6 +30,7 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody UserDto request
     ) {
+        //check if throws exception
         return ResponseEntity.ok(authServiceImpl.login(request));
     }
 
@@ -43,5 +40,10 @@ public class AuthController {
             HttpServletResponse response
     ) throws IOException {
         authServiceImpl.refreshToken(request, response);
+    }
+    @GetMapping("/confirm")
+    public ResponseEntity<String> confirm(@RequestParam("token") String token) {
+        authServiceImpl.confirmToken(token);
+        return ResponseEntity.ok("Email confirmed successfully!");
     }
 }

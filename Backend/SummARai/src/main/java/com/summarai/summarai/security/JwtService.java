@@ -1,5 +1,6 @@
 package com.summarai.summarai.security;
 
+import com.summarai.summarai.model.User;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -11,11 +12,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,17 +36,20 @@ public class JwtService {
     @Value("${jwt.refresh.token.expiration}")
     private Long refreshExpiration;
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(User userDetails) {
         return buildToken(userDetails, jwtExpiration);
     }
-    public String generateRefreshToken(UserDetails userDetails) {
+    public String generateRefreshToken(User userDetails) {
         return buildToken(userDetails, refreshExpiration);
     }
 
-    private String buildToken(UserDetails userDetails, Long expiration) {
-        return Jwts.builder().setSubject(userDetails.getUsername())
+    private String buildToken(User userDetails, Long expiration) {
+        return Jwts.builder()
+                .setSubject(userDetails.getEmail())
+                .claim("username", userDetails.getEmail())
+                .claim("roles", userDetails.getAuthorities())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }

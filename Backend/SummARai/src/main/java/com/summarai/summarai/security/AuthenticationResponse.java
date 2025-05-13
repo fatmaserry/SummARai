@@ -1,5 +1,6 @@
 package com.summarai.summarai.security;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.summarai.summarai.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class AuthenticationResponse {
     private String accessToken;
     @JsonProperty("refresh_token")
     private String refreshToken;
+    private UserDto user;
 }
