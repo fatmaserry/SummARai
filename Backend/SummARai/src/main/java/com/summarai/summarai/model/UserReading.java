@@ -25,6 +25,8 @@ public class UserReading {
     @Column(updatable = false,insertable = false)
     private Date creation_date;
 
+    private boolean finished;
+
 
     public Date getCreation_date() {
         return creation_date;

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StatisticsRepository extends JpaRepository<Statistics,Long> {
+    Statistics getStatisticsByUserId(Long id);
 }
