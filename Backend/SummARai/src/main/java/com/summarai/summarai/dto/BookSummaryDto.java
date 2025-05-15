@@ -12,7 +12,7 @@ public class BookSummaryDto extends SummaryDto{
 
     private Set<GenreDto> genres = new HashSet<>();
 
-    private Author author;
+    private AuthorDto author;
 
     private String image_url ;
 
@@ -32,11 +32,11 @@ public class BookSummaryDto extends SummaryDto{
         this.genres = genres;
     }
 
-    public Author getAuthor() {
+    public AuthorDto getAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
+    public void setAuthor(AuthorDto author) {
         this.author = author;
     }
 

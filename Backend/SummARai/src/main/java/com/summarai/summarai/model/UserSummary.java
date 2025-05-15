@@ -14,7 +14,7 @@ public class UserSummary extends Summary {
     private boolean is_public;
 
     @Column
-    private Date creation_time;
+    private  Date creation_time;
 
     public boolean isIs_public() {
         return is_public;
@@ -24,7 +24,7 @@ public class UserSummary extends Summary {
         this.is_public = is_public;
     }
 
-    public Date getCreation_time() {
+    public Date Creation_time() {
         return creation_time;
     }
 

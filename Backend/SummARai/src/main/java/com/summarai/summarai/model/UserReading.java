@@ -16,15 +16,46 @@ public class UserReading {
     @MapsId("summary_id") // it references the id of this table as the user id
     private Summary summary;
 
-    @ManyToOne(fetch = FetchType.EAGER)  // Still lazy by default
+    @ManyToOne()  // Still lazy by default
     @JoinColumn(name = "user_id")
     @MapsId("user_id") // it references the id of this table as the user id
     private User user;
 
     @CreationTimestamp
-    @Column(updatable = false,insertable = false)
+    @Column(columnDefinition = "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
+            updatable = false
+    )
     private Date creation_date;
 
+    @Column
+    private Long book_mark;
+
+    @Column
+    private boolean finished;
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public Long getBook_mark() {
+        return book_mark;
+    }
+
+    public Long isBookMark() {
+        return book_mark;
+    }
+
+    public void setBook_mark(Long bookMark) {
+        this.book_mark = bookMark;
+    }
+
+    public void setCreation_date(Date creation_date) {
+        this.creation_date = creation_date;
+    }
 
     public Date getCreation_date() {
         return creation_date;
