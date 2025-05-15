@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,8 +44,10 @@ public class BookController {
             return  ResponseEntity.status(HttpStatus.OK).body(books);
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
     // should be for admins only
     @PostMapping(value = "/add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> addBook(
             @ModelAttribute("bookSummary") BookSummaryDto bookSummary,
             @RequestParam("file") MultipartFile file) throws IOException {
@@ -54,7 +57,9 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Book not saved");
     }
     // should be for admins only
+
     @DeleteMapping("delete/{fileName}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<String> deleteFile(@PathVariable String fileName){
         s3Service.deleteFile(fileName);
         return ResponseEntity.status(HttpStatus.OK).body("file "+fileName+ " was deleted.");

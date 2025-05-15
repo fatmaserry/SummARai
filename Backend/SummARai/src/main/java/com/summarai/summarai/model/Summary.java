@@ -21,8 +21,18 @@ public abstract class Summary {
     private String summary_url;
 
     @Column
-    private String number_of_pages;
+    private Long number_of_pages;
 
+    @Column(name = "summary_type", insertable = false, updatable = false)
+    private String summaryType;
+
+    public String getSummaryType() {
+        return summaryType;
+    }
+
+    public void setSummaryType(String summaryType) {
+        this.summaryType = summaryType;
+    }
 
     public String getSummary_url() {
         return summary_url;
@@ -32,11 +42,11 @@ public abstract class Summary {
         this.summary_url = summary_url;
     }
 
-    public String getNumber_of_pages() {
+    public Long getNumber_of_pages() {
         return number_of_pages;
     }
 
-    public void setNumber_of_pages(String number_of_pages) {
+    public void setNumber_of_pages(Long number_of_pages) {
         this.number_of_pages = number_of_pages;
     }
 

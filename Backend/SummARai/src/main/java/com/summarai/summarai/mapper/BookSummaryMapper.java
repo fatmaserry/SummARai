@@ -2,7 +2,6 @@ package com.summarai.summarai.mapper;
 
 import com.summarai.summarai.dto.BookSummaryDto;
 import com.summarai.summarai.model.BookSummary;
-import com.summarai.summarai.model.Summary;
 import org.mapstruct.Mapper;
 
 import java.util.List;

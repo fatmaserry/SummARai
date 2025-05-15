@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,7 @@ public class UserController {
     }
     @Operation(summary = "add a user")
     @PostMapping("")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> addUser(@Validated @RequestBody RegisterDto registerDto){
         return ResponseEntity.ok(userService.addUser(registerDto));
     }
@@ -57,6 +59,7 @@ public class UserController {
 //    }
 
     @DeleteMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
         return ResponseEntity.ok("deleted");
