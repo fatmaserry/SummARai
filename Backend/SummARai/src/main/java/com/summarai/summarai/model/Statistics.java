@@ -2,8 +2,10 @@ package com.summarai.summarai.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
+import java.time.LocalDate;
 @Entity
 @Table
 public class Statistics {
@@ -11,18 +13,23 @@ public class Statistics {
     private Long id;
     @Column
     private Long dayStreak;
-
+    @Column
     private Long maxStreak;
 //    private Date currentYear;
     @Column
     private Long totalReadingDays;
+
+    @Column(length = 365)
+    private String dailyActivity;
+    @Column
+    private LocalDate lastUpdated;
+
     @OneToOne(optional = false)
     @MapsId
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     public Statistics() {
-
     }
     public Statistics(User user) {
         this.user = user;
@@ -74,5 +81,21 @@ public class Statistics {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public LocalDate getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDate lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getDailyActivity() {
+        return dailyActivity;
+    }
+
+    public void setDailyActivity(String dailyActivity) {
+        this.dailyActivity = dailyActivity;
     }
 }

@@ -13,6 +13,4 @@ public interface UserSummaryMapper {
     UserSummaryDto toDto(UserSummary userSummary) ;
     List<UserSummary> toEntities(List<UserSummaryDto> userSummaryDtoList);
     List<UserSummaryDto> toDtos(List<UserSummary> userSummaryList);
-
-
 }

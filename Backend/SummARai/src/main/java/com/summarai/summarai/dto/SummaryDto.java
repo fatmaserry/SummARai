@@ -5,13 +5,21 @@ import jakarta.persistence.Column;
 import java.util.List;
 
 
-public class SummaryDto {
+public abstract class SummaryDto {
     private Long id;
     private String title;
 
     private String summary_url;
-    private String number_of_pages;
+    private Long number_of_pages;
+    private String summaryType;
 
+    public String getSummaryType() {
+        return summaryType;
+    }
+
+    public void setSummaryType(String summaryType) {
+        this.summaryType = summaryType;
+    }
 
     public Long getId() {
         return id;
@@ -37,11 +45,11 @@ public class SummaryDto {
         this.summary_url = summary_url;
     }
 
-    public String getNumber_of_pages() {
+    public Long getNumber_of_pages() {
         return number_of_pages;
     }
 
-    public void setNumber_of_pages(String number_of_pages) {
+    public void setNumber_of_pages(Long number_of_pages) {
         this.number_of_pages = number_of_pages;
     }
 }
