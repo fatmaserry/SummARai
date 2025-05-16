@@ -5,7 +5,15 @@ public class StatisticsDto {
     private Long dayStreak;
     private Long maxStreak;
     private Long totalReadingDays;
+    private String dailyActivity;
 
+    public String getDailyActivity() {
+        return dailyActivity;
+    }
+
+    public void setDailyActivity(String dailyActivity) {
+        this.dailyActivity = dailyActivity;
+    }
 
     public Long getId() {
         return id;
