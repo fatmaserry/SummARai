@@ -3,8 +3,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-const SummarySlider = ({ title, images, className }) => {
-  
+const SummarySlider = ({ title, images, className, books,  onImageClick ,type }) => {
   return (
     <div className={`${className} mb-16`}>
       <h4 className="text-xl font-semibold text-white text-right m-4">
@@ -21,9 +20,25 @@ const SummarySlider = ({ title, images, className }) => {
         modules={[Navigation]}
         className="mySwiper swiper_small"
       >
-        {images.map((imgSrc, idx) => (
+        
+        { type=="home" && images.map((imgSrc, idx) => (
           <SwiperSlide key={idx}>
-            <img src={imgSrc} alt={`slide-${idx}`} />
+            <img
+              src={imgSrc}
+              alt={`slide-${idx}`}
+              onClick={() => onImageClick(books[idx])}
+              style={{ cursor: "pointer" }}
+            />
+          </SwiperSlide>
+        ))}
+        { type=="reading" && images.map((imgSrc, idx, ) => (
+          <SwiperSlide key={idx}>
+            <img
+              src={imgSrc}
+              alt={`slide-${idx}`}
+              onClick={() => onImageClick(books[idx].summaryDto)}
+              style={{ cursor: "pointer" }}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

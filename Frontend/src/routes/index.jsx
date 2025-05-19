@@ -8,6 +8,7 @@ import Readings from "../pages/Readings";
 import Layout from "../layout";
 import Home from "../pages/Home";
 import Signup from "../pages/Signup";
+import Summary from "../pages/Summary";
 
 const Routes = () => {
   // const { token } = useAuth();
@@ -53,6 +54,10 @@ const Routes = () => {
         {
           path: "/Search",
           element: <SearchBooks />,
+        },
+        {
+          path: "/summary",
+          element: <Summary />,
         },
       ],
     },

@@ -14,30 +14,43 @@ import slide_image_2 from "/assets/images/الاثار الاسلامية.png";
 import slide_image_3 from "/assets/images/الفرزدق.png";
 import slide_image_4 from "/assets/images/الهجرة_إلى_الإنسانية.png";
 import slide_image_5 from "/assets/images/مصر و الشام.png";
-
+import { useNavigate } from "react-router-dom";
+let cachedGroupedBooks = null;
 export default function HomePage() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const { isLoggedIn } = useContext(AuthContext);
   const [groupedBooks, setGroupedBooks] = useState({});
+  const navigate = useNavigate();
+
+  const handleImageClick = (book) => {
+    // Navigate to book details page with book data
+    navigate("/summary", { state: { book } });
+  };
+
 
   useEffect(() => {
+    if (cachedGroupedBooks) {
+      setGroupedBooks(cachedGroupedBooks);
+      console.log("Loaded grouped books from cache");
+      return;
+    }
+
     fetchAllBooks()
-      .then(books => {
+      .then((books) => {
         const grouped = books.reduce((acc, book) => {
-          book.genres.forEach(genre => {
+          book.genres.forEach((genre) => {
             const genreName = genre.description;
             if (!acc[genreName]) acc[genreName] = [];
             acc[genreName].push(book);
           });
           return acc;
         }, {});
+        cachedGroupedBooks = grouped;
         setGroupedBooks(grouped);
-        console.log("Grouped books:", grouped);
       })
-      .catch(err => console.error("Failed to fetch books:", err));
+      .catch((err) => console.error("Failed to fetch books:", err));
   }, []);
-
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6">
@@ -126,54 +139,15 @@ export default function HomePage() {
         <h3 className="text-2xl font-semibold text-white text-center mt-12 mb-8">
           القي نظرة على ملخصاتنا
         </h3>
-        {/* {[
-          {
-            title: "ملخصات في الأدب",
-            className: "litrature_swiper",
-            images: [
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-            ],
-          },
-          {
-            title: "ملخصات في التاريخ",
-            className: "history_swiper",
-            images: [
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-            ],
-          },
-          {
-            title: "ملخصات روايات",
-            className: "story_swiper",
-            images: [
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-              slide_image_1,
-            ],
-          },
-        ].map((section, index) => (
-          <SummarySlider
-            key={index}
-            title={section.title}
-            images={section.images}
-            className={section.className}
-          />
-        ))} */}
         {Object.entries(groupedBooks).map(([genre, books], idx) => (
           <SummarySlider
             key={idx}
-            title={`ملخصات في ${ genre}`}
-            images={books.map(book => book.image_url)}
+            title={`ملخصات في ${genre}`}
+            images={books.map((book) => book.image_url)}
+            books={books} // Pass the full books array
+            onImageClick={handleImageClick}
             className={`genre_slider_${idx}`}
+            type = "home"
           />
         ))}
       </div>

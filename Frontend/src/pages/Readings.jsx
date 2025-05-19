@@ -1,25 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DropFileInput from "../components/DropFileInput.jsx";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import slide_image_1 from "/assets/images/الساموراي.png";
+import SummarySlider from "../components/SummarySlider.jsx"; // Import the reusable slider
+import { getCurrentReadings, getFinishedReadings } from "../api/summary/get-summaries.ts"; // Update path if needed
+import { useNavigate } from "react-router-dom"; // To handle navigation when clicking a book
 
 export default function Readings() {
-  
+  const [currentBooks, setCurrentBooks] = useState([]);
+  const [finishedBooks, setFinishedBooks] = useState([]);
+  const navigate = useNavigate();
+
+  // Handle clicking on a book cover
+  const handleImageClick = (book) => {
+    // Navigate to book details page with book data
+    navigate("/summary", { state: { book  } });
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [current, finished] = await Promise.all([
+          getCurrentReadings(),
+          getFinishedReadings(),
+        ]);
+        setCurrentBooks(current);
+        setFinishedBooks(finished);
+      } catch (err) {
+        console.error("Error fetching readings:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <h2 className="text-2xl font-semibold text-white text-center mb-4">
         اضِف قراءات جديدة
       </h2>
+
       <div className="flex justify-center items-center min-h-[60vh]">
         <div className="box w-full max-w-md">
           <div className="border-2 border-dashed border-[#765CDE] rounded-xl p-6 text-center text-white">
             <DropFileInput
-              onFileChange={(files) => onFileChange(files)}
+              onFileChange={(files) => console.log(files)}
               multiple={false}
             />
           </div>
@@ -28,72 +51,28 @@ export default function Readings() {
           </button>
         </div>
       </div>
-      <div className="Continue_reading_swiper mt-20 mb-16">
-          <h4 className="text-lg font-semibold text-white text-right m-4">
-          تابع قراءة
-          </h4>
-          <Swiper
-            // onSwiper={setSwiperRef}
-            onSwiper={(swiper) => {
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
-            slidesPerView={4}
-            spaceBetween={5}
-            navigation={true}
-            modules={[Navigation]}
-            className="mySwiper swiper_small"
-          >
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-          </Swiper>
-        </div>
-        <div className="finished_reading_swiper mt-20 mb-16">
-          <h4 className="text-lg font-semibold text-white text-right m-4">
-          تم الانتهاء منه
-          </h4>
-          <Swiper
-            // onSwiper={setSwiperRef}
-            onSwiper={(swiper) => {
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
-            slidesPerView={4}
-            spaceBetween={5}
-            navigation={true}
-            modules={[Navigation]}
-            className="mySwiper swiper_small"
-          >
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={slide_image_1} />
-            </SwiperSlide>
-          </Swiper>
-        </div>
+
+      {currentBooks.length > 0 && (
+        <SummarySlider
+          title="تابع قراءة"
+          images={currentBooks.map((book) => book.image_url)}
+          books={currentBooks}
+          onImageClick={handleImageClick}
+          className="Continue_reading_swiper mt-20"
+          type= "reading"
+        />
+      )}
+
+      {finishedBooks.length > 0 && (
+        <SummarySlider
+          title="تم الانتهاء منه"
+          images={finishedBooks.map((book) => book.image_url)}
+          books={finishedBooks}
+          onImageClick={handleImageClick}
+          className="finished_reading_swiper mt-20"
+          type= "reading"
+        />
+      )}
     </>
   );
 }

@@ -451,3 +451,14 @@ export const Logout = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
     </g>
   </svg>
 );
+
+export const Bookmark = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
+  <svg width="26" height="31" viewBox="0 0 26 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.3335 28.7822V2.66667C1.3335 1.7462 2.0797 1 3.00016 1H23.0002C23.9207 1 24.6668 1.7462 24.6668 2.66667V28.7822C24.6668 29.5517 23.713 29.91 23.2063 29.3308L13.0002 17.6667L2.79398 29.3308C2.28728 29.91 1.3335 29.5517 1.3335 28.7822Z" stroke="black" strokeLinejoin="round"/>
+</svg>
+);
+export const SaveBookmark = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
+  <svg width="26" height="31" viewBox="0 0 26 31" fill="black" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.3335 28.7822V2.66667C1.3335 1.7462 2.0797 1 3.00016 1H23.0002C23.9207 1 24.6668 1.7462 24.6668 2.66667V28.7822C24.6668 29.5517 23.713 29.91 23.2063 29.3308L13.0002 17.6667L2.79398 29.3308C2.28728 29.91 1.3335 29.5517 1.3335 28.7822Z" stroke="black" strokeLinejoin="round"/>
+</svg>
+);
