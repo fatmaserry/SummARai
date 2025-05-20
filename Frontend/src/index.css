@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -93,23 +93,32 @@ body {
 .swiper_small .swiper-slide img {
   /* width: 100%; */
   height: 100%;
-  object-fit: scale-down; 
+  object-fit: scale-down;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .box {
-  background-color: #1C1F36;
+  background-color: #1c1f36;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3); /* Optional enhancement */
 }
+
 .react-pdf__Page__textContent {
   direction: rtl !important;
   text-align: right !important;
   unicode-bidi: embed !important;
+  width: 100% !important;
 }
 
 .react-pdf__Page__annotations {
   direction: rtl !important;
+}
+
+.react-pdf__Page__canvas,
+.react-pdf__Document,
+.react-pdf__Page {
+  width: 100% !important;
+  margin: auto !important;
 }

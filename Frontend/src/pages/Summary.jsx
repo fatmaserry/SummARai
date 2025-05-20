@@ -29,25 +29,25 @@ export default function Summary() {
   const [pdfData, setPdfData] = useState(null);
   const hasMarkedFinished = useRef(false);
 
-  useEffect(() => {
-    const fetchBookmark = async () => {
-      try {
-        const data = await getReadingDataBySummaryId(book?.id);
-        setApiData(data);
-        if (data?.book_mark) {
-          setPageNumber(data.book_mark);
-          setSavedBookmark(data.book_mark);
-        }
-      } catch (error) {
-        console.error("Error fetching bookmark:", error);
-        setError("فشل تحميل بيانات الكتاب");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBookmark = async () => {
+  //     try {
+  //       const data = await getReadingDataBySummaryId(book?.id);
+  //       setApiData(data);
+  //       if (data?.book_mark) {
+  //         setPageNumber(data.book_mark);
+  //         setSavedBookmark(data.book_mark);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching bookmark:", error);
+  //       setError("فشل تحميل بيانات الكتاب");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    if (book?.id) fetchBookmark();
-  }, [book?.id]);
+  //   if (book?.id) fetchBookmark();
+  // }, [book?.id]);
 
   const fetchAndValidatePdf = async () => {
     try {
@@ -87,7 +87,7 @@ export default function Summary() {
     const handleFinishSummary = async () => {
       if (numPages && pageNumber === numPages && !hasMarkedFinished.current) {
         try {
-        
+
           const summaryId = book?.id;
           if (summaryId) {
             await setFinishedSummary(summaryId);
@@ -123,9 +123,9 @@ export default function Summary() {
     await fetchAndValidatePdf();
   };
 
-  if (isLoading) {
-    return <div className="text-center py-8">جاري تحميل البيانات...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className="text-center py-8">جاري تحميل البيانات...</div>;
+  // }
 
   if (error) {
     return <div className="text-center py-8 text-red-500">{error}</div>;
@@ -168,7 +168,7 @@ export default function Summary() {
           </button>
         </div>
       ) : (
-        <div className="mt-8 bg-white p-6 rounded-lg shadow-lg">
+        <div className="mt-8 bg-white p-6 rounded-lg shadow-lg w-[52vw] mx-auto">
           <button
             onClick={handleSaveBookmark}
             disabled={saveStatus === "saving"}
@@ -181,7 +181,7 @@ export default function Summary() {
           </button>
 
           {pdfData && (
-            <div className="border border-gray-300">
+            <div className="border border-gray-300 w-full">
               <Document
                 file={pdfData}
                 onLoadSuccess={onDocumentLoadSuccess}
@@ -200,25 +200,25 @@ export default function Summary() {
             </div>
           )}
           <div className="w-full flex justify-center mt-6">
-            <div className="flex items-center gap-4 bg-[#141627] text-white rounded-full px-6 py-2">
+            <div className="flex items-center justify-center gap-4 bg-[#141627] text-white rounded-full px-6 py-2">
               <button
                 onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
                 disabled={pageNumber <= 1}
-                className="disabled:opacity-30"
+                className="disabled:opacity-30 flex items-center justify-center"
               >
-                <span className="text-2xl">&lt;</span>
+                <span className="text-lg">&lt;</span>
               </button>
 
-              <span className="text-lg font-semibold">
-                {pageNumber} / {numPages || "--"}
+              <span className="text-sm font-semibold">
+                {numPages || "--"} / {pageNumber} 
               </span>
 
               <button
                 onClick={() => setPageNumber((p) => Math.min(numPages, p + 1))}
                 disabled={pageNumber >= numPages}
-                className="disabled:opacity-30"
+                className="disabled:opacity-30 flex items-center justify-center"
               >
-                <span className="text-2xl">&gt;</span>
+                <span className="text-lg">&gt;</span>
               </button>
             </div>
           </div>

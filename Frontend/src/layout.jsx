@@ -110,7 +110,9 @@ const Layout = ({ children }) => {
 
         {/* Main Content */}
         <main className="flex-1 bg-[#141627] overflow-y-auto p-4 scrollbar-hide">
-          {children}
+          <div className="mx-auto max-w-[80vw]">
+            {children}
+          </div>
         </main>
       </div>
 
