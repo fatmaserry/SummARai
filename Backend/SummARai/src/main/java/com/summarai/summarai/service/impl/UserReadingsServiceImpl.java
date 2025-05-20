@@ -3,6 +3,7 @@ package com.summarai.summarai.service.impl;
 import com.summarai.summarai.dto.UserReadingDto;
 import com.summarai.summarai.exception.DuplicateRecordException;
 import com.summarai.summarai.exception.ReadingNotFoundException;
+import com.summarai.summarai.exception.SummaryNotFoundException;
 import com.summarai.summarai.mapper.UserMapper;
 import com.summarai.summarai.mapper.UserReadingMapper;
 import com.summarai.summarai.model.Summary;
@@ -69,7 +70,7 @@ public class UserReadingsServiceImpl implements UserReadingsService {
             throw new DuplicateRecordException("Reading already exists for this user and summary.");
 
         Summary summary = summaryRepository.findById(summary_id)
-                .orElseThrow(() -> new ReadingNotFoundException("Reading not found"));
+                .orElseThrow(() -> new SummaryNotFoundException("Summary not found, Couldn't Add the Reading"));
 
         Date curTime = Date.valueOf(LocalDate.now());
         UserReading userReading = new UserReading();

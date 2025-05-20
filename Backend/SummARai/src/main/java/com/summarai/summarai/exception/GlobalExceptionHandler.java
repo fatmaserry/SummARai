@@ -26,5 +26,10 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", ex.getMessage()));
     }
 
+    @ExceptionHandler(SummaryNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleSummaryNotFound(SummaryNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", ex.getMessage()));
+    }
 
 }
