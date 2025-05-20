@@ -19,7 +19,7 @@ public class EmailService implements EmailSender{
     }
 
     @Override
-//    @Async
+    @Async
     public void send(String to, String email) {
         try{
             //used to create and manipulate email messages in java, it is a standard mail message (Multipurpose Internet Mail Extensions)
