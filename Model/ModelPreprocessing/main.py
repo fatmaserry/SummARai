@@ -153,42 +153,40 @@ async def get_full_text(file: UploadFile):
     return {"text": text}
 
 
-@app.post("/chunk-tokens")
-async def get_chunk_tokens(file: UploadFile):
-    text = await ocr_service.process_pdf(file)
-    temp = await chunking.chunk_by_max_tokens(text)
-    return {
-        "chunks": temp[0],
-        "size": len(temp)
-    }
+# @app.post("/chunk-tokens")
+# async def get_chunk_tokens(file: UploadFile):
+#     text = await ocr_service.process_pdf(file)
+#     temp = await chunking.chunk_by_max_tokens(text)
+#     return {
+#         "chunks": temp[0],
+#         "size": len(temp)
+#     }
 
 
-@app.post("/chunk-sentences")
-async def get_chunk_sentences(file: UploadFile):
-    text = await ocr_service.process_pdf(file)
-    temp = await chunking.chunk_by_sentences(text)
-    return {
-        "chunks": temp[3],
-        "ch": temp[4],
-        "c": temp[5],
-        "size": len(temp)
-    }
+# @app.post("/chunk-sentences")
+# async def get_chunk_sentences(file: UploadFile):
+#     text = await ocr_service.process_pdf(file)
+#     temp = await chunking.chunk_by_sentences(text)
+#     return {
+#         "chunks": temp[3],
+#         "ch": temp[4],
+#         "c": temp[5],
+#         "size": len(temp)
+#     }
 
 
 
 @app.post("/chunk-spacy")
-async def get_chunk_sentences_spacy(text):
-    # text = await ocr_service.process_pdf(file)
+async def get_chunk_sentences_spacy(file : UploadFile):
+    text = await ocr_service.process_pdf(file)
     temp = await chunking.chunk_using_spacy(text)
-    return {
-        "first": temp[0],
-        "second": temp[1],
-        "f": get_tokens(temp[0]),
-        "s": get_tokens(temp[1]),
-    }
+    response = {}
+    for i in range(len(temp)):
+        response[i] = temp[i]
+    return response
 
 @app.post("/overlappingChunking")
-async def get_chunk_sentences_spacy(file : UploadFile):
+async def getOverlappingChunks(file : UploadFile):
     text = await ocr_service.process_pdf(file)
     temp = await chunking.overlapping_chunking(text)
     response = {}
