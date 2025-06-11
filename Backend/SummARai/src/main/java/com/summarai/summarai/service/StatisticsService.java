@@ -1,11 +1,13 @@
 package com.summarai.summarai.service;
 
+import com.summarai.summarai.dto.GenreCountDTO;
 import com.summarai.summarai.dto.StatisticsDto;
 import com.summarai.summarai.model.Statistics;
 import com.summarai.summarai.model.UserReading;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface StatisticsService {
     // void updateTotalReadingDays(Statistics statistics, List<LocalDate> readingDates);
@@ -13,5 +15,5 @@ public interface StatisticsService {
      StatisticsDto getStatistics();
      void updateStatistics();
      Long getTotalReadingSummaries();
-     Long getTotalNumberOfSummariesByGenre(String genre);
+     List<GenreCountDTO> getTotalNumberOfSummariesByGenre();
 }

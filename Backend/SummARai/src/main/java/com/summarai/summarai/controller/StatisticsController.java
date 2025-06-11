@@ -1,5 +1,6 @@
 package com.summarai.summarai.controller;
 
+import com.summarai.summarai.dto.GenreCountDTO;
 import com.summarai.summarai.dto.StatisticsDto;
 import com.summarai.summarai.security.UserDetailsServiceImpl;
 import com.summarai.summarai.service.StatisticsService;
@@ -10,6 +11,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/statistics")
@@ -37,9 +39,9 @@ public class StatisticsController {
         return ResponseEntity.ok(statisticsService.getTotalReadingSummaries());
     }
 
-    @GetMapping("/summary/{genre}")
-    public ResponseEntity<Long> getTotalNumberOfSummariesByGenre(@PathVariable String genre) {
-        return ResponseEntity.ok(statisticsService.getTotalNumberOfSummariesByGenre(genre));
+    @GetMapping("/summaryGenre")
+    public ResponseEntity<List<GenreCountDTO>> getTotalNumberOfSummariesByGenre() {
+        return ResponseEntity.ok(statisticsService.getTotalNumberOfSummariesByGenre());
     }
 
 }

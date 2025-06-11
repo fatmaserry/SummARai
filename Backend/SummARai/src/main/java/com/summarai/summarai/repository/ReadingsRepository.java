@@ -1,5 +1,6 @@
 package com.summarai.summarai.repository;
 
+import com.summarai.summarai.dto.GenreCountDTO;
 import com.summarai.summarai.model.User;
 import com.summarai.summarai.model.UserReading;
 import com.summarai.summarai.model.UserReadingId;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -32,12 +34,14 @@ public interface ReadingsRepository extends JpaRepository<UserReading, UserReadi
     Page<UserReading> getUserFinishedReadings(@Param("user_id") long user_id, Pageable pageable);
 
 
-    @Query("SELECT COUNT(ur) " +
-            "FROM UserReading ur " +
-            "JOIN BookSummary bs ON ur.summary = bs " +
-            "JOIN bs.genres g " +
-            "WHERE ur.id.user_id = :userId " +
-            "AND ur.finished = true " +
-            "AND g.description = :genreName")
-    long countByUserIdAndGenreName(@Param("userId") Long userId, @Param("genreName") String genreName);
+    @Query("""
+    SELECT new com.summarai.summarai.dto.GenreCountDTO(g.description, COUNT(g))
+    FROM UserReading ur
+    JOIN TREAT(ur.summary AS BookSummary) s
+    JOIN s.genres g
+    WHERE ur.user.id = :userId
+    GROUP BY g.description
+    """)
+    List<GenreCountDTO> getGenreCountsByUserId(@Param("userId") Long userId);
+
 }
