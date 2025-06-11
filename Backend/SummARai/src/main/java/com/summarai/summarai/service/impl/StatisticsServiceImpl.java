@@ -1,6 +1,7 @@
 package com.summarai.summarai.service.impl;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.summarai.summarai.dto.GenreCountDTO;
 import com.summarai.summarai.dto.StatisticsDto;
 import com.summarai.summarai.mapper.StatisticsMapper;
 import com.summarai.summarai.model.Statistics;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -70,9 +72,9 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
 
-    public Long getTotalNumberOfSummariesByGenre(String genre){
+    public List<GenreCountDTO> getTotalNumberOfSummariesByGenre(){
         return readingsRepository
-                .countByUserIdAndGenreName(userDetailsService.getCurrentUser().getId(),genre);
+                .getGenreCountsByUserId(userDetailsService.getCurrentUser().getId());
     }
 
 
