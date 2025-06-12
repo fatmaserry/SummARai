@@ -35,14 +35,15 @@ public class Statistics {
         this.setTotalReadingDays(0L);
         this.setDayStreak(0L);
         this.setDailyActivity("0".repeat(365));
+        this.lastUpdated = LocalDate.now().minusDays(1);
     }
     public Statistics(User user) {
         this.user = user;
         this.setMaxStreak(0L);
         this.setTotalReadingDays(0L);
         this.setDayStreak(0L);
-        this.lastUpdated = LocalDate.now();
         this.setDailyActivity("0".repeat(365));
+        this.lastUpdated = LocalDate.now().minusDays(1);
     }
 
     @PostLoad
