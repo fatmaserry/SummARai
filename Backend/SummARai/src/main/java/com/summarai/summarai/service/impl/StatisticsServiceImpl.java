@@ -1,6 +1,7 @@
 package com.summarai.summarai.service.impl;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.summarai.summarai.dto.ActivityDto;
 import com.summarai.summarai.dto.GenreCountDTO;
 import com.summarai.summarai.dto.StatisticsDto;
 import com.summarai.summarai.mapper.StatisticsMapper;
@@ -18,9 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
@@ -77,6 +76,25 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .getGenreCountsByUserId(userDetailsService.getCurrentUser().getId());
     }
 
+    public List<ActivityDto> getActivity(){
+        Statistics stats = statisticsRepository
+                .getStatisticsByUserId(userDetailsService.getCurrentUser().getId());
+        String activity = stats.getDailyActivity();
+        LocalDate last = stats.getLastUpdated();
+        int count = 365;
+        LocalDate cur = LocalDate.now();
+        List<ActivityDto> dayActivity = new ArrayList<>();
+        while(count-- > 0 && !cur.isEqual(last)){
+            dayActivity.add(new ActivityDto(cur,0));
+            cur = cur.minusDays(1);
+        }
+        int ind = 0;
+        while(count-- > 0){
+            dayActivity.add(new ActivityDto(cur,(activity.charAt(ind++) == '1')?1:0));
+            cur = cur.minusDays(1);
+        }
+        return dayActivity;
+    }
 
     private String shiftDays(String activity, int daysToShift) {
         if (daysToShift <= 0) return activity;
