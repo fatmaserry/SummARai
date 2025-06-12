@@ -30,12 +30,19 @@ public class Statistics {
     private User user;
 
     public Statistics() {
+        this.lastUpdated = LocalDate.now();
+        this.setMaxStreak(0L);
+        this.setTotalReadingDays(0L);
+        this.setDayStreak(0L);
+        this.setDailyActivity("0".repeat(365));
     }
     public Statistics(User user) {
         this.user = user;
         this.setMaxStreak(0L);
         this.setTotalReadingDays(0L);
         this.setDayStreak(0L);
+        this.lastUpdated = LocalDate.now();
+        this.setDailyActivity("0".repeat(365));
     }
 
     @PostLoad

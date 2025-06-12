@@ -5,6 +5,7 @@ import com.summarai.summarai.dto.UserDto;
 import com.summarai.summarai.email.EmailSender;
 import com.summarai.summarai.email.EmailService;
 import com.summarai.summarai.mapper.UserMapper;
+import com.summarai.summarai.model.Statistics;
 import com.summarai.summarai.model.Token;
 import com.summarai.summarai.model.User;
 import com.summarai.summarai.model.VerificationToken;
@@ -62,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userMapper.toEntity(request);
         user.setEnabled(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setStatistics(new Statistics());
         var savedUser = repository.save(user);
 
         String verificationToken = UUID.randomUUID().toString();
