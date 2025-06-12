@@ -1,11 +1,13 @@
 package com.summarai.summarai.controller;
 
+import com.summarai.summarai.dto.ActivityDto;
 import com.summarai.summarai.dto.GenreCountDTO;
 import com.summarai.summarai.dto.StatisticsDto;
 import com.summarai.summarai.security.UserDetailsServiceImpl;
 import com.summarai.summarai.service.StatisticsService;
 import com.summarai.summarai.service.impl.StatisticsServiceImpl;
 import io.swagger.models.auth.In;
+import org.eclipse.angus.mail.iap.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,11 @@ public class StatisticsController {
     public ResponseEntity<StatisticsDto> getUserStatistics() {
         StatisticsDto statistics = statisticsService.getStatistics();
         return ResponseEntity.ok(statistics);
+    }
+
+    @GetMapping("/activity")
+    public ResponseEntity<List<ActivityDto>> getActivityStatistics() {
+        return ResponseEntity.ok(statisticsService.getActivity());
     }
 
     @PutMapping("/update")
