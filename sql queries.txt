@@ -1,0 +1,72 @@
+use summarai;
+
+
+
+INSERT INTO `summarai`.`user`
+(
+`email`,
+`name`,
+`password`)
+VALUES
+(
+'abdelrahmangomaa3005@gmail.com',
+'abdelrahman',
+'1234'),(
+'momenmostafa@gmail.com',
+'momen',
+'1234');
+
+INSERT INTO `summarai`.`statistics`
+(
+`day_streak`,
+`max_streak`,
+`total_reading_days`,
+`user_id`)
+VALUES
+(2,
+5,
+23,
+1),
+(4,
+10,
+56,
+2);
+
+
+INSERT INTO genre (description) VALUES
+ ('Historical Fiction'),
+ ('Philosophy'),
+ ('Short Stories'),
+ ('Science Fiction'),
+ ('Magical Realism');
+ 
+ INSERT INTO author (name, description) VALUES
+ ('Naguib Mahfouz', 'Egyptian writer and Nobel Laureate known for the Cairo Trilogy.'),
+ ('Taha Hussein', 'Renowned Egyptian intellectual and literary critic, known as the Dean of Arabic Literature.'),
+ ('Yusuf Idris', 'Egyptian writer known for his short stories and plays reflecting everyday Egyptian life.'),
+ ('Anis Mansour', 'Egyptian author and journalist famous for his philosophical and humorous writing.'),
+ ('Ahmed Khaled Tawfik', 'Egyptian author and pioneer of horror and science fiction literature in the Arab world.');
+ 
+ 
+ INSERT INTO summary (title, about, author_id , summary_type, number_of_pages) VALUES
+ ('Palace Walk', 'The first novel in the Cairo Trilogy, exploring family life in early 20th-century Egypt.', 1, 'BOOK', 200),
+ ('The Days', 'An autobiographical novel that recounts Taha Hussein’s early life and blindness.', 2, 'BOOK', 256),
+ ('The Cheapest Nights', 'A collection of short stories portraying the struggles of the poor in Cairo.', 3, 'BOOK', 320),
+ ('Around the World in 200 Days', 'A travel memoir exploring different cultures with philosophical reflections.', 4, 'BOOK', 183),
+ ('Utopia', 'A dystopian novel set in future Egypt, highlighting class divides and societal collapse.', 5, 'BOOK',239);
+ 
+ INSERT INTO book_genre (summary_id, genre_id) VALUES
+ (1, 1),  -- Palace Walk -> Historical Fiction
+ (2, 2),  -- The Days -> Philosophy
+ (3, 3),  -- The Cheapest Nights -> Short Stories
+ (4, 2),  -- Around the World in 200 Days -> Philosophy
+ (5, 4),  -- Utopia -> Science Fiction
+ (5, 2);  -- Utopia -> Philosophy (multi-genre example)
+ 
+ UPDATE summary SET image_url = 'https://drive.google.com/uc?export=view&id=1AOd1BP51FjBWAy9L-ksuiTWjrKCJkGfj' WHERE id = 1;
+ UPDATE summary SET image_url = 'https://drive.google.com/uc?export=view&id=1AkJQXhBLg6B_6VE3BMMHC9ez2aEFMw0N' WHERE id = 2;
+ UPDATE summary SET image_url = 'https://drive.google.com/uc?export=view&id=1eNzJsCho93UGM_6CkrXR26Jjk6m2VmRs' WHERE id = 3;
+ UPDATE summary SET image_url = 'https://drive.google.com/uc?export=view&id=1KoFaBMZQMGkj8wtbKmLRmGKs7d9CdSCF' WHERE id = 4;
+ UPDATE summary SET image_url = 'https://drive.google.com/uc?export=view&id=1yaZu-s2YAOo_6iyopJTWW6PoL7mY2RpJ' WHERE id = 5;
+ 
+select * from user
