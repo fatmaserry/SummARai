@@ -72,7 +72,7 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error","Summary file not found for book ID "+id));
         byte[] data = s3Service.downloadFile(fileName);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_PDF_VALUE));
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment",fileName);
         return new ResponseEntity<>(data,headers, HttpStatus.OK);
     }
@@ -87,7 +87,7 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping(params = "/title")
+    @GetMapping(params = "title")
     public ResponseEntity<Page<BookSummaryDto>> getBooksByTitle(@RequestParam String title, Pageable pageable) {
         Page<BookSummaryDto> books = bookSummaryService.getBooksByTitle(title, pageable);
         if(books.hasContent())
@@ -95,7 +95,7 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping(params = "/author")
+    @GetMapping(params = "author")
     public ResponseEntity<Page<BookSummaryDto>> getBooksByAuthor(@RequestParam String author, Pageable pageable) {
         Page<BookSummaryDto> books = bookSummaryService.getBooksByAuthor(author, pageable);
         if(books.hasContent())
