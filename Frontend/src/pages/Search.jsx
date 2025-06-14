@@ -17,8 +17,8 @@ export default function SearchBooks() {
     "مغامرة",
   ];
 
-  const [selected, setSelected] = useState([]);
-  const [inputs, setInputs] = useState({});
+  const [selected, setSelected] = useState(["الكتاب"]);
+  const [inputs, setInputs] = useState({ الكتاب: "" });
   const [results, setResults] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -87,6 +87,7 @@ export default function SearchBooks() {
                 }
               `}
             >
+              {isSelected && <span className="text-white text-sm ml-2 ">✔</span>}
               {option}
             </button>
           );

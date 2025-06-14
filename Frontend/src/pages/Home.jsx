@@ -32,7 +32,6 @@ export default function HomePage() {
   useEffect(() => {
     if (cachedGroupedBooks) {
       setGroupedBooks(cachedGroupedBooks);
-      console.log("Loaded grouped books from cache");
       return;
     }
 

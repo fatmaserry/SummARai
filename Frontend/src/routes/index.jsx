@@ -9,6 +9,7 @@ import Layout from "../layout";
 import Home from "../pages/Home";
 import Signup from "../pages/Signup";
 import Summary from "../pages/Summary";
+import EditProfile from "../pages/EditProfile";
 
 const Routes = () => {
   // const { token } = useAuth();
@@ -59,6 +60,10 @@ const Routes = () => {
           path: "/summary",
           element: <Summary />,
         },
+        {
+          path: "/edit-profile",
+          element: <EditProfile />, 
+        }
       ],
     },
   ];

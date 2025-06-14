@@ -3,6 +3,7 @@ import React from "react";
 interface IconProps {
   size?: number;
   color?: string;
+  className?: string;
 }
 
 export const Home = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
@@ -210,7 +211,7 @@ export const NotFound = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
     />
     <mask
       id="mask0_220_300"
-      style={{ maskType: 'luminance' }}
+      style={{ maskType: "luminance" }}
       maskUnits="userSpaceOnUse"
       x="320"
       y="193"
@@ -239,7 +240,7 @@ export const NotFound = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
     />
     <mask
       id="mask1_220_300"
-      style={{ maskType: 'luminance' }}
+      style={{ maskType: "luminance" }}
       maskUnits="userSpaceOnUse"
       x="12"
       y="209"
@@ -453,12 +454,50 @@ export const Logout = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
 );
 
 export const Bookmark = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
-  <svg width="26" height="31" viewBox="0 0 26 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M1.3335 28.7822V2.66667C1.3335 1.7462 2.0797 1 3.00016 1H23.0002C23.9207 1 24.6668 1.7462 24.6668 2.66667V28.7822C24.6668 29.5517 23.713 29.91 23.2063 29.3308L13.0002 17.6667L2.79398 29.3308C2.28728 29.91 1.3335 29.5517 1.3335 28.7822Z" stroke="black" strokeLinejoin="round"/>
-</svg>
+  <svg
+    width="26"
+    height="31"
+    viewBox="0 0 26 31"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M1.3335 28.7822V2.66667C1.3335 1.7462 2.0797 1 3.00016 1H23.0002C23.9207 1 24.6668 1.7462 24.6668 2.66667V28.7822C24.6668 29.5517 23.713 29.91 23.2063 29.3308L13.0002 17.6667L2.79398 29.3308C2.28728 29.91 1.3335 29.5517 1.3335 28.7822Z"
+      stroke="black"
+      strokeLinejoin="round"
+    />
+  </svg>
 );
 export const SaveBookmark = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
-  <svg width="26" height="31" viewBox="0 0 26 31" fill="black" xmlns="http://www.w3.org/2000/svg">
-<path d="M1.3335 28.7822V2.66667C1.3335 1.7462 2.0797 1 3.00016 1H23.0002C23.9207 1 24.6668 1.7462 24.6668 2.66667V28.7822C24.6668 29.5517 23.713 29.91 23.2063 29.3308L13.0002 17.6667L2.79398 29.3308C2.28728 29.91 1.3335 29.5517 1.3335 28.7822Z" stroke="black" strokeLinejoin="round"/>
-</svg>
+  <svg
+    width="26"
+    height="31"
+    viewBox="0 0 26 31"
+    fill="black"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M1.3335 28.7822V2.66667C1.3335 1.7462 2.0797 1 3.00016 1H23.0002C23.9207 1 24.6668 1.7462 24.6668 2.66667V28.7822C24.6668 29.5517 23.713 29.91 23.2063 29.3308L13.0002 17.6667L2.79398 29.3308C2.28728 29.91 1.3335 29.5517 1.3335 28.7822Z"
+      stroke="black"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+export const EditIcon = ({ size = 24, color = "#FFFFFF", className }: IconProps) => (
+  <svg
+    width="50"
+    height="50"
+    viewBox="0 0 50 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <circle cx="25" cy="25" r="25" fill="#4C4F6A" />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M32.2238 8.62505C32.927 7.92203 33.8806 7.5271 34.875 7.5271C35.8694 7.5271 36.823 7.92203 37.5262 8.62505L42.375 13.4738C43.078 14.177 43.4729 15.1307 43.4729 16.125C43.4729 17.1194 43.078 18.0731 42.375 18.7763L39.4012 21.75L29.25 11.5988L32.2238 8.62505ZM26.5988 14.25L9.72375 31.125C9.02044 31.8281 8.62521 32.7818 8.625 33.7763V38.625C8.625 39.6196 9.02009 40.5734 9.72335 41.2767C10.4266 41.98 11.3804 42.375 12.375 42.375H17.2238C18.2182 42.3748 19.1719 41.9796 19.875 41.2763L36.75 24.4013L26.5988 14.25Z"
+      fill="#765CDE"
+    />
+  </svg>
 );

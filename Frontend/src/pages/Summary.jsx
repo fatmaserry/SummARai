@@ -9,6 +9,7 @@ import {
   getReadingDataBySummaryId,
   setFinishedSummary,
 } from "../api/summary/get-summaries.ts";
+import { updateUserStatistics } from "../api/user/statistics.ts";
 import { Bookmark, SaveBookmark } from "../components/Icons";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -29,25 +30,25 @@ export default function Summary() {
   const [pdfData, setPdfData] = useState(null);
   const hasMarkedFinished = useRef(false);
 
-  // useEffect(() => {
-  //   const fetchBookmark = async () => {
-  //     try {
-  //       const data = await getReadingDataBySummaryId(book?.id);
-  //       setApiData(data);
-  //       if (data?.book_mark) {
-  //         setPageNumber(data.book_mark);
-  //         setSavedBookmark(data.book_mark);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching bookmark:", error);
-  //       setError("فشل تحميل بيانات الكتاب");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchBookmark = async () => {
+      try {
+        const data = await getReadingDataBySummaryId(book?.id);
+        setApiData(data);
+        if (data?.book_mark) {
+          setPageNumber(data.book_mark);
+          setSavedBookmark(data.book_mark);
+        }
+      } catch (error) {
+        console.error("Error fetching bookmark:", error);
+        setError("فشل تحميل بيانات الكتاب");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  //   if (book?.id) fetchBookmark();
-  // }, [book?.id]);
+    if (book?.id) fetchBookmark();
+  }, [book?.id]);
 
   const fetchAndValidatePdf = async () => {
     try {
@@ -87,7 +88,6 @@ export default function Summary() {
     const handleFinishSummary = async () => {
       if (numPages && pageNumber === numPages && !hasMarkedFinished.current) {
         try {
-
           const summaryId = book?.id;
           if (summaryId) {
             await setFinishedSummary(summaryId);
@@ -121,11 +121,12 @@ export default function Summary() {
   const handleShowPdf = async () => {
     setShowPdf(true);
     await fetchAndValidatePdf();
+    await updateUserStatistics();
   };
 
-  // if (isLoading) {
-  //   return <div className="text-center py-8">جاري تحميل البيانات...</div>;
-  // }
+  if (isLoading) {
+    return <div className="text-center py-8">جاري تحميل البيانات...</div>;
+  }
 
   if (error) {
     return <div className="text-center py-8 text-red-500">{error}</div>;
@@ -210,7 +211,7 @@ export default function Summary() {
               </button>
 
               <span className="text-sm font-semibold">
-                {numPages || "--"} / {pageNumber} 
+                {numPages || "--"} / {pageNumber}
               </span>
 
               <button

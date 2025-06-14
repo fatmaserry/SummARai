@@ -14,6 +14,11 @@ const AuthProvider = ({ children }) => {
 
   const setUser = (newUser) => {
     setUser_(newUser);
+    if (newUser) {
+      localStorage.setItem("user", JSON.stringify(newUser));
+    } else {
+      localStorage.removeItem("user");
+    }
   };
 
   useEffect(() => {

@@ -21,7 +21,7 @@ const Login = () => {
       });
       if (response.access_token) {
         setToken(response.access_token);
-        // setUser(response.user);
+        setUser(response.user);
         toast.success("تم تسجيل الدخول بنجاح!");
         setTimeout(() => {
           navigate("/", { replace: true });
