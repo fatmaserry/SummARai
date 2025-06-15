@@ -83,13 +83,17 @@ public class StatisticsServiceImpl implements StatisticsService {
         LocalDate last = stats.getLastUpdated();
         int count = 365;
         LocalDate cur = LocalDate.now();
+        int currentMonth = cur.getMonthValue();
+        int currentYear = cur.getYear();
         List<ActivityDto> dayActivity = new ArrayList<>();
-        while(count-- > 0 && !cur.isEqual(last)){
+        while(count-- > 0 && !cur.isEqual(last)
+                && !(currentYear - 1 == cur.getYear() && currentMonth == cur.getMonthValue())){
             dayActivity.add(new ActivityDto(cur,0));
             cur = cur.minusDays(1);
         }
         int ind = 0;
-        while(count-- > 0){
+        while(count-- > 0
+                && !(currentYear - 1 == cur.getYear() && currentMonth == cur.getMonthValue())){
             dayActivity.add(new ActivityDto(cur,(activity.charAt(ind++) == '1')?1:0));
             cur = cur.minusDays(1);
         }
