@@ -86,7 +86,7 @@ public class SecurityConfig {
                 )
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/api/auth/**","/api/books/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()//
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
