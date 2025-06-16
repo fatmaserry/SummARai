@@ -2,7 +2,8 @@ package com.summarai.summarai.controller;
 
 import com.summarai.summarai.dto.BookSummaryDto;
 import com.summarai.summarai.dto.GenreDto;
-import com.summarai.summarai.dto.SummaryDto;
+import com.summarai.summarai.dto.GenreDto;
+
 
 import com.summarai.summarai.dto.BookSearchRequest;
 import com.summarai.summarai.model.BookSummary;
@@ -120,6 +121,7 @@ public class BookController {
     private List<GenreDto> getAllGenres(){
         return genreService.getAllGenres();
     }
+
 //    @GetMapping("/allusers")
 //    private List<UserDto> getAllUsers(){
 //        return userService.getAllUsers();

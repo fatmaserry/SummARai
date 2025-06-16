@@ -55,7 +55,7 @@ export default function Readings() {
       {currentBooks.length > 0 && (
         <SummarySlider
           title="تابع قراءة"
-          images={currentBooks.map((book) => book.image_url)}
+          images={currentBooks.map((book) => book.summaryDto.image_url)}
           books={currentBooks}
           onImageClick={handleImageClick}
           className="Continue_reading_swiper mt-20"
@@ -66,7 +66,7 @@ export default function Readings() {
       {finishedBooks.length > 0 && (
         <SummarySlider
           title="تم الانتهاء منه"
-          images={finishedBooks.map((book) => book.image_url)}
+          images={finishedBooks.map((book) => book.summaryDto.image_url)}
           books={finishedBooks}
           onImageClick={handleImageClick}
           className="finished_reading_swiper mt-20"

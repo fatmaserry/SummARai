@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import DropFileInput from "../components/DropFileInput.jsx";
 import { AuthContext } from "../provider/auth/authProvider";
-import { fetchAllBooks } from "../api/summary/get-summaries.ts";
+import { fetchAllBooks, getAllGenres } from "../api/summary/get-summaries.ts";
 import SummarySlider from "../components/SummarySlider";
 import slide_image_1 from "/assets/images/الساموراي.png";
 import slide_image_2 from "/assets/images/الاثار الاسلامية.png";
@@ -28,29 +28,40 @@ export default function HomePage() {
     navigate("/summary", { state: { book } });
   };
 
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [books, genres] = await Promise.all([
+          fetchAllBooks(),
+          getAllGenres(),
+        ]);
+
+        const grouped = {};
+
+        books.forEach((book) => {
+          book.genres.forEach((genreObj) => {
+            const genreName = genreObj.description;
+            if (!grouped[genreName]) {
+              grouped[genreName] = []; 
+            }
+            grouped[genreName].push(book);
+          });
+        });
+
+        cachedGroupedBooks = grouped;
+        setGroupedBooks(grouped);
+      } catch (err) {
+        console.error("Failed to fetch books or genres:", err);
+      }
+    };
+
     if (cachedGroupedBooks) {
       setGroupedBooks(cachedGroupedBooks);
       return;
     }
 
-    fetchAllBooks()
-      .then((books) => {
-        const grouped = books.reduce((acc, book) => {
-          book.genres.forEach((genre) => {
-            const genreName = genre.description;
-            if (!acc[genreName]) acc[genreName] = [];
-            acc[genreName].push(book);
-          });
-          return acc;
-        }, {});
-        cachedGroupedBooks = grouped;
-        setGroupedBooks(grouped);
-      })
-      .catch((err) => console.error("Failed to fetch books:", err));
+    fetchData();
   }, []);
-
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6">
       <div className="text-center space-y-2">
@@ -138,17 +149,19 @@ export default function HomePage() {
         <h3 className="text-2xl font-semibold text-white text-center mt-12 mb-8">
           القي نظرة على ملخصاتنا
         </h3>
-        {Object.entries(groupedBooks).map(([genre, books], idx) => (
-          <SummarySlider
-            key={idx}
-            title={`ملخصات في ${genre}`}
-            images={books.map((book) => book.image_url)}
-            books={books} // Pass the full books array
-            onImageClick={handleImageClick}
-            className={`genre_slider_${idx}`}
-            type = "home"
-          />
-        ))}
+        {Object.entries(groupedBooks)
+          .filter(([_, books]) => books.length > 0)
+          .map(([genre, books], idx) => (
+            <SummarySlider
+              key={idx}
+              title={`ملخصات ${genre}`}
+              images={books.map((book) => book.image_url)}
+              books={books} 
+              onImageClick={handleImageClick}
+              className={`genre_slider_${idx}`}
+              type="home"
+            />
+          ))}
       </div>
     </div>
   );

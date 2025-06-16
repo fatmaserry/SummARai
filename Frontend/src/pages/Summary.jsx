@@ -8,6 +8,8 @@ import {
   setBookmark,
   getReadingDataBySummaryId,
   setFinishedSummary,
+  getBook,
+  addReading,
 } from "../api/summary/get-summaries.ts";
 import { updateUserStatistics } from "../api/user/statistics.ts";
 import { Bookmark, SaveBookmark } from "../components/Icons";
@@ -40,6 +42,18 @@ export default function Summary() {
           setSavedBookmark(data.book_mark);
         }
       } catch (error) {
+        if(error?.response?.data?.error === "Reading not found"){
+          // If reading data not found, create a new reading entry
+          try {
+            await addReading(book?.id);
+            console.log("New reading entry created.");
+            await fetchBookmark(); 
+          } catch (addError) {
+            console.error("Error creating new reading entry:", addError);
+            setError("فشل إنشاء سجل قراءة جديد");
+          }
+          return;
+        }
         console.error("Error fetching bookmark:", error);
         setError("فشل تحميل بيانات الكتاب");
       } finally {

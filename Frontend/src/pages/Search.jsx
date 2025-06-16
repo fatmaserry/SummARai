@@ -1,26 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, NotFound } from "../components/Icons";
 import {
   getBooksByTitle,
   getBooksByAuthor,
   searchBooks,
-} from "../api/summary/get-summaries";
-
+  getAllGenres,
+} from "../api/summary/get-summaries.ts";
+import { useNavigate } from "react-router-dom";
 export default function SearchBooks() {
   const options = ["الكتاب", "المؤلف", "النوع"];
-  const genreOptions = [
-    "رواية تاريخية",
-    "فلسفة",
-    "قصص قصيرة",
-    "خيال علمي",
-    "واقعية سحرية",
-    "مغامرة",
-  ];
-
+  const [genreOptions, setGenreOptions] = useState([]);
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(["الكتاب"]);
   const [inputs, setInputs] = useState({ الكتاب: "" });
   const [results, setResults] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const genres = await getAllGenres(); // it's already an array
+        setGenreOptions(genres.map((genre) => genre.description));
+      } catch (err) {
+        console.error("Failed to fetch genres:", err);
+      }
+    };
+
+    fetchGenres();
+  }, []);
 
   const toggleOption = (option) => {
     setSelected((prev) =>
@@ -35,6 +42,9 @@ export default function SearchBooks() {
         return newInputs;
       });
     }
+  };
+  const handleImageClick = (book) => {
+    navigate("/summary", { state: { book } });
   };
   const handleSearch = async () => {
     try {
@@ -52,7 +62,7 @@ export default function SearchBooks() {
         };
         response = await searchBooks(body);
       }
-      console.log(response)
+      console.log(response);
       setResults(response?.data?.content || []);
       setHasSearched(true); // Set to true after search is performed
     } catch (error) {
@@ -87,7 +97,9 @@ export default function SearchBooks() {
                 }
               `}
             >
-              {isSelected && <span className="text-white text-sm ml-2 ">✔</span>}
+              {isSelected && (
+                <span className="text-white text-sm ml-2 ">✔</span>
+              )}
               {option}
             </button>
           );
@@ -129,8 +141,8 @@ export default function SearchBooks() {
       </div>
 
       {/* Genre Grid */}
-      {selected.includes("النوع") && (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 w-fit">
+      {selected.includes("النوع") && !hasSearched && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 w-full">
           {genreOptions.map((genre) => {
             const isSelected = (inputs["النوع"] || []).includes(genre);
             return (
@@ -163,30 +175,42 @@ export default function SearchBooks() {
         </div>
       )}
       {hasSearched ? (
-    results.length > 0 ? (
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold text-white mb-4">
-          نتائج البحث:
-        </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {results.map((book) => (
-            <div key={book.id} className="w-full">
-              <img
-                src={book.image_url}
-                alt={book.title}
-                className="w-full h-48 object-cover rounded-xl border border-[#765CDE]"
-              />
+        results.length > 0 ? (
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold text-white mb-4">
+              نتائج البحث:
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {results.map((book) => (
+                <div key={book.id} className="w-full">
+                  <img
+                    src={book.image_url}
+                    alt={book.title}
+                    className="w-full h-full object-cover rounded-xl cursor-pointer transition-transform hover:scale-105"
+                    onClick={() => handleImageClick(book)}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-    ) : (
-      <div className="flex flex-col items-center justify-center mt-8">
-        <NotFound />
-        <p className="text-white text-xl mt-4">لم يتم العثور على نتائج</p>
-      </div>
-    )
-  ) : null}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center mt-8">
+            <NotFound />
+            <p className="text-white text-xl mt-4">لم يتم العثور على نتائج</p>
+          </div>
+        )
+      ) : null}
+      {hasSearched && (
+        <button
+          onClick={() => {
+            setResults([]);
+            setHasSearched(false);
+          }}
+          className="mt-6 px-4 py-2 bg-[#765CDE] text-white rounded-md"
+        >
+          بحث جديد
+        </button>
+      )}
     </div>
   );
 }

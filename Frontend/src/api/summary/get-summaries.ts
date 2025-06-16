@@ -16,8 +16,8 @@ export const fetchAllBooks = async (page = 0, size = 50) => {
 
 export const getBooksByTitle = async (title, page = 0, size = 10) => {
   try {
-    const response = await api.get("/api/books/title", {
-      params: { title, page, size },
+    const response = await api.get("/api/books", {
+      params: { title },
     });
     return response;
   } catch (error) {
@@ -30,7 +30,7 @@ export const getBooksByTitle = async (title, page = 0, size = 10) => {
 
 export const getBooksByAuthor = async (author, page = 0, size = 10) => {
   try {
-    const response = await api.get("/api/books/author", {
+    const response = await api.get("/api/books", {
       params: { author, page, size },
     });
     return response;
@@ -129,3 +129,39 @@ export const getFinishedReadings = async ()=> {
   }
 }
 
+export  const getBook = async (id) => {
+  try {
+    const response = await api.get(`api/books/${id}`);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 403) {
+      throw new Error("Unauthorized: Please login again");
+    }
+    throw error;
+  }
+}
+
+export const addReading = async (summaryId) => {
+  try {
+    const response = await api.post(`api/readings/addReading?summary_id=${summaryId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 403) {
+      throw new Error("Unauthorized: Please login again");
+    }
+    throw error;
+  }
+}
+
+export const getAllGenres = async () => {
+  try {
+    const response = await api.get(`api/books/allGenres`);
+    console.log("Fetched genres:", response.data);
+    return response.data; 
+  } catch (error) {
+    if (error.response?.status === 403) {
+      throw new Error("Unauthorized: Please login again");
+    }
+    throw error;
+  }
+};
