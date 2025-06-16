@@ -39,7 +39,7 @@ public interface ReadingsRepository extends JpaRepository<UserReading, UserReadi
     FROM UserReading ur
     JOIN TREAT(ur.summary AS BookSummary) s
     JOIN s.genres g
-    WHERE ur.user.id = :userId
+    WHERE ur.user.id = :userId AND ur.finished = true
     GROUP BY g.description
     """)
     List<GenreCountDTO> getGenreCountsByUserId(@Param("userId") Long userId);
