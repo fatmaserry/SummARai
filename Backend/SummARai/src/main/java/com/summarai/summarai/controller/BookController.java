@@ -1,6 +1,7 @@
 package com.summarai.summarai.controller;
 
 import com.summarai.summarai.dto.BookSummaryDto;
+import com.summarai.summarai.dto.GenreDto;
 import com.summarai.summarai.dto.SummaryDto;
 
 import com.summarai.summarai.dto.BookSearchRequest;
@@ -9,6 +10,7 @@ import com.summarai.summarai.service.BookSummaryService;
 import com.summarai.summarai.service.GenreService;
 import com.summarai.summarai.service.S3Service;
 import com.summarai.summarai.service.UserService;
+import com.summarai.summarai.service.impl.GenreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,10 +34,12 @@ import java.util.Optional;
 public class BookController {
     private final BookSummaryService bookSummaryService;
     private final S3Service s3Service;
+    private final GenreService genreService;
 
-    public BookController(BookSummaryService bookSummaryService, S3Service s3Service) {
+    public BookController(BookSummaryService bookSummaryService, S3Service s3Service, GenreService genreService) {
         this.bookSummaryService = bookSummaryService;
         this.s3Service = s3Service;
+        this.genreService = genreService;
     }
 
     @GetMapping("/get_all")
@@ -84,7 +89,7 @@ public class BookController {
 //            return bookSummaryService.getBookById(book_id)
 //                .map(ResponseEntity::ok)
 //                .orElse(ResponseEntity.notFound().build());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping(params = "title")
@@ -92,7 +97,7 @@ public class BookController {
         Page<BookSummaryDto> books = bookSummaryService.getBooksByTitle(title, pageable);
         if(books.hasContent())
             return ResponseEntity.status(HttpStatus.OK).body(books);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping(params = "author")
@@ -100,7 +105,7 @@ public class BookController {
         Page<BookSummaryDto> books = bookSummaryService.getBooksByAuthor(author, pageable);
         if(books.hasContent())
             return ResponseEntity.status(HttpStatus.OK).body(books);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/search")
@@ -108,13 +113,13 @@ public class BookController {
         Page<BookSummaryDto> books = bookSummaryService.searchBooks(criteria, pageable);
         if(books.hasContent())
             return ResponseEntity.status(HttpStatus.OK).body(books);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-//    @GetMapping("/allGenres")
-//    private List<GenreDto> getAllGenres(){
-//        return genreService.getAllGenres();
-//    }
+    @GetMapping("/allGenres")
+    private List<GenreDto> getAllGenres(){
+        return genreService.getAllGenres();
+    }
 //    @GetMapping("/allusers")
 //    private List<UserDto> getAllUsers(){
 //        return userService.getAllUsers();

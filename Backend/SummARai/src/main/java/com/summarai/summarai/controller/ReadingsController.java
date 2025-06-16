@@ -2,6 +2,7 @@ package com.summarai.summarai.controller;
 
 import com.summarai.summarai.dto.UserReadingDto;
 import com.summarai.summarai.exception.DuplicateRecordException;
+import com.summarai.summarai.exception.ReadingNotFoundException;
 import com.summarai.summarai.service.UserReadingsService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -63,4 +64,16 @@ public class ReadingsController {
                .created(URI.create("/readings/" + readingDto.getId().getUser_id() + "/" + readingDto.getId().getSummary_id()))
                .body(readingDto);
    }
+
+   @GetMapping("/hasReading")
+    public ResponseEntity<?> hasReadings(@RequestParam Long summary_id) {
+        try{
+            UserReadingDto userReadingDto = userReadingsService.getReading(summary_id);
+        }
+        catch(ReadingNotFoundException e){
+            return ResponseEntity.ok(false);
+        }
+        return ResponseEntity.ok(true);
+   }
+
 }
