@@ -7,7 +7,9 @@ import com.summarai.summarai.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GenreServiceImpl implements GenreService {
@@ -19,6 +21,9 @@ public class GenreServiceImpl implements GenreService {
     }
 
     public List<GenreDto> getAllGenres() {
-        return genreMapper.toDtos(genreRepository.findAll());
+        return genreMapper.toDtos(genreRepository.findAll())
+                .stream()
+                .sorted(Comparator.comparing(GenreDto::getDescription)) // Assuming GenreDto has a getName() method
+                .collect(Collectors.toList());
     }
 }
