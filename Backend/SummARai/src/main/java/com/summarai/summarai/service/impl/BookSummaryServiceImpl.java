@@ -9,6 +9,7 @@ import com.summarai.summarai.model.BookSummary;
 import com.summarai.summarai.repository.BookSummaryRepository;
 import com.summarai.summarai.service.BookSummaryService;
 import com.summarai.summarai.service.S3Service;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -33,7 +34,9 @@ public class BookSummaryServiceImpl implements BookSummaryService {
     public BookSummary saveBook(BookSummaryDto bookSummary, MultipartFile file) throws IOException {
         String filename =s3Service.uploadFile(file);
         bookSummary.setSummary_url(filename);
-        return this.bookSummaryRepository.save(summaryMapper.toEntity(bookSummary));
+        BookSummary book =  summaryMapper.toEntity(bookSummary);
+        book.setNormTitle(normalizeArabic(book.getTitle()));
+        return this.bookSummaryRepository.save(book);
     }
     public List<BookSummary> saveBooks(List<BookSummaryDto> bookSummaries,List<MultipartFile> file){
         return this.bookSummaryRepository.saveAll(summaryMapper.toEntities(bookSummaries));
@@ -60,7 +63,7 @@ public class BookSummaryServiceImpl implements BookSummaryService {
 
     @Override
     public Page<BookSummaryDto> getBooksByTitle(String title, Pageable pageable) {
-        Page<BookSummary> books = bookSummaryRepository.findByTitle(title,pageable);
+        Page<BookSummary> books = bookSummaryRepository.findByNormTitle(normalizeArabic(title),pageable);
         return books.map(summaryMapper::toDto);
     }
 
@@ -72,7 +75,8 @@ public class BookSummaryServiceImpl implements BookSummaryService {
             spec = spec.and(BookSpecs.authorContains(criteria.getAuthor()));
         }
         if (criteria.getTitle() != null && !criteria.getTitle().isEmpty()) {
-            spec = spec.and(BookSpecs.titleContains(criteria.getTitle()));
+            String normTitle = normalizeArabic(criteria.getTitle());
+            spec = spec.and(BookSpecs.normTitleContains(normTitle));
         }
         List<String> genres = criteria.getGenres();
         if (genres != null && !genres.isEmpty()) {
@@ -82,6 +86,32 @@ public class BookSummaryServiceImpl implements BookSummaryService {
         return bookSummaryRepository.findAll(spec, pageable)
                 .map(summaryMapper::toDto);
     }
+//    @Transactional
+//    public void normalizeExistingBooks(){
+//        List<BookSummary> books = bookSummaryRepository.findAll();
+//        for(BookSummary book : books){
+//            book.setNorm_title(normalizeArabic(book.getTitle()));
+//            System.out.println(book.getNorm_title());
+//        }
+//        bookSummaryRepository.saveAll(books);
+//    }
+    public static String normalizeArabic(String input) {
+        if (input == null) return null;
+
+        // Remove Arabic diacritics (harakat)
+        String cleaned = input.replaceAll("[\\u064B-\\u0652\\u0670]", "");
+
+        // Normalize common hamza-related forms
+        cleaned = cleaned
+                .replace("أ", "ا")
+                .replace("إ", "ا")
+                .replace("آ", "ا")
+                .replace("ؤ", "و")
+                .replace("ئ", "ي");
+
+        return cleaned;
+    }
+
 
 
 }

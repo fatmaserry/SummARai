@@ -12,12 +12,12 @@ public class BookSpecs {
 
     public static Specification<BookSummary> authorContains(String author) {
         return (root, query, cb) ->
-                cb.like(root.get("author").get("name"), "%" + author.toLowerCase() + "%");
+                cb.like(root.get("author").get("name"), "%" + author + "%");
     }
 
-    public static Specification<BookSummary> titleContains(String title) {
+    public static Specification<BookSummary> normTitleContains(String norm_title) {
         return (root, query, cb) ->
-                cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
+                cb.like(cb.lower(root.get("normTitle")), "%" + norm_title+ "%");
     }
 
     /**

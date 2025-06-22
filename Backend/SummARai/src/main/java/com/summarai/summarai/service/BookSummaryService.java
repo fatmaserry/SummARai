@@ -17,7 +17,7 @@ public interface BookSummaryService {
     public List<BookSummary> saveBooks(List<BookSummaryDto> bookSummaries, List<MultipartFile> file);
     public BookSummary saveBook(BookSummaryDto bookSummaries,MultipartFile files) throws IOException;
     public Page<BookSummaryDto> getAllBooks(Pageable pageable);
-
+//    public void normalizeExistingBooks();
     public Optional<BookSummaryDto> getBookById(Long id);
 
     public Page<BookSummaryDto> getBooksByAuthor(String author, Pageable pageable);

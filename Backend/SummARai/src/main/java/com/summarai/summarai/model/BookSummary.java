@@ -18,7 +18,6 @@ public class BookSummary extends Summary {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
-
     @Column
     private String image_url ;
 
@@ -51,4 +50,5 @@ public class BookSummary extends Summary {
     public void setImage_url(String image_url) {
         this.image_url = image_url;
     }
+
 }

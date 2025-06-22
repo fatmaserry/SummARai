@@ -8,7 +8,6 @@ import java.util.List;
 public abstract class SummaryDto {
     private Long id;
     private String title;
-
     private String summary_url;
     private Long number_of_pages;
     private String summaryType;
@@ -32,11 +31,9 @@ public abstract class SummaryDto {
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
     public String getSummary_url() {
         return summary_url;
     }

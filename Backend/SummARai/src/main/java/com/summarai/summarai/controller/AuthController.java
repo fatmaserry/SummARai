@@ -2,6 +2,7 @@ package com.summarai.summarai.controller;
 
 import com.summarai.summarai.dto.UserDto;
 import com.summarai.summarai.security.AuthenticationResponse;
+import com.summarai.summarai.service.BookSummaryService;
 import com.summarai.summarai.service.impl.AuthServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody UserDto request
     ) {
+//        bookSummaryService.normalizeExistingBooks();
         //check if throws exception
         return ResponseEntity.ok(authServiceImpl.login(request));
     }
