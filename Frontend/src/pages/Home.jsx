@@ -21,11 +21,17 @@ export default function HomePage() {
   const nextRef = useRef(null);
   const { isLoggedIn } = useContext(AuthContext);
   const [groupedBooks, setGroupedBooks] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const navigate = useNavigate();
 
   const handleImageClick = (book) => {
     // Navigate to book details page with book data
     navigate("/summary", { state: { book } });
+  };
+
+  const onFileChange = (files) => {
+    setSelectedFile(files[0]); // Store the first file
   };
 
   useEffect(() => {
@@ -42,7 +48,7 @@ export default function HomePage() {
           book.genres.forEach((genreObj) => {
             const genreName = genreObj.description;
             if (!grouped[genreName]) {
-              grouped[genreName] = []; 
+              grouped[genreName] = [];
             }
             grouped[genreName].push(book);
           });
@@ -137,7 +143,16 @@ export default function HomePage() {
                   multiple={false}
                 />
               </div>
-              <button className="mt-4 bg-[#765CDE] text-white py-1.5 px-4 rounded-md text-sm mx-auto block">
+              <button
+                onClick={() => {
+                  if (selectedFile) {
+                    // Handle summarization
+                  } else {
+                    toast.error("الرجاء اختيار ملف أولاً");
+                  }
+                }}
+                className="mt-4 bg-[#765CDE] text-white py-1.5 px-4 rounded-md text-sm mx-auto block"
+              >
                 لخص
               </button>
             </div>
@@ -156,7 +171,7 @@ export default function HomePage() {
               key={idx}
               title={`ملخصات ${genre}`}
               images={books.map((book) => book.image_url)}
-              books={books} 
+              books={books}
               onImageClick={handleImageClick}
               className={`genre_slider_${idx}`}
               type="home"

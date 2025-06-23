@@ -9,19 +9,70 @@ import { Upload } from "../components/Icons";
 const DropFileInput = (props) => {
   const wrapperRef = useRef(null);
   const [fileList, setFileList] = useState([]);
-
+  const MIN_FILE_SIZE = 200 * 1024;  // 200 KB
+  const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 MB
   const onDragEnter = () => wrapperRef.current.classList.add("dragover");
   const onDragLeave = () => wrapperRef.current.classList.remove("dragover");
   const onDrop = () => wrapperRef.current.classList.remove("dragover");
 
-  const onFileDrop = (e) => {
+  const containsArabic = (text) => {
+    // Regular expression to match Arabic characters
+    const arabicRegex = /[\u0600-\u06FF]/;
+    return arabicRegex.test(text);
+  };
+
+  const extractTextFromPDF = async (file) => {
+    try {
+      const pdfjsLib = await import("pdfjs-dist/build/pdf");
+      const pdfjsWorker = await import("pdfjs-dist/build/pdf.worker.entry");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+      const arrayBuffer = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument(arrayBuffer);
+      const pdf = await loadingTask.promise;
+
+      let text = "";
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map((item) => item.str).join(" ");
+      }
+
+      return text;
+    } catch (error) {
+      console.error("Error extracting text from PDF:", error);
+      return "";
+    }
+  };
+
+  const onFileDrop = async (e) => {
     const newFile = e.target.files[0];
+    
+    if (newFile.size < MIN_FILE_SIZE) {
+      toast.error(`الملف صغير جداً. الحد الأدنى للحجم هو ${MIN_FILE_SIZE/1024}KB`);
+      return;
+    }
+    
+    if (newFile.size > MAX_FILE_SIZE) {
+      toast.error(`الملف كبير جداً. الحد الأقصى للحجم هو ${MAX_FILE_SIZE/1024/1024}MB`);
+      return;
+    }
+
     if (newFile && newFile.type === "application/pdf") {
-      const updatedList = [newFile];
-      setFileList(updatedList);
-      props.onFileChange(updatedList);
-    }else{
-      toast.error("الرجاء تحميل ملف PDF فقط");
+      try {
+        const text = await extractTextFromPDF(newFile);
+        if (containsArabic(text)) {
+          const updatedList = [newFile];
+          setFileList(updatedList);
+          props.onFileChange && props.onFileChange(updatedList);
+        } else {
+          toast.error("الرجاء رفع ملف PDF يحتوي على نص عربي فقط");
+        }
+      } catch (error) {
+        toast.error("حدث خطأ أثناء تحليل الملف");
+      }
+    } else {
+      toast.error("الرجاء رفع ملف PDF فقط");
     }
   };
 
