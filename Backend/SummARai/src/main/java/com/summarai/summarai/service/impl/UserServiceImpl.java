@@ -1,5 +1,6 @@
 package com.summarai.summarai.service.impl;
 import com.summarai.summarai.dto.RegisterDto;
+import com.summarai.summarai.dto.UpdateProfileDto;
 import com.summarai.summarai.dto.UserDto;
 import com.summarai.summarai.mapper.RegisterMapper;
 import com.summarai.summarai.mapper.UserMapper;
@@ -8,9 +9,12 @@ import com.summarai.summarai.model.User;
 import com.summarai.summarai.model.UserReading;
 import com.summarai.summarai.repository.ReadingsRepository;
 import com.summarai.summarai.repository.UserRepository;
+import com.summarai.summarai.security.UserDetailsServiceImpl;
 import com.summarai.summarai.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +25,16 @@ public class UserServiceImpl implements UserService {
     private final ReadingsRepository readingsRepository;
     private final UserMapper userMapper;
     private final RegisterMapper registerMapper;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, ReadingsRepository readingsRepository, UserMapper userMapper, RegisterMapper registerMapper) {
+    public UserServiceImpl(UserRepository userRepository, ReadingsRepository readingsRepository, UserMapper userMapper, RegisterMapper registerMapper, UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.readingsRepository = readingsRepository;
         this.userMapper = userMapper;
         this.registerMapper = registerMapper;
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Page<UserDto> findAll(Pageable pageable){
@@ -50,5 +58,17 @@ public class UserServiceImpl implements UserService {
     }
     public void deleteUser(Long id){
         userRepository.deleteById(id);
+    }
+
+    public UserDto updateUser(UpdateProfileDto updateProfileDto) {
+        Long userId = userDetailsService.getCurrentUser().getId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        user.setName(updateProfileDto.getName());
+        user.setPassword(passwordEncoder.encode(updateProfileDto.getPassword()));
+
+        userRepository.save(user);
+        return userMapper.toDto(user);
     }
 }
