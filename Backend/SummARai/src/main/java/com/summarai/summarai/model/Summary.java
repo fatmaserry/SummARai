@@ -16,10 +16,10 @@ public abstract class Summary {
     private Long id;
     @Column
     private String title;
-
     @Column
     private String summary_url;
-
+    @Column(name = "norm_title")
+    private String normTitle;
     @Column
     private Long number_of_pages;
 
@@ -64,6 +64,13 @@ public abstract class Summary {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    public String getNormTitle() {
+        return normTitle;
+    }
+
+    public void setNormTitle(String normTitle) {
+        this.normTitle = normTitle;
     }
 
 }

@@ -58,13 +58,14 @@ public class BookController {
             @ModelAttribute("bookSummary") BookSummaryDto bookSummary,
             @RequestParam("file") MultipartFile file) throws IOException {
         BookSummary saved = bookSummaryService.saveBook(bookSummary, file);
+
         if(saved!=null)
             return ResponseEntity.status(HttpStatus.CREATED).body("Book added successfully");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Book not saved");
     }
     // should be for admins only
 
-    @DeleteMapping("delete/{fileName}")
+    @DeleteMapping("/delete/{fileName}")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<String> deleteFile(@PathVariable String fileName){
         s3Service.deleteFile(fileName);
@@ -93,7 +94,7 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping(params = "title")
+    @GetMapping(params = "/title")
     public ResponseEntity<Page<BookSummaryDto>> getBooksByTitle(@RequestParam String title, Pageable pageable) {
         Page<BookSummaryDto> books = bookSummaryService.getBooksByTitle(title, pageable);
         if(books.hasContent())
@@ -101,7 +102,7 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping(params = "author")
+    @GetMapping(params = "/author")
     public ResponseEntity<Page<BookSummaryDto>> getBooksByAuthor(@RequestParam String author, Pageable pageable) {
         Page<BookSummaryDto> books = bookSummaryService.getBooksByAuthor(author, pageable);
         if(books.hasContent())

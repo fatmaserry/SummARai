@@ -1,5 +1,6 @@
 package com.summarai.summarai.controller;
 import com.summarai.summarai.dto.RegisterDto;
+import com.summarai.summarai.dto.UpdateProfileDto;
 import com.summarai.summarai.dto.UserDto;
 import com.summarai.summarai.model.UserReading;
 import com.summarai.summarai.service.impl.UserServiceImpl;
@@ -65,5 +66,9 @@ public class UserController {
         return ResponseEntity.ok("deleted");
     }
 
+    @PutMapping("")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateProfileDto updateProfileDto){
+        return ResponseEntity.ok(userService.updateUser(updateProfileDto));
+    }
 
 }
