@@ -15,7 +15,7 @@ class SummarizationService:
     async def run(self, file : UploadFile):
         fullText = await self.ocr_service.process_pdf(file)
         print("OCR Done")
-        chunks = await self.chunking_service.overlapping_chunking(fullText)
+        chunks = await self.chunking_service.chunk_using_spacy(fullText)
         print("Chunking Done")
         extractiveSummary = []
         for chunk in chunks:

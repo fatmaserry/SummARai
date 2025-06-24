@@ -1,9 +1,9 @@
-from spacy.lang.en import English
-
+from spacy.lang.ar import Arabic
+import re
 
 class SentenceHandler(object):
 
-    def __init__(self, language = English):
+    def __init__(self, language=Arabic):
         self.nlp = language()
         self.nlp.add_pipe('sentencizer')
 

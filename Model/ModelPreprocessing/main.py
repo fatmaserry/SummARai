@@ -8,16 +8,17 @@ summarizationService = SummarizationService()
 
 
 
-# @app.post("/full-text")
-# async def get_full_text(file: UploadFile):
-#     text = await ocr_service.process_pdf(file)
-#     return {"text": text}
+@app.post("/full-text")
+async def get_full_text(file: UploadFile):
+    ocr_service = OCRService()
+    text = await ocr_service.process_pdf(file)
+    return {"text": text}
 
 
 
 from ChunkingService import ChunkingService
 @app.post("/chunk-spacy")
-async def get_chunk_sentences_spacy(file : UploadFile):
+async def get_chunk_sentences_spacy(file: UploadFile):
     ocr_service = OCRService()
     chunking = ChunkingService()
     text = await ocr_service.process_pdf(file)

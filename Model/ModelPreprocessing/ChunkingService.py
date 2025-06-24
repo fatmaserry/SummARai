@@ -19,8 +19,12 @@ class ChunkingService:
         cur = ""
         ret = []
         tot = 0
+        mxSentenceTokens = 0
+        mxSentenceLen = 0
         for sent in doc.sents:
-            cur += sent.text
+            cur += sent.text.strip()
+            mxSentenceTokens = max(mxSentenceTokens, self.get_tokens(sent.text.strip()))
+            mxSentenceLen = max(mxSentenceLen, len(sent.text.strip()))
             s = self.get_tokens(cur)
             if s >= 400:
                 tot += s
@@ -30,6 +34,8 @@ class ChunkingService:
             ret.append(cur)
             tot += self.get_tokens(cur)
         print(tot)
+        print(mxSentenceLen)
+        print(mxSentenceTokens)
         return ret
 
 
