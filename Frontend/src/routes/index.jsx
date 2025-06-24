@@ -10,7 +10,9 @@ import Home from "../pages/Home";
 import Signup from "../pages/Signup";
 import Summary from "../pages/Summary";
 import EditProfile from "../pages/EditProfile";
-
+import ForgotPassword from "../pages/ForgetPassword";
+import VerifyOtp from "../pages/VerifyOTP";
+import ResetPassword from "../pages/ResetPassword";
 const Routes = () => {
   // const { token } = useAuth();
 
@@ -32,6 +34,19 @@ const Routes = () => {
       path: "/register",
       element: <Signup />,
     },
+    {
+      path: "/forgot-password",
+      element: <ForgotPassword />,
+    },
+    {
+      path: "/verify-otp",
+      element: <VerifyOtp />,
+    },
+    {
+      path: "/reset-password",
+      element: <ResetPassword />,
+    },
+    
   ];
 
   // Define routes accessible only to authenticated users

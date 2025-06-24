@@ -40,7 +40,18 @@ export const signup = async (userData: SignupData) => {
   }
 };
 
+export const updateProfile = async (data: object, token: string) => {
+  const response = await api.put('/api/user', data, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  return response.data;
+};
+
 export default {
   login,
   signup,
+  updateProfile,
 };

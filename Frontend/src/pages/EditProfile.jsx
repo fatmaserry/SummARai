@@ -1,14 +1,18 @@
 import { useState, useRef, useContext } from "react";
 import { AuthContext } from "../provider/auth/authProvider";
+import { updateProfile } from "../api/user/auth";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function EditProfile() {
-  const { user } = useContext(AuthContext); 
+  const { user, token, setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [username, setUsername] = useState(user?.name || "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [profileImage, setProfileImage] = useState("assets/images/profile.png");
   const fileInputRef = useRef(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -23,10 +27,32 @@ export default function EditProfile() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) return alert("كلمتا المرور غير متطابقتين");
-    console.log("Saved:", { username, password, profileImage });
+    if (password !== confirmPassword)
+      return alert("كلمتا المرور غير متطابقتين");
+    setIsLoading(true);
+    try {
+    const payload = {
+      name: username,
+      ...(password && { password })
+    };
+
+    const updatedUser = await updateProfile(payload, token);
+    
+    setUser(updatedUser);
+    toast.success("تم تحديث الملف الشخصي بنجاح");
+    navigate("/profile");
+  } catch (error) {
+    console.error("Update error details:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status
+    });
+    toast.error("حدث خطأ أثناء تحديث الملف الشخصي");
+  } finally {
+    setIsLoading(false);
+  }
   };
 
   return (
@@ -41,30 +67,6 @@ export default function EditProfile() {
           alt="profile"
           className="w-24 h-24 rounded-full object-cover mb-4"
         />
-        <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={() => document.getElementById('profileImageInput').click()}
-            className="bg-[#765CDE] px-3 py-1.5 rounded"
-          >
-            تغير الصورة
-          </button>
-          <button
-            type="button"
-            onClick={handleDeleteImage}
-            className="bg-[#6E7493] px-3 py-1.5 rounded"
-          >
-            حذف الصورة
-          </button>
-        </div>
-        <input 
-          type="file" 
-          accept="image/*" 
-          onChange={handleImageChange}
-          ref={fileInputRef}
-          className="hidden" 
-          id="profileImageInput"
-        />
       </div>
 
       {/* Form Fields Section */}
@@ -76,6 +78,7 @@ export default function EditProfile() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="w-50 p-2 rounded text-black bg-white border border-[#3A3F50]"
+            required
           />
         </div>
 
@@ -87,6 +90,7 @@ export default function EditProfile() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-50 p-2 rounded text-black bg-white border border-[#3A3F50]"
+              placeholder="اتركه فارغاً إذا لم ترد التغيير"
             />
           </div>
 
@@ -97,16 +101,18 @@ export default function EditProfile() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-50 p-2 rounded text-black bg-white border border-[#3A3F50]"
+              placeholder="اتركه فارغاً إذا لم ترد التغيير"
             />
           </div>
         </div>
 
-        <div className="flex justify-end"> {/* Added this container */}
-          <button 
-            type="submit" 
+        <div className="flex justify-end">
+          <button
+            type="submit"
             className="w-30 bg-[#765CDE] p-3 rounded-lg mt-6 font-medium"
+            disabled={isLoading}
           >
-            حفظ التغيرات
+            {isLoading ? "جاري الحفظ..." : "حفظ التغيرات"}
           </button>
         </div>
       </div>

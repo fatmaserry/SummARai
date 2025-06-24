@@ -17,7 +17,7 @@ const Login = () => {
     try {
       const response = await login({
         email,
-        password
+        password,
       });
       if (response.access_token) {
         setToken(response.access_token);
@@ -61,7 +61,10 @@ const Login = () => {
             {/* {error && <p className="text-red-500 text-sm">
               {error}
             </p>} */}
-            <div className="text-sm text-primary-400 text-left mb-2 cursor-pointer hover:underline">
+            <div
+              className="text-sm text-primary-400 text-left mb-2 cursor-pointer hover:underline"
+              onClick={() => navigate("/forgot-password")}
+            >
               نسيت كلمة المرور؟
             </div>
             <div className="text-sm text-center text-black">
