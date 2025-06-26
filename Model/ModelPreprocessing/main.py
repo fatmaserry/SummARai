@@ -22,7 +22,7 @@ async def get_chunk_sentences_spacy(file: UploadFile):
     ocr_service = OCRService()
     chunking = ChunkingService()
     text = await ocr_service.process_pdf(file)
-    temp = await chunking.chunk_using_spacy(text)
+    temp = await chunking.semantic_chunk_using_spacy(text)
     response = {}
     for i in range(len(temp)):
         response[i] = temp[i]
