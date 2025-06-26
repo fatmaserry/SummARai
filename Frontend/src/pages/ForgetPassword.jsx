@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FormLayout from "../components/Form/layout";
-import Form from "../components/Form/form";
+import FormLayout from "../components/form/layout";
+import Form from "../components/form/form";
 import toast from "react-hot-toast";
 // import { sendOtp } from "../api/user/auth"; 
 
@@ -12,7 +12,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-    //   await sendOtp({ email });
+      //   await sendOtp({ email });
       toast.success("تم إرسال رمز التحقق إلى بريدك الإلكتروني");
       navigate("/verify-otp", { state: { email } });
     } catch (error) {
@@ -39,7 +39,7 @@ const ForgotPassword = () => {
         footer={
           <div className="text-sm text-center text-black">
             تذكرت كلمة المرور؟{" "}
-            <span 
+            <span
               className="text-primary-400 hover:underline cursor-pointer"
               onClick={() => navigate("/login")}
             >

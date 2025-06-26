@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import FormLayout from "../components/Form/layout";
-import Form from "../components/Form/form";
+import FormLayout from "../components/form/layout";
+import Form from "../components/form/form";
 import toast from "react-hot-toast";
 // import { resetPassword } from "../api/user/auth";
 
@@ -17,9 +17,9 @@ const ResetPassword = () => {
       toast.error("كلمة المرور غير متطابقة");
       return;
     }
-    
+
     try {
-    //   await resetPassword({ email: state?.email, password });
+      //   await resetPassword({ email: state?.email, password });
       toast.success("تم تغيير كلمة المرور بنجاح");
       navigate("/login");
     } catch (error) {

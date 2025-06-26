@@ -9,7 +9,7 @@ import useAuth from "./provider/auth/useAuth";
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, user } = useContext(AuthContext);
   const { setToken } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,11 +27,15 @@ const Layout = ({ children }) => {
     <div className="flex flex-col w-screen h-screen overflow-hidden" dir="rtl">
       {/* Header */}
       <header
-        className="bg-[#141627] w-full text-white p-4 flex items-center justify-between sticky top-0 z-30"
+        className="bg-[#241740] w-full text-white p-4 flex items-center justify-between sticky top-0 z-[9999]"
         dir="ltr"
       >
         {isLoggedIn ? (
-          <h1 className="text-xl font-bold">مرحبا بك</h1>
+          <img
+            src="assets/images/samurai.png"
+            alt="Profile"
+            className="w-12 h-12 rounded-full transform scale-x-[-1] object-cover bg-gray-700 mx-4"
+          />
         ) : (
           <Link
             to="/login"
@@ -108,19 +112,31 @@ const Layout = ({ children }) => {
           )}
         </Sidebar>
 
+
         {/* Main Content */}
-        <main className="flex-1 bg-[#141627] overflow-y-auto p-4 scrollbar-hide">
-          <div className="mx-auto max-w-[80vw]">
+        <main className="relative flex-1 bg-[#241740] overflow-y-auto scrollbar-hide">
+          {/* Background Logo */}
+          <div className="fixed inset-0 flex justify-center items-center opacity-10 pointer-events-none z-0">
+            <img
+              src="/assets/images/logo_name.png"
+              alt="logo"
+              className="w-auto max-w-[70%] max-h-[500px] object-contain mt-10"
+            />
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 mx-auto max-w-[80vw] p-4">
             {children}
           </div>
+
         </main>
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#141627] text-sm text-[#6E7493] text-center p-4 w-full">
+      <footer className="bg-[#241740] text-sm text-[#6E7493] text-center p-4 w-full">
         حقوق النشر © 2025 - جميع الحقوق محفوظة
       </footer>
-    </div>
+    </div >
   );
 };
 

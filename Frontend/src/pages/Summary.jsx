@@ -42,12 +42,12 @@ export default function Summary() {
           setSavedBookmark(data.book_mark);
         }
       } catch (error) {
-        if(error?.response?.data?.error === "Reading not found"){
+        if (error?.response?.data?.error === "Reading not found") {
           // If reading data not found, create a new reading entry
           try {
             await addReading(book?.id);
             console.log("New reading entry created.");
-            await fetchBookmark(); 
+            await fetchBookmark();
           } catch (addError) {
             console.error("Error creating new reading entry:", addError);
             setError("فشل إنشاء سجل قراءة جديد");
@@ -160,7 +160,7 @@ export default function Summary() {
         </div>
 
         <div className="w-full md:w-2/3 lg:w-3/4 space-y-6">
-          <h2 className="text-xl font-semibold text-white">
+          <h2 className="text-3xl font-semibold text-white">
             {book?.author?.name}
           </h2>
 
@@ -215,7 +215,8 @@ export default function Summary() {
             </div>
           )}
           <div className="w-full flex justify-center mt-6">
-            <div className="flex items-center justify-center gap-4 bg-[#141627] text-white rounded-full px-6 py-2">
+            <div className="flex items-center justify-center gap-4 bg-[#241740
+] text-white rounded-full px-6 py-2">
               <button
                 onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
                 disabled={pageNumber <= 1}

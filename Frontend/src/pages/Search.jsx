@@ -74,7 +74,7 @@ export default function SearchBooks() {
 
   return (
     <div className="text-right mr-4">
-      <h2 className="text-xl font-semibold text-white mb-2">
+      <h2 className="text-3xl font-semibold text-white mb-2">
         اختر طريقة البحث
       </h2>
       <h3 className="text-base font-medium text-white mb-4">
@@ -90,10 +90,9 @@ export default function SearchBooks() {
               key={option}
               onClick={() => toggleOption(option)}
               className={`px-4 py-2 text-base rounded-full font-semibold border transition-all duration-200
-                ${
-                  isSelected
-                    ? "bg-[#765CDE] text-white border-[#765CDE]"
-                    : "bg-[#4E3693]/60 text-white border-[#765CDE]"
+                ${isSelected
+                  ? "bg-[#765CDE] text-white border-[#765CDE]"
+                  : "bg-[#4E3693]/60 text-white border-[#765CDE]"
                 }
               `}
             >
@@ -160,11 +159,10 @@ export default function SearchBooks() {
                   })
                 }
                 className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200
-                    ${
-                      isSelected
-                        ? "bg-[#765CDE] text-white border-[#765CDE] "
-                        : "bg-[#4E3693]/60 text-white border-[#765CDE]"
-                    }
+                    ${isSelected
+                    ? "bg-[#765CDE] text-white border-[#765CDE] "
+                    : "bg-[#4E3693]/60 text-white border-[#765CDE]"
+                  }
                   `}
               >
                 {isSelected && <span className="text-white text-sm">✔</span>}
@@ -196,7 +194,7 @@ export default function SearchBooks() {
         ) : (
           <div className="flex flex-col items-center justify-center mt-8">
             <NotFound />
-            <p className="text-white text-xl mt-4">لم يتم العثور على نتائج</p>
+            <p className="text-white text-3xl mt-4">لم يتم العثور على نتائج</p>
           </div>
         )
       ) : null}

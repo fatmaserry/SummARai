@@ -483,21 +483,29 @@ export const SaveBookmark = ({ size = 24, color = "#FFFFFF" }: IconProps) => (
     />
   </svg>
 );
-export const EditIcon = ({ size = 24, color = "#FFFFFF", className }: IconProps) => (
+
+export const EditIcon = ({ size = 24, className = "" }: IconProps) => (
   <svg
-    width="50"
-    height="50"
+    width={size}
+    height={size}
     viewBox="0 0 50 50"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    className={`transition-colors duration-300 ${className}`}
   >
-    <circle cx="25" cy="25" r="25" fill="#4C4F6A" />
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M32.2238 8.62505C32.927 7.92203 33.8806 7.5271 34.875 7.5271C35.8694 7.5271 36.823 7.92203 37.5262 8.62505L42.375 13.4738C43.078 14.177 43.4729 15.1307 43.4729 16.125C43.4729 17.1194 43.078 18.0731 42.375 18.7763L39.4012 21.75L29.25 11.5988L32.2238 8.62505ZM26.5988 14.25L9.72375 31.125C9.02044 31.8281 8.62521 32.7818 8.625 33.7763V38.625C8.625 39.6196 9.02009 40.5734 9.72335 41.2767C10.4266 41.98 11.3804 42.375 12.375 42.375H17.2238C18.2182 42.3748 19.1719 41.9796 19.875 41.2763L36.75 24.4013L26.5988 14.25Z"
-      fill="#765CDE"
+    <circle
+      cx="25"
+      cy="25"
+      r="25"
+      className="fill-[#4C4F6A] group-hover:fill-[#765CDE]"
     />
+    <g transform="scale(0.8) translate(6.5, 6.5)">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M32.2238 8.62505C32.927 7.92203 33.8806 7.5271 34.875 7.5271C35.8694 7.5271 36.823 7.92203 37.5262 8.62505L42.375 13.4738C43.078 14.177 43.4729 15.1307 43.4729 16.125C43.4729 17.1194 43.078 18.0731 42.375 18.7763L39.4012 21.75L29.25 11.5988L32.2238 8.62505ZM26.5988 14.25L9.72375 31.125C9.02044 31.8281 8.62521 32.7818 8.625 33.7763V38.625C8.625 39.6196 9.02009 40.5734 9.72335 41.2767C10.4266 41.98 11.3804 42.375 12.375 42.375H17.2238C18.2182 42.3748 19.1719 41.9796 19.875 41.2763L36.75 24.4013L26.5988 14.25Z"
+        className="fill-[#765CDE] group-hover:fill-white"
+      />
+    </g>
   </svg>
 );

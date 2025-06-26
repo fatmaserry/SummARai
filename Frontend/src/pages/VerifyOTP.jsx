@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import FormLayout from "../components/Form/layout";
-import Form from "../components/Form/form";
+import FormLayout from "../components/form/layout";
+import Form from "../components/form/form";
 import toast from "react-hot-toast";
 
 const VerifyOtp = () => {
@@ -10,7 +10,7 @@ const VerifyOtp = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  
+
   useEffect(() => {
     if (otpInputs.current[0]) {
       otpInputs.current[0].focus();
@@ -19,19 +19,19 @@ const VerifyOtp = () => {
 
   const handleChange = (e, index) => {
     const value = e.target.value;
-    
+
     // Only allow numbers
     if (/^\d*$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
-      
+
       // Auto-focus next input if a digit was entered
       if (value && index < 4 && otpInputs.current[index + 1]) {
         otpInputs.current[index + 1].focus();
       }
     }
-    
+
     // Auto-submit if all digits are filled
     if (newOtp.every(digit => digit !== "")) {
       handleSubmit(newOtp.join(""));
@@ -56,7 +56,7 @@ const VerifyOtp = () => {
         }
       }
       setOtp(newOtp);
-      
+
       // Focus last input if OTP is complete
       if (pasteData.length === 5 && otpInputs.current[4]) {
         otpInputs.current[4].focus();
@@ -77,8 +77,8 @@ const VerifyOtp = () => {
   return (
     <FormLayout>
       <div className="w-full max-w-md mx-auto">
-        <h1 className="text-2xl font-bold text-center mb-6">ادخل رمز ال OTP</h1>
-        
+        <h1 className="text-3xl font-bold text-center mb-6">ادخل رمز ال OTP</h1>
+
         {/* OTP Input Boxes */}
         <div className="flex justify-center gap-3 mb-6" dir="ltr">
           {otp.map((digit, index) => (
@@ -91,13 +91,13 @@ const VerifyOtp = () => {
               onKeyDown={(e) => handleKeyDown(e, index)}
               onPaste={handlePaste}
               ref={(el) => (otpInputs.current[index] = el)}
-              className="w-12 h-12 text-2xl text-center border border-gray-300 rounded-lg focus:border-primary-400 focus:outline-none"
+              className="w-12 h-12 text-3xl text-center border border-gray-300 rounded-lg focus:border-primary-400 focus:outline-none"
               inputMode="numeric"
               pattern="[0-9]*"
             />
           ))}
         </div>
-        
+
         {/* Submit Button */}
         <button
           onClick={(e) => {
@@ -108,10 +108,10 @@ const VerifyOtp = () => {
         >
           تحقق
         </button>
-        
+
         {/* Resend OTP Link */}
         <div className="text-center">
-          <button 
+          <button
             onClick={() => toast.success("تم إعادة إرسال الرمز")}
             className="text-primary-400 hover:underline cursor-pointer"
           >

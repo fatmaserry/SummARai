@@ -1,8 +1,8 @@
 import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../provider/auth/useAuth";
 import React, { useState } from "react";
-import FormLayout from "../components/Form/layout";
-import Form from "../components/Form/form";
+import FormLayout from "../components/form/layout";
+import Form from "../components/form/form";
 import { signup } from "../api/user/auth";
 import toast from "react-hot-toast";
 

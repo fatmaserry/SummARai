@@ -14,19 +14,21 @@ import slide_image_2 from "/assets/images/الاثار الاسلامية.png";
 import slide_image_3 from "/assets/images/الفرزدق.png";
 import slide_image_4 from "/assets/images/الهجرة_إلى_الإنسانية.png";
 import slide_image_5 from "/assets/images/مصر و الشام.png";
+import slide_image_6 from "/assets/images/6.jpg";
 import { useNavigate } from "react-router-dom";
+import WelcomeMessage from "../components/welcome-message/index.tsx";
+
 let cachedGroupedBooks = null;
+
 export default function HomePage() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const { isLoggedIn } = useContext(AuthContext);
   const [groupedBooks, setGroupedBooks] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
-
   const navigate = useNavigate();
 
   const handleImageClick = (book) => {
-    // Navigate to book details page with book data
     navigate("/summary", { state: { book } });
   };
 
@@ -68,13 +70,15 @@ export default function HomePage() {
 
     fetchData();
   }, []);
+
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-6">
+    <div className="px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-7">
+      <WelcomeMessage />
       <div className="text-center space-y-2">
-        <h3 className="text-2xl font-semibold text-white">
+        <h3 className="text-4xl font-semibold text-white">
           مكتبة SummARai لتلخيص الكتب العربية
         </h3>
-        <h3 className="text-2xl font-semibold text-white">
+        <h3 className="text-4xl font-semibold text-white">
           اكثر من الف كتاب تم تلخيصهم بدقة بواسطة الذكاء الاصطناعي
         </h3>
       </div>
@@ -82,15 +86,16 @@ export default function HomePage() {
       <div className="w-full max-w-4xl mx-auto mt-6 mb-16 relative">
         <div
           ref={prevRef}
-          className="swiper-button-prev absolute -left-12 top-1/2 transform -translate-y-1/2 z-10"
+          className="absolute -left-28 top-1/2 transform -translate-y-1/2 z-10"
         >
-          <ion-icon name="arrow-back-outline"></ion-icon>
+          <img src="/assets/images/sword.png" alt="prev" width={90} height={200} className="transform rotate-[-135deg] hover:animate-prev hover:cursor-pointer" />
+          {/* <ion-icon name="arrow-back-outline"></ion-icon> */}
         </div>
         <div
           ref={nextRef}
-          className="swiper-button-next absolute -right-12 top-1/2 transform -translate-y-1/2 z-10"
+          className="absolute -right-[6.5rem] top-1/2 transform -translate-y-1/2 z-10"
         >
-          <ion-icon name="arrow-forward-outline"></ion-icon>
+          <img src="/assets/images/sword.png" alt="next" width={90} height={200} className="transform rotate-[45deg] hover:animate-next hover:cursor-pointer" />
         </div>
 
         <Swiper
@@ -122,6 +127,7 @@ export default function HomePage() {
             slide_image_3,
             slide_image_4,
             slide_image_5,
+            slide_image_6,
           ].map((img, idx) => (
             <SwiperSlide key={idx}>
               <img src={img} alt={`slide_image_${idx + 1}`} />
@@ -132,10 +138,10 @@ export default function HomePage() {
 
       {isLoggedIn ? (
         <>
-          <h2 className="text-2xl font-semibold text-white text-center mb-4">
+          <h2 className="text-3xl font-semibold text-white text-center">
             يمكنك اضافة كتابك وتلخيصه
           </h2>
-          <div className="flex justify-center items-center min-h-[60vh]">
+          <div className="flex justify-center items-center p-2">
             <div className="box w-full max-w-md">
               <div className="border-2 border-dashed border-[#765CDE] rounded-xl p-6 text-center text-white">
                 <DropFileInput
@@ -151,7 +157,7 @@ export default function HomePage() {
                     toast.error("الرجاء اختيار ملف أولاً");
                   }
                 }}
-                className="mt-4 bg-[#765CDE] text-white py-1.5 px-4 rounded-md text-sm mx-auto block"
+                className="mt-4 bg-[#765CDE] hover:bg-purple-500 text-white py-1.5 px-4 rounded-md text-sm mx-auto block"
               >
                 لخص
               </button>
@@ -160,24 +166,26 @@ export default function HomePage() {
         </>
       ) : null}
 
-      <div className="summaries max-w-7xl mx-auto">
-        <h3 className="text-2xl font-semibold text-white text-center mt-12 mb-8">
-          القي نظرة على ملخصاتنا
-        </h3>
-        {Object.entries(groupedBooks)
-          .filter(([_, books]) => books.length > 0)
-          .map(([genre, books], idx) => (
-            <SummarySlider
-              key={idx}
-              title={`ملخصات ${genre}`}
-              images={books.map((book) => book.image_url)}
-              books={books}
-              onImageClick={handleImageClick}
-              className={`genre_slider_${idx}`}
-              type="home"
-            />
-          ))}
-      </div>
+      {groupedBooks &&
+        <div className="summaries max-w-7xl mx-auto">
+          <h3 className="text-3xl font-semibold text-white text-center mt-12 mb-8">
+            القي نظرة على ملخصاتنا
+          </h3>
+          {Object.entries(groupedBooks)
+            .filter(([_, books]) => books.length > 0)
+            .map(([genre, books], idx) => (
+              <SummarySlider
+                key={idx}
+                title={`ملخصات ${genre}`}
+                images={books.map((book) => book.image_url)}
+                books={books}
+                onImageClick={handleImageClick}
+                className={`genre_slider_${idx}`}
+                type="home"
+              />
+            ))}
+        </div>
+      }
     </div>
   );
 }

@@ -1,19 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import DropFileInput from "../components/DropFileInput.jsx";
-import SummarySlider from "../components/SummarySlider.jsx"; // Import the reusable slider
-import { getCurrentReadings, getFinishedReadings } from "../api/summary/get-summaries.ts"; // Update path if needed
-import { useNavigate } from "react-router-dom"; // To handle navigation when clicking a book
+import SummarySlider from "../components/SummarySlider.jsx";
+import { getCurrentReadings, getFinishedReadings } from "../api/summary/get-summaries.ts";
+import { useNavigate } from "react-router-dom";
+import WelcomeMessage from "../components/welcome-message/index.tsx";
 
 export default function Readings() {
   const [currentBooks, setCurrentBooks] = useState([]);
   const [finishedBooks, setFinishedBooks] = useState([]);
   const navigate = useNavigate();
+  const MemoizedWelcomeMessage = useMemo(() => <WelcomeMessage />, []);
 
-  // Handle clicking on a book cover
-  const handleImageClick = (book) => {
-    // Navigate to book details page with book data
-    navigate("/summary", { state: { book  } });
-  };
+  // Stable callback for image clicks
+  const handleImageClick = useCallback((book) => {
+    navigate("/summary", { state: { book } });
+  }, [navigate]);
+
+  // Memoized book data to prevent unnecessary re-renders
+  const currentBooksData = useMemo(() => ({
+    books: currentBooks,
+    images: currentBooks.map((book) => book.summaryDto.image_url)
+  }), [currentBooks]);
+
+  const finishedBooksData = useMemo(() => ({
+    books: finishedBooks,
+    images: finishedBooks.map((book) => book.summaryDto.image_url)
+  }), [finishedBooks]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,12 +45,14 @@ export default function Readings() {
   }, []);
 
   return (
-    <>
-      <h2 className="text-2xl font-semibold text-white text-center mb-4">
+    <div className="readings-page">
+      {MemoizedWelcomeMessage}
+
+      <h2 className="text-3xl font-semibold text-white text-center">
         اضِف قراءات جديدة
       </h2>
 
-      <div className="flex justify-center items-center min-h-[60vh]">
+      <div className="flex justify-center items-center p-4">
         <div className="box w-full max-w-md">
           <div className="border-2 border-dashed border-[#765CDE] rounded-xl p-6 text-center text-white">
             <DropFileInput
@@ -46,7 +60,7 @@ export default function Readings() {
               multiple={false}
             />
           </div>
-          <button className="mt-4 bg-[#765CDE] text-white py-1.5 px-4 rounded-md text-sm mx-auto block">
+          <button className="mt-4 bg-[#765CDE] hover:bg-purple-500 text-white py-1.5 px-4 rounded-md text-sm mx-auto block">
             لخص
           </button>
         </div>
@@ -55,24 +69,24 @@ export default function Readings() {
       {currentBooks.length > 0 && (
         <SummarySlider
           title="تابع قراءة"
-          images={currentBooks.map((book) => book.summaryDto.image_url)}
-          books={currentBooks}
+          images={currentBooksData.images}
+          books={currentBooksData.books}
           onImageClick={handleImageClick}
           className="Continue_reading_swiper mt-20"
-          type= "reading"
+          type="reading"
         />
       )}
 
       {finishedBooks.length > 0 && (
         <SummarySlider
           title="تم الانتهاء منه"
-          images={finishedBooks.map((book) => book.summaryDto.image_url)}
-          books={finishedBooks}
+          images={finishedBooksData.images}
+          books={finishedBooksData.books}
           onImageClick={handleImageClick}
           className="finished_reading_swiper mt-20"
-          type= "reading"
+          type="reading"
         />
       )}
-    </>
+    </div>
   );
 }
