@@ -45,7 +45,7 @@ const SummarySlider = ({ title, images, className, books, onImageClick, type }) 
           swiper.navigation.init();
           swiper.navigation.update();
         }}
-        className="mySwiper swiper_small !w-[92%]"
+        className="mySwiper swiper_small !w-[83%]"
       >
         {images.map((imgSrc, idx) => (
           <SwiperSlide
