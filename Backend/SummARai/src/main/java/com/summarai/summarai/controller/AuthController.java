@@ -36,19 +36,19 @@ public class AuthController {
         return ResponseEntity.ok(authServiceImpl.login(request));
     }
     @PostMapping("/forget-password")
-    public ResponseEntity<?> forgetPassword (@RequestBody String email){
+    public ResponseEntity<?> forgetPassword (@RequestParam String email){
         if(authServiceImpl.forgetPassword(email))
             return ResponseEntity.ok().build();
         return ResponseEntity.ok(HttpStatus.NOT_FOUND);
     }
     @PostMapping("/verifyOTP")
-    public ResponseEntity<?>verifyOTP(@RequestBody String email, @RequestBody String otp){
+    public ResponseEntity<?>verifyOTP(@RequestParam String email, @RequestParam String otp){
         if(authServiceImpl.verifyOTP(email, otp))
             return ResponseEntity.ok().build();
         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
     }
     @PostMapping("/update-password")
-    public ResponseEntity<?>updatePassword(@RequestBody String email,@RequestBody String password){
+    public ResponseEntity<?>updatePassword(@RequestParam String email,@RequestParam String password){
         authServiceImpl.updatePassword(email,password);
         return ResponseEntity.ok().build();
     }
