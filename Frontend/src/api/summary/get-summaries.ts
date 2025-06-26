@@ -156,7 +156,6 @@ export const addReading = async (summaryId) => {
 export const getAllGenres = async () => {
   try {
     const response = await api.get(`api/books/allGenres`);
-    console.log("Fetched genres:", response.data);
     return response.data; 
   } catch (error) {
     if (error.response?.status === 403) {

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import FormLayout from "../components/form/layout";
 import Form from "../components/form/form";
 import toast from "react-hot-toast";
-// import { resetPassword } from "../api/user/auth";
+import { updatePassword } from "../api/user/auth";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -19,7 +19,7 @@ const ResetPassword = () => {
     }
 
     try {
-      //   await resetPassword({ email: state?.email, password });
+      await updatePassword( state?.email, password );
       toast.success("تم تغيير كلمة المرور بنجاح");
       navigate("/login");
     } catch (error) {

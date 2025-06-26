@@ -27,13 +27,11 @@ const Signup = () => {
                 password,
                 role: "USER"
             });
-            if (response.access_token) {
-                setToken(response.access_token);
-                // setUser(response.user);
-                toast.success("تم إنشاء الحساب بنجاح!");
-                setTimeout(() => {
-                    navigate("/", { replace: true });
-                }, 1500);
+            
+            if (response.message) { // Check for success message instead of token
+                toast.success("تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني للتأكيد.");
+                // Don't set token or user yet - they're not verified
+                navigate("/login", { replace: true }); // Redirect to login
             }
         } catch (error) {
             toast.error("حدث خطأ أثناء إنشاء الحساب!");

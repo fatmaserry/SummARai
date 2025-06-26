@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import FormLayout from "../components/form/layout";
 import Form from "../components/form/form";
 import toast from "react-hot-toast";
-// import { sendOtp } from "../api/user/auth"; 
+import { forgetPassword } from "../api/user/auth"; 
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +12,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      //   await sendOtp({ email });
+      await forgetPassword( email );
       toast.success("تم إرسال رمز التحقق إلى بريدك الإلكتروني");
       navigate("/verify-otp", { state: { email } });
     } catch (error) {

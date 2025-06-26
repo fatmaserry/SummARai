@@ -3,20 +3,32 @@ import { useLocation, useNavigate } from "react-router-dom";
 import FormLayout from "../components/form/layout";
 import Form from "../components/form/form";
 import toast from "react-hot-toast";
-
+import { verifyOTP } from "../api/user/auth";
 const VerifyOtp = () => {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const otpInputs = useRef([]);
   const { state } = useLocation();
   const navigate = useNavigate();
-
-
   useEffect(() => {
     if (otpInputs.current[0]) {
       otpInputs.current[0].focus();
     }
   }, []);
 
+  const handleSubmit = async (otpValue = otp.join("")) => {
+    
+    if (!state?.email) {
+      toast.error("حدث خطأ: البريد الإلكتروني غير متوفر");
+      return;
+    }
+    try {
+      await verifyOTP(state.email, otpValue);
+      toast.success("تم التحقق بنجاح");
+      navigate("/reset-password", { state: { email: state.email } });
+    } catch (error) {
+      toast.error("رمز التحقق غير صحيح");
+    }
+  };
   const handleChange = (e, index) => {
     const value = e.target.value;
 
@@ -27,27 +39,27 @@ const VerifyOtp = () => {
       setOtp(newOtp);
 
       // Auto-focus next input if a digit was entered
-      if (value && index < 4 && otpInputs.current[index + 1]) {
+      if (value && index < 5 && otpInputs.current[index + 1]) {
         otpInputs.current[index + 1].focus();
       }
-    }
-
-    // Auto-submit if all digits are filled
-    if (newOtp.every(digit => digit !== "")) {
-      handleSubmit(newOtp.join(""));
     }
   };
 
   const handleKeyDown = (e, index) => {
     // Move focus to previous input on backspace if current is empty
-    if (e.key === "Backspace" && !otp[index] && index > 0 && otpInputs.current[index - 1]) {
+    if (
+      e.key === "Backspace" &&
+      !otp[index] &&
+      index > 0 &&
+      otpInputs.current[index - 1]
+    ) {
       otpInputs.current[index - 1].focus();
     }
   };
 
   const handlePaste = (e) => {
     e.preventDefault();
-    const pasteData = e.clipboardData.getData("text/plain").slice(0, 5);
+    const pasteData = e.clipboardData.getData("text/plain").slice(0, 6);
     if (/^\d+$/.test(pasteData)) {
       const newOtp = [...otp];
       for (let i = 0; i < pasteData.length; i++) {
@@ -64,15 +76,6 @@ const VerifyOtp = () => {
     }
   };
 
-  const handleSubmit = async (otpValue = otp.join("")) => {
-    try {
-      // await verifyOtp({ email: state?.email, otp: otpValue });
-      toast.success("تم التحقق بنجاح");
-      navigate("/reset-password", { state: { email: state?.email } });
-    } catch (error) {
-      toast.error("رمز التحقق غير صحيح");
-    }
-  };
 
   return (
     <FormLayout>

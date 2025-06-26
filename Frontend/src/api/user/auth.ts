@@ -50,8 +50,38 @@ export const updateProfile = async (data: object, token: string) => {
   return response.data;
 };
 
+export const forgetPassword = async (email: string) => {
+  try {
+    const response = await api.post(`/api/auth/forget-password?email=${email}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Failed to send reset password email");
+  }
+};
+
+export const updatePassword = async (email: string, newPassword: string) => {
+  try {
+    const response = await api.post(`/api/auth/update-password?email=${email}&password=${newPassword}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Failed to reset password");
+  }
+};
+
+export const verifyOTP = async (email: string, otp: string) => {
+  try {
+    const response = await api.post(`/api/auth/verifyOTP?email=${email}&otp=${otp}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Failed to verify OTP");
+  }
+}
+
 export default {
   login,
   signup,
   updateProfile,
+  forgetPassword,
+  updatePassword,
+  verifyOTP
 };
