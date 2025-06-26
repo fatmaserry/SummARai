@@ -1,22 +1,16 @@
 package com.summarai.summarai.email;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 @Service
 public class OTPServiceImpl implements OTPService{
-    private final EmailService emailService;
+    private final EmailSender emailService;
     private final Redis redis;
 
 
-    public OTPServiceImpl(EmailService emailService, Redis redis) {
+    public OTPServiceImpl(EmailSender emailService, Redis redis) {
         this.emailService = emailService;
         this.redis = redis;
     }
