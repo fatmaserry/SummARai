@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class EmailService implements EmailSender{
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
@@ -20,14 +22,14 @@ public class EmailService implements EmailSender{
 
     @Override
     @Async
-    public void send(String to, String email) {
+    public void send(String to, String subject, String emailText) {
         try{
             //used to create and manipulate email messages in java, it is a standard mail message (Multipurpose Internet Mail Extensions)
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,"utf-8");
-            messageHelper.setText(email,true);
+            messageHelper.setText(emailText,true);
             messageHelper.setTo(to);
-            messageHelper.setSubject("Confirm your email");
+            messageHelper.setSubject(subject);
             // email: summaraiservice@gmail.com, password: summARai_0.1
             messageHelper.setFrom("summaraiservice@gmail.com");
             mailSender.send(mimeMessage);
