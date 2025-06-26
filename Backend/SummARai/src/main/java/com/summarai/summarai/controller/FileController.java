@@ -22,11 +22,12 @@ public class FileController {
     public FileController(S3ServiceImpl s3Service) {
         this.s3Service = s3Service;
     }
-//    @PostMapping("/upload")
-//    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-//        String fileName = s3Service.uploadFile(file);
-//        return ResponseEntity.ok("File uploaded: "+fileName);
-//    }
+    @PostMapping("/upload") // from fastapi save the summary in db and return the id
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        String fileName = s3Service.uploadFile(file);
+
+        return ResponseEntity.ok("File uploaded: "+fileName);
+    }
 //    @GetMapping("/download/{fileName}")
 //    public ResponseEntity<byte[]> DownloadFile(@PathVariable String fileName){
 //        byte[] data = s3Service.downloadFile(fileName);
