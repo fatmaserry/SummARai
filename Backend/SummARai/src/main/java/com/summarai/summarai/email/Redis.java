@@ -1,9 +1,10 @@
 package com.summarai.summarai.email;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
-
+@Component
 public class Redis {
     private final StringRedisTemplate redisTemplate;
 
@@ -16,7 +17,13 @@ public class Redis {
     }
 
     public boolean verifyOtp(String email, String otp) {
-        String storedOtp = redisTemplate.opsForValue().get("otp:" + email);
-        return otp.equals(storedOtp);
+        String emailOTP = "otp:" + email;
+        String storedOtp = redisTemplate.opsForValue().get(emailOTP);
+        if(storedOtp.equals(otp)){
+            redisTemplate.delete(emailOTP);
+            return true;
+        }
+        return false;
     }
+
 }

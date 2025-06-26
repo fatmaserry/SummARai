@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     private final OTPService otpService;
 
 
-    public AuthServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, TokenRepository tokenRepository, EmailService emailService, VerificationTokenRepository verificationTokenRepository, UserRepository userRepository, OTPService otpService) {
+    public AuthServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, TokenRepository tokenRepository, EmailSender emailService, VerificationTokenRepository verificationTokenRepository, UserRepository userRepository, OTPService otpService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
@@ -110,6 +110,7 @@ public class AuthServiceImpl implements AuthService {
         // the user is already verified
         User user = userRepository.findByEmail(email).get();
         user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
     private void saveVerificationToken(User user, String token) {
         VerificationToken verificationToken = new VerificationToken();
