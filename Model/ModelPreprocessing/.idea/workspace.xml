@@ -5,100 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2c7ad5a2-ab32-480d-9a0a-8a12c3ac4d34" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/graduation-project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/config/awsS3Config.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/controller/AuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/controller/BookController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/controller/FileController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/controller/ReadingsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/controller/StatisticsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/controller/UserController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/ActivityDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/AuthorDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/BookSearchRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/BookSpecs.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/BookSummaryDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/GenreCountDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/GenreDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/RegisterDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/StatisticsDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/SummaryDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/UpdateProfileDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/UserDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/UserReadingDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/dto/UserSummaryDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/email/EmailSender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/email/EmailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/exception/DuplicateRecordException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/exception/ReadingNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/exception/SummaryNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/AuthorMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/BookSummaryMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/GenreMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/RegisterMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/StatisticsMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/SummaryMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/UserMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/UserReadingMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/mapper/UserSummaryMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/Author.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/BookSummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/Genre.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/Role.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/Statistics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/Summary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/Token.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/UserReading.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/UserReadingId.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/UserSummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/model/VerificationToken.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/BookSummaryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/GenreRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/ReadingsRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/StatisticsRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/SummaryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/TokenRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/UserRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/UserSummaryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/repository/VerificationTokenRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/security/ApplicationConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/security/AuthenticationResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/security/JwtAuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/security/JwtService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/security/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/security/UserDetailsServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/AuthService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/BookSummaryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/GenreService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/S3Service.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/StatisticsService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/UserReadingsService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/UserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/impl/AuthServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/impl/BookSummaryServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/impl/DateTimeHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/impl/GenreServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/impl/S3ServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/impl/StatisticsServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/impl/UserReadingsServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../sql queries.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Backend/SummARai/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Backend/SummARai/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/SummARaiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/SummARaiApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Backend/SummARai/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Backend/SummARai/src/main/java/com/summarai/summarai/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +32,7 @@
     "Python.main.executor": "Run",
     "Python.test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging model-development",
+    "git-widget-placeholder": "model-development",
     "last_opened_file_path": "C:/Users/DELL/Desktop/Test Extractive Summarization/bert-extractive-summarizer-master",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -220,6 +128,7 @@
       <workItem from="1749642617078" duration="10000" />
       <workItem from="1749731753844" duration="10000" />
       <workItem from="1749783721871" duration="9000" />
+      <workItem from="1751028316844" duration="2319000" />
     </task>
     <servers />
   </component>
@@ -228,7 +137,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ModelPreprocessing$fastapi.coverage" NAME="fastapi Coverage Results" MODIFIED="1748624008676" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/ModelPreprocessing$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1749394907549" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ModelPreprocessing$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1751029233910" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/ModelPreprocessing$main.coverage" NAME="main Coverage Results" MODIFIED="1748627832361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ModelPreprocessing$test.coverage" NAME="test Coverage Results" MODIFIED="1748621886201" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
