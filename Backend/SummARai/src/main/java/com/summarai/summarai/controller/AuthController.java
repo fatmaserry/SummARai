@@ -6,6 +6,7 @@ import com.summarai.summarai.service.BookSummaryService;
 import com.summarai.summarai.service.impl.AuthServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,23 @@ public class AuthController {
 //        bookSummaryService.normalizeExistingBooks();
         //check if throws exception
         return ResponseEntity.ok(authServiceImpl.login(request));
+    }
+    @PostMapping("/forget-password")
+    public ResponseEntity<?> forgetPassword (@RequestParam String email){
+        if(authServiceImpl.forgetPassword(email))
+            return ResponseEntity.ok().build();
+        return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+    }
+    @PostMapping("/verifyOTP")
+    public ResponseEntity<?>verifyOTP(@RequestParam String email, @RequestParam String otp){
+        if(authServiceImpl.verifyOTP(email, otp))
+            return ResponseEntity.ok().build();
+        return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+    }
+    @PostMapping("/update-password")
+    public ResponseEntity<?>updatePassword(@RequestParam String email,@RequestParam String password){
+        authServiceImpl.updatePassword(email,password);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/refresh-token")

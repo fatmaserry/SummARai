@@ -70,6 +70,8 @@ public class BookSummaryServiceImpl implements BookSummaryService {
     @Override
     public Page<BookSummaryDto> searchBooks(BookSearchRequest criteria, Pageable pageable) {
         Specification<BookSummary> spec = Specification.where(null);
+        criteria.setAuthor(normalizeArabic(criteria.getAuthor()));
+        criteria.setTitle(normalizeArabic(criteria.getTitle()));
 
         if (criteria.getAuthor() != null && !criteria.getAuthor().isEmpty()) {
             spec = spec.and(BookSpecs.authorContains(criteria.getAuthor()));
