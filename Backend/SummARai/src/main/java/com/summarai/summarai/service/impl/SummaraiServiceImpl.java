@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -24,7 +25,7 @@ public class SummaraiServiceImpl implements SummaraiService {
 
 
     @Override
-    public Mono<Long> summarai(MultipartFile book) {
+    public Mono<String> summarai(MultipartFile book) {
         return Mono.fromCallable(() -> {
             ByteArrayResource resource = new ByteArrayResource(book.getBytes()) {
                 @Override
@@ -32,12 +33,8 @@ public class SummaraiServiceImpl implements SummaraiService {
                     return book.getOriginalFilename();
                 }
             };
-
             MultipartBodyBuilder builder = new MultipartBodyBuilder();
-            builder.part("file", resource)
-                    .header("Content-Disposition", "form-data; name=file; filename=" + book.getOriginalFilename())
-                    .contentType(MediaType.APPLICATION_PDF);
-
+            builder.part("file", resource).contentType(MediaType.APPLICATION_PDF);
             return builder.build();
         }).flatMap(parts ->
                 webClient.post()
@@ -45,9 +42,16 @@ public class SummaraiServiceImpl implements SummaraiService {
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .body(BodyInserters.fromMultipartData(parts))
                         .retrieve()
-                        .bodyToMono(Long.class)
-                        .timeout(Duration.ofMinutes(10))
+                        .bodyToMono(String.class) // expects: {"task_id": "..."}
         );
+    }
+    public Flux<String> streamSummaryProgress(String taskId) {
+        return webClient.get()
+                .uri("/summaryProgress/{taskId}", taskId)
+                .accept(MediaType.TEXT_EVENT_STREAM)
+                .retrieve()
+                .bodyToFlux(String.class)
+                .doOnNext(System.out::println);
     }
 
 
