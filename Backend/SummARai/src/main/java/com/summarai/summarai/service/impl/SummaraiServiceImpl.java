@@ -6,8 +6,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @Service
 public class SummaraiServiceImpl implements SummaraiService {
@@ -32,15 +35,19 @@ public class SummaraiServiceImpl implements SummaraiService {
 
             MultipartBodyBuilder builder = new MultipartBodyBuilder();
             builder.part("file", resource)
+                    .header("Content-Disposition", "form-data; name=file; filename=" + book.getOriginalFilename())
                     .contentType(MediaType.APPLICATION_PDF);
 
             return builder.build();
-        }).flatMap(parts -> webClient.post()
-                .uri("http://127.0.0.1:8000/getSummary")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .bodyValue(parts)
-                .retrieve()
-                .bodyToMono(Long.class));
+        }).flatMap(parts ->
+                webClient.post()
+                        .uri("/getSummary")
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .body(BodyInserters.fromMultipartData(parts))
+                        .retrieve()
+                        .bodyToMono(Long.class)
+                        .timeout(Duration.ofMinutes(10))
+        );
     }
 
 
