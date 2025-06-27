@@ -17,7 +17,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/api/files")
 public class FileController {
-    private final S3Service s3Service;
+    private final S3ServiceImpl s3Service;
 
     public FileController(S3ServiceImpl s3Service) {
         this.s3Service = s3Service;
