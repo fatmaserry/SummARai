@@ -16,7 +16,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/readings")
 public class ReadingsController {
-
     private final UserReadingsService userReadingsService;
 
     public ReadingsController(UserReadingsService userReadingsService) {
