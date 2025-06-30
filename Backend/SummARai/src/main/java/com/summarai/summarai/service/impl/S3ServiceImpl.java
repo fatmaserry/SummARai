@@ -37,7 +37,20 @@ public class S3ServiceImpl implements S3Service {
             throw new RuntimeException("Upload failed"+ e.getMessage());
         }
     }
-
+    public String uploadFile(byte[] fileBytes, String originalFilename) {
+        try {
+            File tempFile = File.createTempFile("summary-", "-" + originalFilename);
+            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                fos.write(fileBytes);
+            }
+            String fileName = System.currentTimeMillis() + "_" + originalFilename;
+            s3Client.putObject(new PutObjectRequest(bucketName, fileName, tempFile));
+            tempFile.delete();
+            return fileName;
+        } catch (IOException e) {
+            throw new RuntimeException("Upload failed: " + e.getMessage(), e);
+        }
+    }
     @Override
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName,fileName);
