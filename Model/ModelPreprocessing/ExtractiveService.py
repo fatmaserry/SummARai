@@ -12,7 +12,7 @@ from rouge import Rouge
 
 class ExtractiveService:
     def __init__(self):
-        self.extractiveModel = pickle.load(open("extractiveModel.pkl", 'rb'))
+        # self.extractiveModel = pickle.load(open("extractiveModel.pkl", 'rb'))
         self.dic = {}
         self.chunk = 0
         nltk.download('stopwords')

@@ -1,32 +1,48 @@
-from fastapi import FastAPI, UploadFile
-
+from fastapi import FastAPI, UploadFile, Request, File
+from fastapi.middleware.cors import CORSMiddleware
 from OCRService import OCRService
 from SummarizationPipeline import SummarizationService
-
+from Events import SSEEvent, EventModel
+import asyncio
+from sse_starlette import EventSourceResponse
 app = FastAPI()
 summarizationService = SummarizationService()
 
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-@app.post("/full-text")
-async def get_full_text(file: UploadFile):
-    ocr_service = OCRService()
-    text = await ocr_service.process_pdf(file)
-    return {"text": text}
+
+# @app.post("/full-text")
+# async def get_full_text(file: UploadFile):
+#     ocr_service = OCRService()
+#     text = await ocr_service.process_pdf(file)
+#     return {"text": text}
 
 
 
-from ChunkingService import ChunkingService
-@app.post("/chunk-spacy")
-async def get_chunk_sentences_spacy(file: UploadFile):
-    ocr_service = OCRService()
-    chunking = ChunkingService()
-    text = await ocr_service.process_pdf(file)
-    temp = await chunking.semantic_chunk_using_spacy(text)
-    response = {}
-    for i in range(len(temp)):
-        response[i] = temp[i]
-    return response
+# from ChunkingService import ChunkingService
+# @app.post("/chunk-spacy")
+# async def get_chunk_sentences_spacy(file: UploadFile):
+#     ocr_service = OCRService()
+#     chunking = ChunkingService()
+#     text = await ocr_service.process_pdf(file)
+#     temp = await chunking.semantic_chunk_using_spacy(text)
+#     response = {}
+#     for i in range(len(temp)):
+#         response[i] = temp[i]
+#     return response
 
 
 
@@ -41,6 +57,23 @@ async def get_chunk_sentences_spacy(file: UploadFile):
 
 
 @app.post("/getSummary")
-async def getExtractiveSummary(file: UploadFile):
-    ret = await summarizationService.run(file)
-    return ret
+async def getSummary(file: UploadFile = File(...)):
+    summary = await summarizationService.run(file)
+    return summary
+
+
+@app.post("/stream")
+async def stream_events(req: Request):
+    async def stream_generator():
+        while True:
+            event = SSEEvent.get_event()
+            temp = event.model_dump()
+            if temp['message'] == 'end':
+                break
+            elif event:
+                yield "data: {}".format(event.model_dump_json())
+
+            await asyncio.sleep(1)
+
+    return EventSourceResponse(stream_generator())
+

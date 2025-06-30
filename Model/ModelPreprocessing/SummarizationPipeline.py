@@ -1,13 +1,13 @@
 import time
 
 from transformers import AutoTokenizer
-
+import asyncio
 from AbstractiveService import AbstractiveService
 from ChunkingService import ChunkingService
 from ExtractiveService import ExtractiveService
 from OCRService import OCRService
 from fastapi import UploadFile
-
+from Events import SSEEvent, EventModel
 from SmoothingService import SmoothingService
 
 
@@ -31,14 +31,22 @@ class SummarizationService:
 
     async def run(self, file : UploadFile):
         start_total = time.perf_counter()
+        SSEEvent.add_event(EventModel(message="OCR Begins",percentage=0))
         fullText = await self.ocr_service.process_pdf(file)
-        print("OCR Done")
+        await asyncio.sleep(1)
+        SSEEvent.add_event(EventModel(message="OCR Done",percentage=10))
+        SSEEvent.add_event(EventModel(message="Chunking Begins",percentage=10))
+        # await asyncio.sleep(1)
         chunks = await self.chunking_service.semantic_chunk_using_spacy(fullText)
-        print("Chunking Done")
+        SSEEvent.add_event(EventModel(message="Chunking Done",percentage=20))
+        SSEEvent.add_event(EventModel(message="Extractive Begins",percentage=20))
+        # await asyncio.sleep(1)
         extractiveSummary = []
         for chunk in chunks:
             extractiveSummary.append(self.extractiveService.getSummary(chunk) + "\n")
-        print("Extractive Summary Done")
+        SSEEvent.add_event(EventModel(message="Extractive Done",percentage=40))
+        SSEEvent.add_event(EventModel(message="Abstractive Begins",percentage=40))
+        # await asyncio.sleep(1)
         cur = ""
         cnt = 1
         abstractiveSummary = []
@@ -76,15 +84,17 @@ class SummarizationService:
         if cur:
             finalSummary.append(cur)
         endTime = time.perf_counter()
-
+        SSEEvent.add_event(EventModel(message="Abstractive Done", percentage=90))
         print("Abstractive Summary Time " + str(endTime - startTime))
 
         """
              Smoothing
         """
-
+        SSEEvent.add_event(EventModel(message="Smoothing Begins", percentage=90))
+        # await asyncio.sleep(1)
         self.smoothingService.process_text_file(finalSummary)
-
+        SSEEvent.add_event(EventModel(message="Smoothing Done", percentage=100))
+        SSEEvent.add_event(EventModel(message="end", percentage=100))
 
         end_total = time.perf_counter()
         print("Total Time " + str(end_total - start_total))
