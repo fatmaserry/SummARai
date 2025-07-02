@@ -87,6 +87,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/summarai/events").permitAll()
                         .anyRequest().authenticated()//
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
@@ -99,7 +100,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:1080")); // or "*" for all origins
+        configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:1080","http://localhost:8000")); // or "*" for all origins
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
