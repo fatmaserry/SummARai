@@ -1,3 +1,4 @@
+import io
 import os
 import requests
 import textwrap
@@ -78,10 +79,15 @@ class SmoothingService:
                 reshaped = arabic_reshaper.reshape(line)
                 bidi_line = get_display(reshaped)
                 pdf.multi_cell(0, 10, bidi_line, align='R')
-            pdf.ln(5)  # Add space between paragraphs
+            pdf.ln(5)
 
-        pdf.output(output_path)
-        print(f" PDF saved to: {output_path}")
+        # Get PDF content as a string, encode it, and write to BytesIO
+        pdf_bytes = io.BytesIO()
+        pdf_output = pdf.output(dest='S').encode('latin1')
+        pdf_bytes.write(pdf_output)
+        pdf_bytes.seek(0)
+        # pdf_output.output(output_path)
+        return pdf_bytes.read()
 
     def process_text_file(self, chunks):
 
@@ -93,4 +99,4 @@ class SmoothingService:
             smoothed_chunks.append(smoothed)
 
         final_text = "\n\n".join(smoothed_chunks)
-        self.save_to_pdf(final_text)
+        return self.save_to_pdf(final_text)

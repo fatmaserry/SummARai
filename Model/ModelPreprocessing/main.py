@@ -1,5 +1,11 @@
-from fastapi import FastAPI, UploadFile, Request, File
+import io
+from pipes import quote
+from typing import IO, Iterator
+
+from fastapi import FastAPI, UploadFile, Request, File, Body
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import StreamingResponse
+
 from OCRService import OCRService
 from SummarizationPipeline import SummarizationService
 from Events import SSEEvent, EventModel
@@ -59,21 +65,31 @@ app.add_middleware(
 @app.post("/getSummary")
 async def getSummary(file: UploadFile = File(...)):
     summary = await summarizationService.run(file)
-    return summary
 
 
-@app.post("/stream")
+    return StreamingResponse(
+        io.BytesIO(summary),
+        media_type="application/pdf",
+        headers={
+            # This header will make Spring’s WebClient (or a browser) see it as a downloadable file
+            "Content-Disposition": 'attachment; filename="book.pdf"'
+        }
+    )
+
+
+@app.get("/stream")
 async def stream_events(req: Request):
     async def stream_generator():
         while True:
             event = SSEEvent.get_event()
-            temp = event.model_dump()
-            if temp['message'] == 'end':
-                break
-            elif event:
-                yield "data: {}".format(event.model_dump_json())
+            if event:
+                temp = event.model_dump()
+                if temp['message'] == 'end':
+                    break
+                else:
+                    yield "data: {}\n\n".format(event.model_dump_json())
 
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.01)
 
     return EventSourceResponse(stream_generator())
 
