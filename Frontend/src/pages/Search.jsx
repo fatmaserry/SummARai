@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Search, NotFound } from "../components/Icons";
+
 import {
   getBooksByTitle,
   getBooksByAuthor,
@@ -49,7 +50,6 @@ export default function SearchBooks() {
   const handleSearch = async () => {
     try {
       let response;
-
       if (selected.length === 1 && selected.includes("الكتاب")) {
         response = await getBooksByTitle(inputs["الكتاب"] || "");
       } else if (selected.length === 1 && selected.includes("المؤلف")) {

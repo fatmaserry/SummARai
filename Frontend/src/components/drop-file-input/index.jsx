@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 import "./drop-file-input.css";
 
-import { ImageConfig } from "../components/ImageConfig.js";
-import { Upload } from "../components/Icons";
+import { ImageConfig } from "./ImageConfig.js";
+import { Upload } from "../Icons.tsx";
 
 const DropFileInput = (props) => {
   const wrapperRef = useRef(null);
@@ -47,14 +47,14 @@ const DropFileInput = (props) => {
 
   const onFileDrop = async (e) => {
     const newFile = e.target.files[0];
-    
+
     if (newFile.size < MIN_FILE_SIZE) {
-      toast.error(`الملف صغير جداً. الحد الأدنى للحجم هو ${MIN_FILE_SIZE/1024}KB`);
+      toast.error(`الملف صغير جداً. الحد الأدنى للحجم هو ${MIN_FILE_SIZE / 1024}KB`);
       return;
     }
-    
+
     if (newFile.size > MAX_FILE_SIZE) {
-      toast.error(`الملف كبير جداً. الحد الأقصى للحجم هو ${MAX_FILE_SIZE/1024/1024}MB`);
+      toast.error(`الملف كبير جداً. الحد الأقصى للحجم هو ${MAX_FILE_SIZE / 1024 / 1024}MB`);
       return;
     }
 

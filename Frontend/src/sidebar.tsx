@@ -40,7 +40,7 @@ export default function Sidebar({
       {/* Sidebar with improved transitions */}
       <aside
         className={`fixed right-0 h-full z-[9999] bg-[#241740] transition-all duration-300 ease-in-out ${
-          isSidebarOpen ? "w-64" : "w-20"
+          isSidebarOpen ? "w-64" : "w-14 md:w-20"
         }`}
       >
         {/* Glitter background decoration with smooth transition */}

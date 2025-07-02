@@ -38,7 +38,9 @@ const WelcomeMessage = memo(() => {
       <WordDropText text={" مَــرْحَبــاً بــك يا"} delayStart={0.2} />
       <WordDropText
         className="text-yellow-400"
-        text={" " + user.name.split(" ")[0] + user.name.split(" ")[1]}
+        text={` ${user.name.split(" ")[0]}${
+          user.name.split(" ")[1] ? " " + user.name.split(" ")[1] : ""
+        }`}
         delayStart={1}
       />
       <WordDropText text={" !"} delayStart={1.5} />

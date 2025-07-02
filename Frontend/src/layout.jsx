@@ -125,7 +125,7 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Content */}
-          <div className="relative z-10 mx-auto max-w-[80vw] p-4">
+          <div className="relative z-10 mx-auto max-w-[80vw] p-4 h-full">
             {children}
           </div>
 

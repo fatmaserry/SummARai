@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import DropFileInput from "../components/DropFileInput.jsx";
-import SummarySlider from "../components/SummarySlider.jsx";
+import SummarySlider from "../components/slider/index.jsx";
 import { getCurrentReadings, getFinishedReadings } from "../api/summary/get-summaries.ts";
 import { useNavigate } from "react-router-dom";
 import WelcomeMessage from "../components/welcome-message/index.tsx";
+import UploadSummary from "../components/upload-summary/index.tsx";
 
 export default function Readings() {
   const [currentBooks, setCurrentBooks] = useState([]);
@@ -47,25 +47,7 @@ export default function Readings() {
   return (
     <div className="readings-page">
       {MemoizedWelcomeMessage}
-
-      <h2 className="text-3xl font-semibold text-white text-center">
-        اضِف قراءات جديدة
-      </h2>
-
-      <div className="flex justify-center items-center p-4">
-        <div className="box w-full max-w-md">
-          <div className="border-2 border-dashed border-[#765CDE] rounded-xl p-6 text-center text-white">
-            <DropFileInput
-              onFileChange={(files) => console.log(files)}
-              multiple={false}
-            />
-          </div>
-          <button className="mt-4 bg-[#765CDE] hover:bg-purple-500 text-white py-1.5 px-4 rounded-md text-sm mx-auto block">
-            لخص
-          </button>
-        </div>
-      </div>
-
+      <UploadSummary />
       {currentBooks.length > 0 && (
         <SummarySlider
           title="تابع قراءة"

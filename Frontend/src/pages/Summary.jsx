@@ -139,7 +139,9 @@ export default function Summary() {
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">جاري تحميل البيانات...</div>;
+    return <div className="text-center py-8 flex justify-center items-center h-full">
+      <img src="/assets/images/books.gif" alt="loading" width={200} />
+    </div >;
   }
 
   if (error) {
@@ -151,7 +153,7 @@ export default function Summary() {
       <h1 className="text-3xl font-bold text-white">ملخص {book?.title}</h1>
 
       <div className="flex flex-col md:flex-row gap-8 p-6">
-        <div className="w-full md:w-1/3 lg:w-1/4">
+        <div className="w-full md:w-52">
           <img
             src={book?.image_url}
             alt={book?.title}
@@ -160,7 +162,7 @@ export default function Summary() {
         </div>
 
         <div className="w-full md:w-2/3 lg:w-3/4 space-y-6">
-          <h2 className="text-3xl font-semibold text-white">
+          <h2 className="text-4xl font-semibold text-white">
             {book?.author?.name}
           </h2>
 
@@ -168,13 +170,13 @@ export default function Summary() {
             <h3 className="text-lg text-white font-semibold mb-2">
               مقدمة عن الكتاب:
             </h3>
-            <p className="text-white text-base">{book?.about}</p>
+            <p className="text-white text-md">{book?.about}</p>
           </div>
         </div>
       </div>
 
       {!showPdf ? (
-        <div className="flex gap-4">
+        <div className="flex gap-4 mx-6">
           <button
             onClick={handleShowPdf}
             className="bg-[#765CDE] text-lg text-white font-bold py-1.5 px-3 rounded-lg hover:bg-[#6a50c9] transition-colors"
@@ -216,7 +218,7 @@ export default function Summary() {
           )}
           <div className="w-full flex justify-center mt-6">
             <div className="flex items-center justify-center gap-4 bg-[#241740
-] text-white rounded-full px-6 py-2">
+] text-white rounded-full px-6 py-2 bg-black w-fit">
               <button
                 onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
                 disabled={pageNumber <= 1}
