@@ -2,6 +2,7 @@ package com.summarai.summarai.controller;
 import com.summarai.summarai.dto.RegisterDto;
 import com.summarai.summarai.dto.UpdateProfileDto;
 import com.summarai.summarai.dto.UserDto;
+import com.summarai.summarai.model.User;
 import com.summarai.summarai.model.UserReading;
 import com.summarai.summarai.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,9 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
