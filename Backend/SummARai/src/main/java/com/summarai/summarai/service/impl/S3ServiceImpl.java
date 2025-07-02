@@ -5,9 +5,11 @@ import com.amazonaws.services.s3.model.*;
 import com.summarai.summarai.model.BookSummary;
 import com.summarai.summarai.service.BookSummaryService;
 import com.summarai.summarai.service.S3Service;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.yaml.snakeyaml.util.Tuple;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,16 +39,26 @@ public class S3ServiceImpl implements S3Service {
             throw new RuntimeException("Upload failed"+ e.getMessage());
         }
     }
-    public String uploadFile(byte[] fileBytes, String originalFilename) {
+    public Tuple<String,Integer> uploadFile(byte[] fileBytes, String originalFilename) {
         try {
-            File tempFile = File.createTempFile("summary-", "-" + originalFilename);
+            String folderName = "summary";
+            String workingDir = System.getProperty("user.dir");
+            File customDir = new File(workingDir, folderName);
+            File tempFile = File.createTempFile(
+                    "summary-", "-" + originalFilename,
+                    customDir);
             try (FileOutputStream fos = new FileOutputStream(tempFile)) {
                 fos.write(fileBytes);
             }
+            int pageCount;
+            try (PDDocument document = PDDocument.load(tempFile)) {
+                pageCount =  document.getNumberOfPages();
+            }
+
             String fileName = System.currentTimeMillis() + "_" + originalFilename;
             s3Client.putObject(new PutObjectRequest(bucketName, fileName, tempFile));
             tempFile.delete();
-            return fileName;
+            return new Tuple<String,Integer>(fileName,pageCount);
         } catch (IOException e) {
             throw new RuntimeException("Upload failed: " + e.getMessage(), e);
         }

@@ -3,13 +3,16 @@ package com.summarai.summarai.controller;
 import com.summarai.summarai.security.UserDetailsServiceImpl;
 import com.summarai.summarai.service.impl.SummaraiServiceImpl;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.security.Principal;
 
 @Controller
@@ -23,9 +26,9 @@ public class SummaraiController {
     }
 
     @PostMapping(value = "/summarize" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void summarai(@RequestParam("file") MultipartFile file, @RequestParam String email,@RequestParam int is_public) {
+    public ResponseEntity<?> summarai(@RequestParam("file") MultipartFile file, @RequestParam String email, @RequestParam int is_public) throws IOException {
         summaraiService.summarai(file,email,is_public, file.getOriginalFilename());
-
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     @GetMapping(value = "/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamEvents() {
