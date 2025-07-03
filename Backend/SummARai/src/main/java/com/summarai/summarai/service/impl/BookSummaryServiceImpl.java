@@ -54,6 +54,11 @@ public class BookSummaryServiceImpl implements BookSummaryService {
         return books.map(bookSummaryMapper::toDto);
     }
 
+    @Override
+    public Page<BookSummaryDto> getBooksByGenre(String genre, Pageable pageable) {
+        return bookSummaryRepository.findByGenre(genre, pageable).map(bookSummaryMapper::toDto);
+    }
+
     public Optional<BookSummaryDto> getBookById(Long id) {
         return bookSummaryRepository.findById(id)
                 .map(book -> bookSummaryMapper.toDto(book));

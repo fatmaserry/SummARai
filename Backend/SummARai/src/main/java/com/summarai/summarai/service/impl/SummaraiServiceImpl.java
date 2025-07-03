@@ -56,7 +56,7 @@ public class SummaraiServiceImpl implements SummaraiService {
     }
 
     @Override
-    public void summarai(MultipartFile book, String email, int is_public,String summaryName) throws IOException {
+    public void summarai(MultipartFile book, String email, String title, int is_public, String summaryName) throws IOException {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", new MultipartFileResource(book));
 
@@ -73,7 +73,10 @@ public class SummaraiServiceImpl implements SummaraiService {
                     Integer pageNo = temp._2();
                     userSummary.setSummary_url(fileName);
                     userSummary.setIs_public(is_public == 1);
-                    userSummary.setTitle(summaryName);
+
+                    if (title != null) userSummary.setTitle(title);
+                    else userSummary.setTitle(summaryName);
+
                     userSummary.setSummaryType("USER");
                     userSummary.setNormTitle(Normalizer.normalizeArabic(summaryName));
                     userSummary.setNumber_of_pages(Integer.toUnsignedLong(pageNo));
@@ -88,7 +91,6 @@ public class SummaraiServiceImpl implements SummaraiService {
                             emitter.send(SseEmitter.event().data("done"));
                             emitter.send(userSummaryMapper.toDto(userSummary));
                             emitter.complete();
-//                            sseService.removeEmitter(email);
                         } catch (IOException e) {
                             emitter.completeWithError(e);
                         }
@@ -111,12 +113,7 @@ public class SummaraiServiceImpl implements SummaraiService {
                             emitter.completeWithError(e);
                         }
                     }
-
-                    if ("end".equalsIgnoreCase(event.trim())) {
-
-                    }
                 })
-                .doOnError(Throwable::printStackTrace)
                 .subscribe();
     }
     public SseEmitter createEmitter(){
@@ -132,34 +129,5 @@ public class SummaraiServiceImpl implements SummaraiService {
         return emitter;
     }
 
-//    private void saveSummary(String email, int is_public,String summaryName) {
-//        webClient.get()
-//                .uri("/download")
-//                .accept(MediaType.APPLICATION_PDF)
-//                .retrieve()
-//                .bodyToMono(byte[].class)
-//                .doOnNext(pdfBytes -> {
-//
-//                    UserSummary userSummary = new UserSummary();
-//                    String fileName = s3Service.uploadFile(pdfBytes, summaryName + ".pdf");
-//                    userSummary.setSummary_url(fileName);
-//                    userSummary.setIs_public(is_public == 1);
-//                    userSummary.setTitle(summaryName);
-//
-//                    SseEmitter emitter = sseService.getEmitter(email);
-//                    if (emitter != null) {
-//                        try {
-//                            emitter.send(SseEmitter.event().data("done"));
-//                            emitter.complete();
-//                            sseService.removeEmitter(email);
-//                        } catch (IOException e) {
-//                            emitter.completeWithError(e);
-//                        }
-//                    }
-//
-//                })
-//                .doOnError(Throwable::printStackTrace)
-//                .subscribe();
-//    }
 }
 

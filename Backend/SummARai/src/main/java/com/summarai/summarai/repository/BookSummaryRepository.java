@@ -23,5 +23,8 @@ public interface BookSummaryRepository extends JpaRepository<BookSummary, Long>,
     @Query("select s.summary_url from BookSummary s where s.id=:id")
     String findUrlById(@Param("id") Long id);
 
+    @Query("SELECT s FROM BookSummary s JOIN s.genres g WHERE g.description = :genre")
+    Page<BookSummary> findByGenre(String genre, Pageable pageable);
+
 
 }

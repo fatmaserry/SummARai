@@ -101,6 +101,14 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping(params = "genre")
+    public ResponseEntity<Page<BookSummaryDto>> getBooksByGenre(@RequestParam String genre, Pageable pageable) {
+        Page<BookSummaryDto> books = bookSummaryService.getBooksByGenre(genre, pageable);
+        if(books.hasContent())
+            return ResponseEntity.status(HttpStatus.OK).body(books);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @GetMapping(params = "author")
     public ResponseEntity<Page<BookSummaryDto>> getBooksByAuthor(@RequestParam String author, Pageable pageable) {
         Page<BookSummaryDto> books = bookSummaryService.getBooksByAuthor(author, pageable);
@@ -108,6 +116,7 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.OK).body(books);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 
     @PostMapping("/search")
     public ResponseEntity<Page<?>> search(@RequestBody BookSearchRequest criteria, Pageable pageable) {
@@ -121,6 +130,8 @@ public class BookController {
     private List<GenreDto> getAllGenres(){
         return genreService.getAllGenres();
     }
+
+
 //    @GetMapping("/allusers")
 //    private List<UserDto> getAllUsers(){
 //        return userService.getAllUsers();
