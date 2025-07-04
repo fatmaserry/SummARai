@@ -11,7 +11,7 @@ import { useSSE } from "./provider/context/SSEContext";
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { resetProcessing, isProcessing } = useSSE();
+  const { resetProcessing, isProcessing, showCompletion } = useSSE();
   const { setToken, isLoggedIn, user, setUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,10 +30,12 @@ const Layout = ({ children }) => {
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden" dir="rtl">
       {/* Global Components - Highest z-index */}
-      {isProcessing && <div className="fixed inset-0 z-[9999]">
-        <GlobalProgressBar />
-        <GlobalCompletionPopup />
-      </div>}
+      {(isProcessing || showCompletion) && (
+        <div className="fixed inset-0 z-[9999]">
+          {isProcessing && <GlobalProgressBar />}
+          {showCompletion && <GlobalCompletionPopup />}
+        </div>
+      )}
 
       {/* Header */}
       <header

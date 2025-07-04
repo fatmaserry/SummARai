@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,14 +20,16 @@ import java.security.Principal;
 @RequestMapping("/summarai")
 public class SummaraiController {
     private final SummaraiServiceImpl summaraiService;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public SummaraiController(SummaraiServiceImpl summaraiService) {
+    public SummaraiController(SummaraiServiceImpl summaraiService, UserDetailsServiceImpl userDetailsService) {
         this.summaraiService = summaraiService;
-
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping(value = "/summarize" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> summarai(@RequestParam("file") MultipartFile file, @RequestParam String email, @RequestParam int is_public, @RequestParam String title) throws IOException {
+    public ResponseEntity<?> summarai(@RequestParam("file") MultipartFile file, @RequestParam int is_public, @RequestParam String title) throws IOException {
+        String email = userDetailsService.getCurrentUsername();
         summaraiService.summarai(file,email,title, is_public, file.getOriginalFilename());
         return ResponseEntity.status(HttpStatus.OK).build();
     }

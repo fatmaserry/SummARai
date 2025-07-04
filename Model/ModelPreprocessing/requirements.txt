@@ -18,7 +18,7 @@ python-bidi
 fpdf
 arabic_reshaper
 sse_starlette
-
+Groq
 
 # Bert
 # numpy>=1.23

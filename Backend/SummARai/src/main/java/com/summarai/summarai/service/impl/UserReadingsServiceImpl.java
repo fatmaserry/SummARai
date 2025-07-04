@@ -75,7 +75,7 @@ public class UserReadingsServiceImpl implements UserReadingsService {
                 .orElseThrow(() -> new SummaryNotFoundException("Summary not found, Couldn't Add the Reading"));
         if (summary instanceof UserSummary) {
             UserSummary userSummary = (UserSummary) summary;
-            if (!userSummary.getIs_public() && !userSummary.getOwner().getEmail().equals(UserDetailsServiceImpl.getCurrentUsername())) {
+            if (!userSummary.getIs_public() && !userSummary.getOwner().getEmail().equals(userDetailsService.getCurrentUsername())) {
                 throw new UnAuthorizedOperationException("Summary Is Private.");
             }
         }

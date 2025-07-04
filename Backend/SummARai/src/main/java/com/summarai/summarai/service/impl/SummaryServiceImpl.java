@@ -36,11 +36,13 @@ public class SummaryServiceImpl implements SummaryService {
     private final ReadingsRepository readingsRepository;
     private final SummaryRepository summaryRepository;
     private final SummaryMapper summaryMapper;
+    private final UserDetailsServiceImpl userDetailsService;
     private final BookSummaryMapper bookSummaryMapper;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final UserSummaryMapper userSummaryMapper;
     private final S3Service s3Service;
 
-    public SummaryServiceImpl(BookSummaryRepository summaryRepository, UserSummaryRepository userSummaryRepository, SummaryRepository summaryRepository1, SummaryMapper summaryMapper1, BookSummaryMapper summaryMapper, UserSummaryMapper userSummaryMapper, S3Service s3Service, UserDetailsServiceImpl userDetailsService, ReadingsRepository readingsRepository) {
+    public SummaryServiceImpl(BookSummaryRepository summaryRepository, UserSummaryRepository userSummaryRepository, SummaryRepository summaryRepository1, SummaryMapper summaryMapper1, BookSummaryMapper summaryMapper, UserSummaryMapper userSummaryMapper, S3Service s3Service, UserDetailsServiceImpl userDetailsService, ReadingsRepository readingsRepository, UserDetailsServiceImpl userDetailsService1, UserDetailsServiceImpl userDetailsServiceImpl) {
         this.bookSummaryRepository = summaryRepository;
         this.userSummaryRepository = userSummaryRepository;
         this.summaryRepository = summaryRepository1;
@@ -49,6 +51,8 @@ public class SummaryServiceImpl implements SummaryService {
         this.userSummaryMapper = userSummaryMapper;
         this.s3Service = s3Service;
         this.readingsRepository = readingsRepository;
+        this.userDetailsService = userDetailsService1;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
     public BookSummary saveBook(BookSummaryDto bookSummary, MultipartFile file) throws IOException {
@@ -69,7 +73,7 @@ public class SummaryServiceImpl implements SummaryService {
 
     @Override
     public Page<UserSummaryDto> getMySummaries(Pageable pageable) {
-        return userSummaryRepository.findMySummaries(UserDetailsServiceImpl.getCurrentUsername(), pageable).map(userSummaryMapper::toDto);
+        return userSummaryRepository.findMySummaries(userDetailsService.getCurrentUsername(), pageable).map(userSummaryMapper::toDto);
     }
 
     @Override
@@ -77,7 +81,7 @@ public class SummaryServiceImpl implements SummaryService {
         boolean isOnwer = false;
         if (userSummaryRepository.findById(summaryId).isPresent()) {
             UserSummary userSummary = userSummaryRepository.findById(summaryId).get();
-            if (Objects.equals(userSummary.getOwner().getEmail(), UserDetailsServiceImpl.getCurrentUsername()))
+            if (Objects.equals(userSummary.getOwner().getEmail(), userDetailsService.getCurrentUsername()))
                 isOnwer = true;
         }
         if (!isOnwer) {
@@ -107,7 +111,7 @@ public class SummaryServiceImpl implements SummaryService {
                 .orElseThrow(() -> new SummaryNotFoundException("Book not found"));
         if (summary instanceof UserSummary) {
             UserSummary userSummary = (UserSummary) summary;
-            if (!userSummary.getIs_public() && !userSummary.getOwner().getEmail().equals(UserDetailsServiceImpl.getCurrentUsername())) {
+            if (!userSummary.getIs_public() && !userSummary.getOwner().getEmail().equals(userDetailsService.getCurrentUsername())) {
                 throw new UnAuthorizedOperationException("Book Is Private.");
             }
         }
@@ -134,7 +138,7 @@ public class SummaryServiceImpl implements SummaryService {
         if (criteria.getType() == SummaryType.BOOK) {
             searchType = new SystemSearchFactory(bookSummaryRepository, bookSummaryMapper);
         } else
-            searchType = new UserGeneratedSearchFactory(userSummaryRepository, userSummaryMapper);
+            searchType = new UserGeneratedSearchFactory(userSummaryRepository, userSummaryMapper, userDetailsServiceImpl);
 
         return searchType.CreateSearch(criteria, pageable);
     }

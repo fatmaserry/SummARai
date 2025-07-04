@@ -1,7 +1,10 @@
 import { useSSE } from '../../provider/context/SSEContext';
+import { useNavigate } from "react-router-dom";
+
 
 const GlobalCompletionPopup = () => {
     const { summaryResult, showCompletion, closeCompletion } = useSSE();
+    const navigate = useNavigate();
 
     if (!showCompletion || !summaryResult) return null;
 
@@ -30,7 +33,7 @@ const GlobalCompletionPopup = () => {
                         rel="noopener noreferrer"
                         onClick={() => {
                             closeCompletion();
-                            navigate("/summary", { state: { summaryResult } });
+                            navigate("/summary", { state: { book: summaryResult } });
                         }}
                     >
                         افتح الملخص

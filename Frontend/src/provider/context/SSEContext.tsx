@@ -78,30 +78,39 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   });
 
-  // In SSEProvider component
-
   const [controller, setController] = useState<AbortController | null>(null);
 
-  const updateState = (newState: Partial<typeof state>) => {
-    setState((prev) => {
-      const updated = { ...prev, ...newState };
-      saveProcessingState(updated);
-      return updated;
-    });
-  };
+  // Ensure new objects for nested state (progress) to trigger re-render
+  const updateState = useCallback(
+    (newState: Partial<typeof state>) => {
+      setState((prev) => ({
+        ...prev,
+        ...newState,
+        progress: newState.progress
+          ? { ...newState.progress }
+          : { ...prev.progress },
+      }));
+    },
+    []
+  );
+
+  // Persist state to localStorage when state changes
+  useEffect(() => {
+    saveProcessingState(state);
+  }, [state]);
 
   const resetProcessing = useCallback(() => {
     if (controller) {
       controller.abort();
     }
-    updateState({
+    setController(null);
+    setState({
       progress: { percentage: 0, message: "" },
       summaryResult: null,
       isProcessing: false,
       showCompletion: false,
     });
     clearProcessingState();
-    setController(null);
   }, [controller]);
 
   useEffect(() => {
@@ -109,11 +118,12 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!user) {
       resetProcessing();
     }
-  }, [user, resetProcessing]);
+    // eslint-disable-next-line
+  }, [user]);
 
   const closeCompletion = useCallback(() => {
     updateState({ showCompletion: false });
-  }, []);
+  }, [updateState]);
 
   const startProcessing = useCallback(
     async (file: File, title: string, isPublic: boolean) => {
@@ -135,7 +145,6 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("email", user.email);
         formData.append("is_public", isPublic ? "1" : "0");
         formData.append("title", title);
 
@@ -155,7 +164,6 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
 
           onopen: async (response) => {
             if (response.ok) {
-              console.log("SSE connection established");
               return;
             }
             throw new Error(`SSE connection failed: ${response.status}`);
@@ -164,8 +172,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
           onmessage: async (event) => {
             try {
               const rawData = event.data;
-              console.log("Reconnection - Raw SSE data:", rawData);
-
+              console.log(rawData)
               if (!rawData || rawData.trim() === "") return;
 
               if (rawData === "done") {
@@ -183,6 +190,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
               let jsonString = rawData;
               if (rawData.startsWith("data: ")) {
                 jsonString = rawData.substring(6).trim();
+                console.log(jsonString)
               }
 
               jsonString = jsonString
@@ -191,8 +199,10 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
                 .replace(/\\/g, "");
 
               const eventData = JSON.parse(jsonString);
+              console.log(eventData)
 
               if (eventData.percentage !== undefined) {
+                console.log(eventData)
                 updateState({
                   progress: {
                     percentage: Math.min(
@@ -240,7 +250,6 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
           },
 
           onclose: () => {
-            console.log("Connection closed");
             updateState({ isProcessing: false });
           },
         });
@@ -250,7 +259,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
         ctrl.abort();
       }
     },
-    [token, user]
+    [token, user, updateState]
   );
 
   // Reconnect on page refresh if processing was ongoing
@@ -270,7 +279,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
 
             onopen: async (response) => {
               if (response.ok) {
-                console.log("SSE reconnection established");
+                // SSE reconnection established
                 return;
               }
               throw new Error(`SSE connection failed: ${response.status}`);
@@ -279,8 +288,6 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
             onmessage: async (event) => {
               try {
                 const rawData = event.data;
-                console.log("Reconnection - Raw SSE data:", rawData);
-
                 if (!rawData || rawData.trim() === "") return;
 
                 if (rawData === "done") {
@@ -373,6 +380,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
         controller.abort();
       }
     };
+    // eslint-disable-next-line
   }, [token]);
 
   return (

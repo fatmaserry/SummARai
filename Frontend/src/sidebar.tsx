@@ -117,18 +117,6 @@ export function SidebarItem({
         </span>
       </div>
 
-      {alert && (
-        <div
-          className={`absolute left-2 w-2 h-2 rounded-full ${
-            isSidebarOpen ? "" : "top-3"
-          }`}
-          style={{
-            backgroundColor: "#765CDE",
-            boxShadow: "0 0 0 2px rgba(118, 92, 222, 0.3)",
-          }}
-        />
-      )}
-
       {!isSidebarOpen && (
         <div
           className={`

@@ -8,6 +8,12 @@ import com.summarai.summarai.service.impl.Normalizer;
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserGeneratedSearchCriteria extends SearchCriteria{
+    private final UserDetailsServiceImpl userDetailsService;
+
+    public UserGeneratedSearchCriteria(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Override
     Specification<UserSummary> search(BookSearchRequest bookSearchRequest) {
         Specification<UserSummary> spec = Specification.where(null);
@@ -20,15 +26,15 @@ public class UserGeneratedSearchCriteria extends SearchCriteria{
         spec = spec.and(isPublic());
         return spec;
     }
-    public static Specification<UserSummary> normTitleContains(String norm_title) {
+    public Specification<UserSummary> normTitleContains(String norm_title) {
         return (root, query, cb) ->
                 cb.like(cb.lower(root.get("normTitle")), "%" + norm_title+ "%");
     }
-    public static Specification<UserSummary> isPublic() {
+    public Specification<UserSummary> isPublic() {
         return (root, query, cb) ->
                 cb.or(
                         cb.equal(root.get("is_public"), true),
-                        cb.equal(root.get("owner").get("email"), UserDetailsServiceImpl.getCurrentUsername() )
+                        cb.equal(root.get("owner").get("email"), userDetailsService.getCurrentUsername() )
                 );
     }
 }

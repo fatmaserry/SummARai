@@ -1,7 +1,7 @@
 package com.summarai.summarai.controller;
 import com.summarai.summarai.dto.BookSummaryDto;
 import com.summarai.summarai.dto.GenreDto;
-import com.summarai.summarai.dto.GenreDto;
+import com.summarai.summarai.dto.*;
 
 
 

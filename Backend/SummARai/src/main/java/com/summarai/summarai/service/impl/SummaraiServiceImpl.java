@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import com.summarai.summarai.mapper.UserMapper;
 import com.summarai.summarai.mapper.UserSummaryMapper;
 import com.summarai.summarai.model.UserSummary;
+import com.summarai.summarai.repository.UserRepository;
 import com.summarai.summarai.repository.UserSummaryRepository;
 import com.summarai.summarai.security.UserDetailsServiceImpl;
 import com.summarai.summarai.service.SummaraiService;
@@ -49,7 +50,9 @@ public class SummaraiServiceImpl implements SummaraiService {
     private final UserSummaryRepository userSummaryRepository;
     private final UserSummaryMapper userSummaryMapper;
     private final UserMapper userMapper;
-    public SummaraiServiceImpl(WebClient.Builder webClientBuilder, SseServiceImpl sseService, UserDetailsServiceImpl userDetailsService, S3ServiceImpl s3Service, UserSummaryRepository userSummaryRepository, UserSummaryMapper userSummaryMapper, UserMapper userMapper) {
+    private final UserRepository userRepository;
+
+    public SummaraiServiceImpl(WebClient.Builder webClientBuilder, SseServiceImpl sseService, UserDetailsServiceImpl userDetailsService, S3ServiceImpl s3Service, UserSummaryRepository userSummaryRepository, UserSummaryMapper userSummaryMapper, UserMapper userMapper, UserRepository userRepository) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
         this.sseService = sseService;
         this.userDetailsService = userDetailsService;
@@ -57,6 +60,7 @@ public class SummaraiServiceImpl implements SummaraiService {
         this.userSummaryRepository = userSummaryRepository;
         this.userSummaryMapper = userSummaryMapper;
         this.userMapper = userMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -87,7 +91,7 @@ public class SummaraiServiceImpl implements SummaraiService {
                     LocalDate localDate = LocalDate.now();  // or whatever date
                     Date nw = java.sql.Date.valueOf(localDate);
                     userSummary.setCreation_time(nw);
-                    userSummary.setOwner(userMapper.toEntity(userDetailsService.getCurrentUser()));
+                    userSummary.setOwner(userRepository.findByEmail(email).get());
                     userSummaryRepository.save(userSummary);
 
                     SseEmitter emitter = sseService.getEmitter(email);
