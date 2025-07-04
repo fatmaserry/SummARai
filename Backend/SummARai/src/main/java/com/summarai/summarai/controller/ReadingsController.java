@@ -1,18 +1,13 @@
 package com.summarai.summarai.controller;
-
 import com.summarai.summarai.dto.UserReadingDto;
-import com.summarai.summarai.exception.DuplicateRecordException;
 import com.summarai.summarai.exception.ReadingNotFoundException;
 import com.summarai.summarai.service.UserReadingsService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
-
 @RestController
 @RequestMapping("/api/readings")
 public class ReadingsController {

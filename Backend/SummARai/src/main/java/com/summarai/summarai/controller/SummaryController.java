@@ -2,15 +2,10 @@ package com.summarai.summarai.controller;
 import com.summarai.summarai.dto.BookSummaryDto;
 import com.summarai.summarai.dto.GenreDto;
 import com.summarai.summarai.dto.*;
-
-
-
 import com.summarai.summarai.model.BookSummary;
 import com.summarai.summarai.service.SummaryService;
 import com.summarai.summarai.service.GenreService;
 import com.summarai.summarai.service.S3Service;
-
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -20,12 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/books")
 public class SummaryController {
@@ -84,9 +77,6 @@ public class SummaryController {
         Optional<SummaryDto> book = summaryService.getBookById(book_id);
         if(book.isPresent())
             return ResponseEntity.status(HttpStatus.OK).body(book);
-//            return bookSummaryService.getBookById(book_id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -145,10 +135,4 @@ public class SummaryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
-//    @GetMapping("/allusers")
-//    private List<UserDto> getAllUsers(){
-//        return userService.getAllUsers();
-//    }
-
 }

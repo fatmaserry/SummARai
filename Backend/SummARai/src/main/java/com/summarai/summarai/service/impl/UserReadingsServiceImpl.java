@@ -91,6 +91,7 @@ public class UserReadingsServiceImpl implements UserReadingsService {
         ret.getSummaryDto().setSummary_url(null);
         return ret;
     }
+    @Override
     public UserReadingDto updateBookMark(Long summary_id, Long book_mark){
         Long user_id = userDetailsService.getCurrentUser().getId();
         UserReadingId userReadingId = new UserReadingId(user_id, summary_id);
