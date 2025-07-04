@@ -1,7 +1,5 @@
 package com.summarai.summarai.service.impl;
 import java.time.LocalDate;
-
-import com.summarai.summarai.mapper.UserMapper;
 import com.summarai.summarai.mapper.UserSummaryMapper;
 import com.summarai.summarai.model.UserSummary;
 import com.summarai.summarai.repository.UserRepository;
@@ -9,9 +7,7 @@ import com.summarai.summarai.repository.UserSummaryRepository;
 import com.summarai.summarai.security.UserDetailsServiceImpl;
 import com.summarai.summarai.service.SummaraiService;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -19,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import reactor.core.publisher.Mono;
-
 import java.io.IOException;
-import java.time.ZoneId;
 import java.sql.Date;
 
 class MultipartFileResource extends ByteArrayResource {
@@ -49,17 +42,15 @@ public class SummaraiServiceImpl implements SummaraiService {
     private final S3ServiceImpl s3Service;
     private final UserSummaryRepository userSummaryRepository;
     private final UserSummaryMapper userSummaryMapper;
-    private final UserMapper userMapper;
     private final UserRepository userRepository;
 
-    public SummaraiServiceImpl(WebClient.Builder webClientBuilder, SseServiceImpl sseService, UserDetailsServiceImpl userDetailsService, S3ServiceImpl s3Service, UserSummaryRepository userSummaryRepository, UserSummaryMapper userSummaryMapper, UserMapper userMapper, UserRepository userRepository) {
+    public SummaraiServiceImpl(WebClient.Builder webClientBuilder, SseServiceImpl sseService, UserDetailsServiceImpl userDetailsService, S3ServiceImpl s3Service, UserSummaryRepository userSummaryRepository, UserSummaryMapper userSummaryMapper, UserRepository userRepository) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
         this.sseService = sseService;
         this.userDetailsService = userDetailsService;
         this.s3Service = s3Service;
         this.userSummaryRepository = userSummaryRepository;
         this.userSummaryMapper = userSummaryMapper;
-        this.userMapper = userMapper;
         this.userRepository = userRepository;
     }
 

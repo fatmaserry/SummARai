@@ -17,18 +17,15 @@ import com.summarai.summarai.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -80,8 +77,6 @@ public class AuthServiceImpl implements AuthService {
         String subject = "Confirm your email";
         String emailText = buildVerifyEmail(user.getName(), confirmationLink);
         emailService.send(request.getEmail(),subject,emailText);
-
-//        var userDetails = userDetailsMapper.userToUserDetails(savedUser);
         var jwtToken = jwtService.generateToken(savedUser);
         var refreshToken = jwtService.generateRefreshToken(savedUser);
         saveUserToken(savedUser, jwtToken);
@@ -91,7 +86,6 @@ public class AuthServiceImpl implements AuthService {
                 .refreshToken(refreshToken)
                 .build();
     }
-
     public boolean forgetPassword(String email){
         boolean found = userRepository.existsByEmail(email);
         if(!found)
@@ -117,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
         verificationToken.setToken(token);
         verificationToken.setUser(user);
         verificationToken.setExpiryDate(Instant.now().plus(15, ChronoUnit.MINUTES));
-        verificationTokenRepository.save(verificationToken); // Save to DB
+        verificationTokenRepository.save(verificationToken);
     }
 
     public void confirmToken(String token) {
