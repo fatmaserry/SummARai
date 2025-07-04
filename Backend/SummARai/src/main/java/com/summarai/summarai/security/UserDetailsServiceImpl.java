@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
-    public String getCurrentUsername() {
+    static public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             return authentication.getName();

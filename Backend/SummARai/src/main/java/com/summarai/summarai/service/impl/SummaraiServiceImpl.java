@@ -1,5 +1,7 @@
 package com.summarai.summarai.service.impl;
 import java.time.LocalDate;
+
+import com.summarai.summarai.mapper.UserMapper;
 import com.summarai.summarai.mapper.UserSummaryMapper;
 import com.summarai.summarai.model.UserSummary;
 import com.summarai.summarai.repository.UserSummaryRepository;
@@ -46,17 +48,19 @@ public class SummaraiServiceImpl implements SummaraiService {
     private final S3ServiceImpl s3Service;
     private final UserSummaryRepository userSummaryRepository;
     private final UserSummaryMapper userSummaryMapper;
-    public SummaraiServiceImpl(WebClient.Builder webClientBuilder, SseServiceImpl sseService, UserDetailsServiceImpl userDetailsService, S3ServiceImpl s3Service, UserSummaryRepository userSummaryRepository, UserSummaryMapper userSummaryMapper) {
+    private final UserMapper userMapper;
+    public SummaraiServiceImpl(WebClient.Builder webClientBuilder, SseServiceImpl sseService, UserDetailsServiceImpl userDetailsService, S3ServiceImpl s3Service, UserSummaryRepository userSummaryRepository, UserSummaryMapper userSummaryMapper, UserMapper userMapper) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
         this.sseService = sseService;
         this.userDetailsService = userDetailsService;
         this.s3Service = s3Service;
         this.userSummaryRepository = userSummaryRepository;
         this.userSummaryMapper = userSummaryMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
-    public void summarai(MultipartFile book, String email, int is_public,String summaryName) throws IOException {
+    public void summarai(MultipartFile book, String email, String title, int is_public, String summaryName) throws IOException {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", new MultipartFileResource(book));
 
@@ -73,13 +77,17 @@ public class SummaraiServiceImpl implements SummaraiService {
                     Integer pageNo = temp._2();
                     userSummary.setSummary_url(fileName);
                     userSummary.setIs_public(is_public == 1);
-                    userSummary.setTitle(summaryName);
+
+                    if (title != null) userSummary.setTitle(title);
+                    else userSummary.setTitle(summaryName);
+
                     userSummary.setSummaryType("USER");
                     userSummary.setNormTitle(Normalizer.normalizeArabic(summaryName));
                     userSummary.setNumber_of_pages(Integer.toUnsignedLong(pageNo));
                     LocalDate localDate = LocalDate.now();  // or whatever date
                     Date nw = java.sql.Date.valueOf(localDate);
                     userSummary.setCreation_time(nw);
+                    userSummary.setOwner(userMapper.toEntity(userDetailsService.getCurrentUser()));
                     userSummaryRepository.save(userSummary);
 
                     SseEmitter emitter = sseService.getEmitter(email);
@@ -88,7 +96,6 @@ public class SummaraiServiceImpl implements SummaraiService {
                             emitter.send(SseEmitter.event().data("done"));
                             emitter.send(userSummaryMapper.toDto(userSummary));
                             emitter.complete();
-//                            sseService.removeEmitter(email);
                         } catch (IOException e) {
                             emitter.completeWithError(e);
                         }
@@ -111,12 +118,7 @@ public class SummaraiServiceImpl implements SummaraiService {
                             emitter.completeWithError(e);
                         }
                     }
-
-                    if ("end".equalsIgnoreCase(event.trim())) {
-
-                    }
                 })
-                .doOnError(Throwable::printStackTrace)
                 .subscribe();
     }
     public SseEmitter createEmitter(){
@@ -132,34 +134,5 @@ public class SummaraiServiceImpl implements SummaraiService {
         return emitter;
     }
 
-//    private void saveSummary(String email, int is_public,String summaryName) {
-//        webClient.get()
-//                .uri("/download")
-//                .accept(MediaType.APPLICATION_PDF)
-//                .retrieve()
-//                .bodyToMono(byte[].class)
-//                .doOnNext(pdfBytes -> {
-//
-//                    UserSummary userSummary = new UserSummary();
-//                    String fileName = s3Service.uploadFile(pdfBytes, summaryName + ".pdf");
-//                    userSummary.setSummary_url(fileName);
-//                    userSummary.setIs_public(is_public == 1);
-//                    userSummary.setTitle(summaryName);
-//
-//                    SseEmitter emitter = sseService.getEmitter(email);
-//                    if (emitter != null) {
-//                        try {
-//                            emitter.send(SseEmitter.event().data("done"));
-//                            emitter.complete();
-//                            sseService.removeEmitter(email);
-//                        } catch (IOException e) {
-//                            emitter.completeWithError(e);
-//                        }
-//                    }
-//
-//                })
-//                .doOnError(Throwable::printStackTrace)
-//                .subscribe();
-//    }
 }
 

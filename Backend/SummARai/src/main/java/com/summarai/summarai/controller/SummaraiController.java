@@ -26,8 +26,8 @@ public class SummaraiController {
     }
 
     @PostMapping(value = "/summarize" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> summarai(@RequestParam("file") MultipartFile file, @RequestParam String email, @RequestParam int is_public) throws IOException {
-        summaraiService.summarai(file,email,is_public, file.getOriginalFilename());
+    public ResponseEntity<?> summarai(@RequestParam("file") MultipartFile file, @RequestParam String email, @RequestParam int is_public, @RequestParam String title) throws IOException {
+        summaraiService.summarai(file,email,title, is_public, file.getOriginalFilename());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @GetMapping(value = "/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
