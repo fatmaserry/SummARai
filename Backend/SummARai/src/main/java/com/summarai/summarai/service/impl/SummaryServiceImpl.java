@@ -64,7 +64,7 @@ public class SummaryServiceImpl implements SummaryService {
     }
 
     public String getSummaryURL(Long id) {
-        return this.bookSummaryRepository.findUrlById(id);
+        return this.summaryRepository.findUrlById(id);
     }
 
     @Override
