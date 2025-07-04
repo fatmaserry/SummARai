@@ -4,10 +4,20 @@ import jakarta.persistence.Column;
 
 import java.sql.Date;
 
-public class UserSummaryDto extends SummaryDto{
+public class UserSummaryDto extends SummaryDto {
     private boolean is_public;
 
-    private Date creation_time ;
+    private Date creation_time;
+
+    private Long owner_id;
+
+    public Long getOwner_id() {
+        return owner_id;
+    }
+
+    public void setOwner_id(Long owner_id) {
+        this.owner_id = owner_id;
+    }
 
     public boolean isIs_public() {
         return is_public;

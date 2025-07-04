@@ -4,11 +4,13 @@ import com.summarai.summarai.dto.UserReadingDto;
 import com.summarai.summarai.exception.DuplicateRecordException;
 import com.summarai.summarai.exception.ReadingNotFoundException;
 import com.summarai.summarai.exception.SummaryNotFoundException;
+import com.summarai.summarai.exception.UnAuthorizedOperationException;
 import com.summarai.summarai.mapper.UserMapper;
 import com.summarai.summarai.mapper.UserReadingMapper;
 import com.summarai.summarai.model.Summary;
 import com.summarai.summarai.model.UserReading;
 import com.summarai.summarai.model.UserReadingId;
+import com.summarai.summarai.model.UserSummary;
 import com.summarai.summarai.repository.ReadingsRepository;
 import com.summarai.summarai.repository.SummaryRepository;
 import com.summarai.summarai.security.UserDetailsServiceImpl;
@@ -71,7 +73,12 @@ public class UserReadingsServiceImpl implements UserReadingsService {
 
         Summary summary = summaryRepository.findById(summary_id)
                 .orElseThrow(() -> new SummaryNotFoundException("Summary not found, Couldn't Add the Reading"));
-
+        if (summary instanceof UserSummary) {
+            UserSummary userSummary = (UserSummary) summary;
+            if (!userSummary.getIs_public() && !userSummary.getOwner().getEmail().equals(UserDetailsServiceImpl.getCurrentUsername())) {
+                throw new UnAuthorizedOperationException("Summary Is Private.");
+            }
+        }
         Date curTime = Date.valueOf(LocalDate.now());
         UserReading userReading = new UserReading();
         userReading.setId(userReadingId);

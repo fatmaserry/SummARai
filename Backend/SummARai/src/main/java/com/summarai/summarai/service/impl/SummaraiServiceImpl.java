@@ -1,5 +1,7 @@
 package com.summarai.summarai.service.impl;
 import java.time.LocalDate;
+
+import com.summarai.summarai.mapper.UserMapper;
 import com.summarai.summarai.mapper.UserSummaryMapper;
 import com.summarai.summarai.model.UserSummary;
 import com.summarai.summarai.repository.UserSummaryRepository;
@@ -46,13 +48,15 @@ public class SummaraiServiceImpl implements SummaraiService {
     private final S3ServiceImpl s3Service;
     private final UserSummaryRepository userSummaryRepository;
     private final UserSummaryMapper userSummaryMapper;
-    public SummaraiServiceImpl(WebClient.Builder webClientBuilder, SseServiceImpl sseService, UserDetailsServiceImpl userDetailsService, S3ServiceImpl s3Service, UserSummaryRepository userSummaryRepository, UserSummaryMapper userSummaryMapper) {
+    private final UserMapper userMapper;
+    public SummaraiServiceImpl(WebClient.Builder webClientBuilder, SseServiceImpl sseService, UserDetailsServiceImpl userDetailsService, S3ServiceImpl s3Service, UserSummaryRepository userSummaryRepository, UserSummaryMapper userSummaryMapper, UserMapper userMapper) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
         this.sseService = sseService;
         this.userDetailsService = userDetailsService;
         this.s3Service = s3Service;
         this.userSummaryRepository = userSummaryRepository;
         this.userSummaryMapper = userSummaryMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -83,6 +87,7 @@ public class SummaraiServiceImpl implements SummaraiService {
                     LocalDate localDate = LocalDate.now();  // or whatever date
                     Date nw = java.sql.Date.valueOf(localDate);
                     userSummary.setCreation_time(nw);
+                    userSummary.setOwner(userMapper.toEntity(userDetailsService.getCurrentUser()));
                     userSummaryRepository.save(userSummary);
 
                     SseEmitter emitter = sseService.getEmitter(email);

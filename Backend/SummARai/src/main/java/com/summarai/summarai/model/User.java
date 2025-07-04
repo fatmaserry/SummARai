@@ -6,9 +6,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -29,6 +27,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true,cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     private List<UserReading> myReadings;
+
+    @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY)
+    private Set<UserSummary> summaries = new HashSet<>();
 
     @Column
     private Role role;

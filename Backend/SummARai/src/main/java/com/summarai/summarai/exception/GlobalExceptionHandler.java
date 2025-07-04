@@ -31,5 +31,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", ex.getMessage()));
     }
+    @ExceptionHandler(UnAuthorizedOperationException.class)
+    public ResponseEntity<Map<String, String>> handleUnAuthorizedOperation(UnAuthorizedOperationException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", ex.getMessage()));
+    }
 
 }

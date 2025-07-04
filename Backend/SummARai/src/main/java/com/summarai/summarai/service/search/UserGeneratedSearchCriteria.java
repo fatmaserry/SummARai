@@ -3,6 +3,7 @@ package com.summarai.summarai.service.search;
 import com.summarai.summarai.dto.BookSearchRequest;
 import com.summarai.summarai.dto.BookSpecs;
 import com.summarai.summarai.model.UserSummary;
+import com.summarai.summarai.security.UserDetailsServiceImpl;
 import com.summarai.summarai.service.impl.Normalizer;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -25,6 +26,9 @@ public class UserGeneratedSearchCriteria extends SearchCriteria{
     }
     public static Specification<UserSummary> isPublic() {
         return (root, query, cb) ->
-                cb.equal(root.get("is_public"),true);
+                cb.or(
+                        cb.equal(root.get("is_public"), true),
+                        cb.equal(root.get("owner").get("email"), UserDetailsServiceImpl.getCurrentUsername() )
+                );
     }
 }

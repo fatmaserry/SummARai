@@ -2,8 +2,6 @@ package com.summarai.summarai.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import com.summarai.summarai.model.BookSummary;
-import com.summarai.summarai.service.BookSummaryService;
 import com.summarai.summarai.service.S3Service;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Value;

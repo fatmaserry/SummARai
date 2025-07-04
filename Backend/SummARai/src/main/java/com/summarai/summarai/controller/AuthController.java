@@ -2,7 +2,6 @@ package com.summarai.summarai.controller;
 
 import com.summarai.summarai.dto.UserDto;
 import com.summarai.summarai.security.AuthenticationResponse;
-import com.summarai.summarai.service.BookSummaryService;
 import com.summarai.summarai.service.impl.AuthServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
