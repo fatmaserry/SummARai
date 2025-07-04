@@ -5,8 +5,9 @@ import {
   getBooksByTitle,
   getBooksByAuthor,
   searchBooks,
-  getAllGenres,
-} from "../api/summary/get-summaries.ts";
+} from "../api/summary/search";
+
+import { getAllGenres } from "../api/summary/get-summaries";
 import { useNavigate } from "react-router-dom";
 export default function SearchBooks() {
   const options = ["الكتاب", "المؤلف", "النوع"];

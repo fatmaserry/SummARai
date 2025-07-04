@@ -5,12 +5,14 @@ import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import {
   getSummaryById,
+  getBook,
+} from "../api/summary/get-summaries.ts";
+import {
+  addReading,
   setBookmark,
   getReadingDataBySummaryId,
   setFinishedSummary,
-  getBook,
-  addReading,
-} from "../api/summary/get-summaries.ts";
+} from "../api/summary/readings.ts";
 import { updateUserStatistics } from "../api/user/statistics.ts";
 import { Bookmark, SaveBookmark } from "../components/Icons";
 

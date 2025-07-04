@@ -10,9 +10,9 @@ const SummarySlider = ({ title, images, className, books, onImageClick, type }) 
 
   return (
     <div className={`${className} mb-16 relative w-[300px] md:w-[600px] lg:w-full`}>
-      <h4 className="text-3xl font-semibold text-white text-right m-4">
+      {title && <h4 className="text-3xl font-semibold text-white text-right m-4">
         {title}
-      </h4>
+      </h4>}
 
       {/* Custom arrows */}
       <div className="absolute top-1/2 -left-6 z-10 -translate-y-1/2" ref={prevRef}>
@@ -65,7 +65,11 @@ const SummarySlider = ({ title, images, className, books, onImageClick, type }) 
         className="px-4 !w-[80%]"
       >
         {images.map((imgSrc, idx) => {
-          const slideTitle = type === "home" ? books[idx]?.title : books[idx]?.summaryDto?.title;
+          const slideTitle =
+            type === "home" ? books[idx]?.title :
+              type === "summary" ? books[idx]?.title :
+                books[idx]?.summaryDto?.title;
+
 
           return (
             <SwiperSlide
@@ -75,7 +79,7 @@ const SummarySlider = ({ title, images, className, books, onImageClick, type }) 
               <div
                 className="relative w-full h-full rounded overflow-hidden cursor-pointer"
                 aria-label={slideTitle}
-                onClick={() => onImageClick(type === "home" ? books[idx] : books[idx].summaryDto)}
+                onClick={() => onImageClick(type === "home" ? books[idx] : type === "summary" ? books[idx] : books[idx].summaryDto)}
               >
                 <img
                   src={imgSrc}

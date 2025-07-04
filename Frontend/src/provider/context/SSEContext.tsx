@@ -9,7 +9,7 @@ import { fetchEventSource } from "@microsoft/fetch-event-source";
 import toast from "react-hot-toast";
 import { api } from "../../api";
 import { AuthContext } from "../auth/authProvider";
-import { addReading } from "../../api/summary/get-summaries";
+import { addReading } from "../../api/summary/readings";
 
 interface ProgressEvent {
   percentage: number;
@@ -81,18 +81,15 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
   const [controller, setController] = useState<AbortController | null>(null);
 
   // Ensure new objects for nested state (progress) to trigger re-render
-  const updateState = useCallback(
-    (newState: Partial<typeof state>) => {
-      setState((prev) => ({
-        ...prev,
-        ...newState,
-        progress: newState.progress
-          ? { ...newState.progress }
-          : { ...prev.progress },
-      }));
-    },
-    []
-  );
+  const updateState = useCallback((newState: Partial<typeof state>) => {
+    setState((prev) => ({
+      ...prev,
+      ...newState,
+      progress: newState.progress
+        ? { ...newState.progress }
+        : { ...prev.progress },
+    }));
+  }, []);
 
   // Persist state to localStorage when state changes
   useEffect(() => {
@@ -172,7 +169,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
           onmessage: async (event) => {
             try {
               const rawData = event.data;
-              console.log(rawData)
+              console.log(rawData);
               if (!rawData || rawData.trim() === "") return;
 
               if (rawData === "done") {
@@ -190,7 +187,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
               let jsonString = rawData;
               if (rawData.startsWith("data: ")) {
                 jsonString = rawData.substring(6).trim();
-                console.log(jsonString)
+                console.log(jsonString);
               }
 
               jsonString = jsonString
@@ -199,10 +196,10 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
                 .replace(/\\/g, "");
 
               const eventData = JSON.parse(jsonString);
-              console.log(eventData)
+              console.log(eventData);
 
               if (eventData.percentage !== undefined) {
-                console.log(eventData)
+                console.log(eventData);
                 updateState({
                   progress: {
                     percentage: Math.min(

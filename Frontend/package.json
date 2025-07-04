@@ -10,10 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@mui/material": "^7.2.0",
+    "@mui/styled-engine": "^7.2.0",
+    "@nextui-org/react": "^2.6.11",
     "axios": "^1.9.0",
     "chart.js": "^4.4.9",
     "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.0",
     "i": "^0.3.7",
     "lucide-react": "^0.501.0",
     "npm": "^10.9.3",
