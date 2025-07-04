@@ -5,12 +5,14 @@ import { SidebarItem } from "./sidebar";
 import { AuthContext } from "./provider/auth/authProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "./provider/auth/useAuth";
-
+import GlobalProgressBar from "./components/progress-bar/global";
+import GlobalCompletionPopup from "./components/popup/index";
+import { useSSE } from "./provider/context/SSEContext";
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isLoggedIn, user } = useContext(AuthContext);
-  const { setToken } = useAuth();
+  const { resetProcessing, isProcessing } = useSSE();
+  const { setToken, isLoggedIn, user, setUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,15 +21,23 @@ const Layout = ({ children }) => {
   };
 
   const handleLogout = () => {
+    resetProcessing();
+    setUser(null)
     setToken();
     navigate("/", { replace: true });
   };
 
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden" dir="rtl">
+      {/* Global Components - Highest z-index */}
+      {isProcessing && <div className="fixed inset-0 z-[9999]">
+        <GlobalProgressBar />
+        <GlobalCompletionPopup />
+      </div>}
+
       {/* Header */}
       <header
-        className="bg-[#241740] w-full text-white p-4 flex items-center justify-between sticky top-0 z-[9999]"
+        className="bg-[#241740] w-full text-white p-4 flex items-center justify-between sticky top-0 z-[999]"
         dir="ltr"
       >
         {isLoggedIn ? (
@@ -112,7 +122,6 @@ const Layout = ({ children }) => {
           )}
         </Sidebar>
 
-
         {/* Main Content */}
         <main className="relative flex-1 bg-[#241740] overflow-y-auto scrollbar-hide">
           {/* Background Logo */}
@@ -128,7 +137,6 @@ const Layout = ({ children }) => {
           <div className="relative z-10 mx-auto max-w-[80vw] p-4 h-full">
             {children}
           </div>
-
         </main>
       </div>
 
@@ -136,7 +144,7 @@ const Layout = ({ children }) => {
       <footer className="bg-[#241740] text-sm text-[#6E7493] text-center p-4 w-full">
         حقوق النشر © 2025 - جميع الحقوق محفوظة
       </footer>
-    </div >
+    </div>
   );
 };
 

@@ -29,7 +29,7 @@ export default function Sidebar({
     <>
       {/* Mobile Backdrop*/}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-[999] transition-all duration-300 ease-in-out md:hidden ${
+        className={`fixed inset-0 bg-black bg-opacity-50 z-[899] transition-all duration-300 ease-in-out md:hidden ${
           isSidebarOpen
             ? "opacity-100 visible"
             : "opacity-0 invisible delay-100"
@@ -39,7 +39,7 @@ export default function Sidebar({
 
       {/* Sidebar with improved transitions */}
       <aside
-        className={`fixed right-0 h-full z-[9999] bg-[#241740] transition-all duration-300 ease-in-out ${
+        className={`fixed right-0 h-full z-[900] bg-[#241740] transition-all duration-300 ease-in-out ${
           isSidebarOpen ? "w-64" : "w-14 md:w-20"
         }`}
       >

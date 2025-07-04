@@ -1,4 +1,4 @@
-from summarizer import Summarizer
+# from summarizer import Summarizer
 from spacy.lang.ar import Arabic
 import pickle
 import nltk
@@ -6,6 +6,7 @@ import networkx as nx
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+nltk.data.path.append('nltk_data')
 import re
 from rouge import Rouge
 
@@ -15,7 +16,7 @@ class ExtractiveService:
         # self.extractiveModel = pickle.load(open("extractiveModel.pkl", 'rb'))
         self.dic = {}
         self.chunk = 0
-        nltk.download('stopwords')
+        nltk.set_proxy('')
         from nltk.corpus import stopwords
         self.arabic_stopwords = set(stopwords.words('arabic'))
 

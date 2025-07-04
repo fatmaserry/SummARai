@@ -3,7 +3,7 @@ import SummarySlider from "../components/slider/index.jsx";
 import { getCurrentReadings, getFinishedReadings } from "../api/summary/get-summaries.ts";
 import { useNavigate } from "react-router-dom";
 import WelcomeMessage from "../components/welcome-message/index.tsx";
-import UploadSummary from "../components/upload-summary/index.tsx";
+import UploadSummary from "../components/generate-summary/index.tsx";
 
 export default function Readings() {
   const [currentBooks, setCurrentBooks] = useState([]);

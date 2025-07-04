@@ -7,9 +7,13 @@ import { Toaster } from 'react-hot-toast'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Toaster
+      containerStyle={{
+        zIndex: 9999,
+      }}
       toastOptions={{
         style: {
           fontSize: '20px',
+          zIndex: 99999,
         },
       }}
     />
