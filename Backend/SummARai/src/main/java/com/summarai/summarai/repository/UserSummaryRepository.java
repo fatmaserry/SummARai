@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface UserSummaryRepository extends JpaRepository<UserSummary, Long>, JpaSpecificationExecutor<UserSummary> {
     Page<UserSummary> findAll(Pageable pageable);
 
-    @Query("SELECT s FROM UserSummary s JOIN User u WHERE u.email = :email")
+    @Query("SELECT s FROM UserSummary s JOIN s.owner u WHERE u.email = :email")
     Page<UserSummary> findMySummaries(String email, Pageable pageable);
 
     @Modifying
