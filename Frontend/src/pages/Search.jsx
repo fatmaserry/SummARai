@@ -440,7 +440,7 @@ export default function SearchBooks() {
                 <>
                   <button
                     onClick={() => handlePageClick(0)}
-                    className={`p-[15px] pt-[3px] pb-0 mx-2 rounded-full ${page === 0 ? "bg-white text-[#765CDE]" : "bg-[#4E3693]/60"}`}
+                    className={`p-[15px] pt-[3px] pb-0 mx-2 rounded-full hover:bg-[#765CDE] hover:text-white ${page === 0 ? "bg-white text-[#765CDE]" : "bg-[#4E3693]/60"}`}
                   >
                     1
                   </button>
@@ -453,7 +453,7 @@ export default function SearchBooks() {
                 <button
                   key={p}
                   onClick={() => handlePageClick(p)}
-                  className={`p-[15px] pt-[3px] pb-0 mx-2 rounded-full ${page === p ? "bg-white text-[#765CDE]" : "bg-primary-400"}`}
+                  className={`p-[15px] pt-[3px] pb-0 mx-2 rounded-full hover:bg-[#765CDE] hover:text-white ${page === p ? "bg-white text-[#765CDE]" : "bg-primary-400"}`}
                 >
                   {p + 1}
                 </button>
@@ -465,7 +465,7 @@ export default function SearchBooks() {
                   <span className="px-2 mx-2 text-white">...</span>
                   <button
                     onClick={() => handlePageClick(totalPages - 1)}
-                    className={`p-[15px] pt-[3px] pb-0 rounded-full mx-2 ${page === totalPages - 1 ? "bg-white text-[#765CDE]" : "bg-primary-400"}`}
+                    className={`p-[15px] pt-[3px] pb-0 rounded-full mx-2 hover:bg-[#765CDE] hover:text-white ${page === totalPages - 1 ? "bg-white text-[#765CDE]" : "bg-primary-400"}`}
                   >
                     {totalPages}
                   </button>
