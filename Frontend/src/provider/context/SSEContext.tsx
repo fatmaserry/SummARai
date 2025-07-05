@@ -160,10 +160,9 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
           signal: ctrl.signal,
 
           onopen: async (response) => {
-            if (response.ok) {
-              return;
+            if (!response.ok) {
+              throw new Error(`SSE connection failed: ${response.status}`);
             }
-            throw new Error(`SSE connection failed: ${response.status}`);
           },
 
           onmessage: async (event) => {
@@ -186,7 +185,6 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
               let jsonString = rawData;
               if (rawData.startsWith("data: ")) {
                 jsonString = rawData.substring(6).trim();
-                console.log(jsonString);
               }
 
               jsonString = jsonString
@@ -198,7 +196,6 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
               console.log(eventData);
 
               if (eventData.percentage !== undefined) {
-                console.log(eventData);
                 updateState({
                   progress: {
                     percentage: Math.min(
@@ -230,9 +227,14 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
                     isProcessing: false,
                     showCompletion: true,
                   });
+                  toast.error("حدث خطأ أثناء إضافة الملخص إلى القراءات");
                 }
               }
             } catch (e) {
+              // Handle JSON parsing or unexpected errors
+              updateState({ isProcessing: false });
+              ctrl.abort();
+              toast.error("، حدث خطأ أثناء معالجة البيانات");
               console.error("Error parsing event:", e, "Raw data:", event.data);
             }
           },

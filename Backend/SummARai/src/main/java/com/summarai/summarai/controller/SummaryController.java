@@ -88,7 +88,7 @@ public class SummaryController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping(params = "genre")
+    @GetMapping("/genre")
     public ResponseEntity<Page<BookSummaryDto>> getBooksByGenre(@RequestParam String genre, Pageable pageable) {
         Page<BookSummaryDto> books = summaryService.getBooksByGenre(genre, pageable);
         if(books.hasContent())

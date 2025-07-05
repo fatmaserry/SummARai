@@ -41,7 +41,7 @@ export default function Sidebar({
       <aside
         className={`
           fixed right-0 h-full z-[900] bg-[#241740] transition-all duration-300 ease-in-out
-          ${isSidebarOpen ? "w-64" : "w-0"}  /* Mobile: 0 or 64 */
+          ${isSidebarOpen ? "w-64" : "w-0 overflow-hidden md:overflow-visible"}  /* Mobile: 0 or 64 */
           md:${isSidebarOpen ? "w-64" : "w-20"} /* Desktop: 20 or 64 */
         `}
       >

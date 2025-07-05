@@ -6,7 +6,7 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { AuthContext } from "../provider/auth/authProvider";
-import { fetchAllBooks, getAllGenres } from "../api/summary/get-summaries.ts";
+import { getBooksByGenre } from "../api/summary/search.ts";
 import SummarySlider from "../components/slider/index.jsx";
 import slide_image_1 from "/assets/images/الساموراي.png";
 import slide_image_2 from "/assets/images/الاثار الاسلامية.png";
@@ -48,6 +48,14 @@ export default function HomePage() {
   ], []);
 
   const duplicatedSlides = useMemo(() => [...slides, ...slides, ...slides], [slides]);
+  const allowedGenres = [
+    "تاريخ",
+    "سياسة",
+    "اقتصاد",
+    "علم النفس",
+    "سيرة ذاتية"
+  ];
+
 
   const handleImageClick = (book) => {
     navigate("/summary", { state: { book } });
@@ -56,41 +64,29 @@ export default function HomePage() {
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
-        const [books, genres] = await Promise.all([
-          fetchAllBooks(),
-          getAllGenres(),
-        ]);
-
-        if (isMounted) {
-          const grouped = {};
-          books.forEach((book) => {
-            book.genres.forEach((genreObj) => {
-              const genreName = genreObj.description;
-              if (!grouped[genreName]) {
-                grouped[genreName] = [];
-              }
-              grouped[genreName].push(book);
-            });
-          });
-          setGroupedBooks(grouped);
-        }
+        const grouped = {};
+        await Promise.all(
+          allowedGenres.map(async (genre) => {
+            const books = await getBooksByGenre(genre, 0, 50);
+            if (books && books.length > 0) {
+              grouped[genre] = books;
+            }
+          })
+        );
+        if (isMounted) setGroupedBooks(grouped);
       } catch (err) {
-        console.error("Failed to fetch books or genres:", err);
+        console.error("Failed to fetch books by genre:", err);
       } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
+        if (isMounted) setIsLoading(false);
       }
     };
-
     fetchData();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, []);
+
+
 
   const renderSummaries = useMemo(() => {
     if (isLoading) {

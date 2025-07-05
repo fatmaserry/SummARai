@@ -216,7 +216,7 @@ export default function Summary() {
 
       <div className="flex flex-col md:flex-row gap-8 p-6">
         {/* Image and info container */}
-        <div className={`flex flex-col rounded ${book.summaryType == "USER" ? "bg-white md:w-52" : ""}`}>
+        <div className={`flex flex-col w-64 rounded ${book.summaryType == "USER" ? "bg-white md:w-52" : "md:w-96"}`}>
           <img
             src={book?.image_url ?? "/assets/images/summarai_cover.png"}
             alt={book?.title ?? "Book cover"}
@@ -310,7 +310,7 @@ export default function Summary() {
 
           {/* Pagination controls */}
           <div className="w-full flex justify-center mt-6">
-            <div className="flex items-center justify-center gap-4 bg-[#241740] text-white rounded-full px-6 py-2 bg-black w-fit">
+            <div className="flex items-center justify-center gap-4 bg-[#241740] text-white rounded-full px-6 py-2 w-fit">
               <button
                 onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
                 disabled={pageNumber <= 1}

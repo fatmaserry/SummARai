@@ -87,6 +87,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/books/genre").permitAll()
                         .requestMatchers("/summarai/events").permitAll()
                         .anyRequest().authenticated()//
                 )

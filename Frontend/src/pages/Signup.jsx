@@ -5,6 +5,8 @@ import FormLayout from "../components/form/layout";
 import Form from "../components/form/form";
 import { signup } from "../api/user/auth";
 import toast from "react-hot-toast";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+
 
 const Signup = () => {
     const [name, setName] = useState("");
@@ -14,12 +16,50 @@ const Signup = () => {
     const { setToken, setUser } = useAuth();
     const navigate = useNavigate();
 
+    const passwordRequirements = [
+        { label: "8 أحرف على الأقل", test: (pw) => pw.length >= 8 },
+        { label: "حرف كبير واحد على الأقل", test: (pw) => /[A-Z]/.test(pw) },
+        { label: "حرف صغير واحد على الأقل", test: (pw) => /[a-z]/.test(pw) },
+        { label: "رقم واحد على الأقل", test: (pw) => /[0-9]/.test(pw) },
+        { label: "رمز خاص واحد على الأقل", test: (pw) => /[!@#$%^&*(),.?\":{}|<>]/.test(pw) },
+    ];
+
+    const PasswordChecklist = ({ password }) => (
+        <ul className="text-xs space-y-1 grid grid-cols-2 m-2 mb-4 items-baseline">
+            {passwordRequirements.map((req, idx) => {
+                const passed = req.test(password);
+                return (
+                    <li key={idx} className={passed ? "text-green-600" : "text-gray-500"}>
+                        <div className="flex items-center gap-2">
+                            {passed ? (
+                                <FaCheckCircle className="text-green-600" />
+                            ) : (
+                                <FaTimesCircle className="text-gray-400" />
+                            )}
+                            <span>
+                                {req.label}
+                            </span>
+                        </div>
+
+                    </li>
+                );
+            })}
+        </ul>
+    );
+
+    const isStrongPassword = (pw) => passwordRequirements.every((req) => req.test(pw));
+
     const handleSignup = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             toast.error("كلمة المرور غير متطابقة!");
             return;
         }
+        if (!isStrongPassword(password)) {
+            toast.error("كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، وحرف كبير وصغير، ورقم، ورمز خاص.");
+            return;
+        }
+
         try {
             const userData = {
                 name,
@@ -81,13 +121,16 @@ const Signup = () => {
                     },
                 ]}
                 footer={
-                    <div className="text-sm text-center text-black">
-                        لديك حساب بالفعل؟{" "}
-                        <Link to="/login">
-                            <span className="text-primary-400 hover:underline cursor-pointer">
-                                تسجيل الدخول
-                            </span>
-                        </Link>
+                    <div className="flex flex-col">
+                        <PasswordChecklist password={password} />
+                        <div className="text-sm text-center text-black">
+                            لديك حساب بالفعل؟{" "}
+                            <Link to="/login">
+                                <span className="text-primary-400 hover:underline cursor-pointer">
+                                    تسجيل الدخول
+                                </span>
+                            </Link>
+                        </div>
                     </div>
                 }
             />
