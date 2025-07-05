@@ -179,3 +179,27 @@ body {
 .text-3d {
   text-shadow: 1px 1px 0 #4c4f6a, 2px 2px 0 #4c4f6a, 3px 3px 0 #241740;
 }
+
+.genre-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.genre-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.genre-dropdown::-webkit-scrollbar-thumb {
+  background-color: #765cde;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.genre-dropdown::-webkit-scrollbar-thumb:hover {
+  background-color: #5a44b8;
+}
+
+/* Firefox */
+.genre-dropdown {
+  scrollbar-width: thin;
+  scrollbar-color: #765cde transparent;
+}

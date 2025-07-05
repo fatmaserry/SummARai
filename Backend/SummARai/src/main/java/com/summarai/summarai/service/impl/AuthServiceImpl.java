@@ -58,10 +58,15 @@ public class AuthServiceImpl implements AuthService {
     public AuthenticationResponse register(UserDto request) {
         String email = request.getEmail();
         System.out.println(email);
-        if (repository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        }
 
+        if (repository.existsByEmail(request.getEmail())) {
+            return AuthenticationResponse.builder()
+                    .status(409) // Conflict: Email already exists
+                    .accessToken(null)
+                    .refreshToken(null)
+                    .message("Email already exists")
+                    .build();
+        }
 
         User user = userMapper.toEntity(request);
         user.setEnabled(false);
@@ -72,20 +77,23 @@ public class AuthServiceImpl implements AuthService {
         String verificationToken = UUID.randomUUID().toString();
         saveVerificationToken(savedUser, verificationToken);
 
-        // remember to remove user if not verified email
         String confirmationLink = "http://localhost:8080/api/auth/confirm?token=" + verificationToken;
         String subject = "Confirm your email";
         String emailText = buildVerifyEmail(user.getName(), confirmationLink);
-        emailService.send(request.getEmail(),subject,emailText);
+        emailService.send(request.getEmail(), subject, emailText);
+
         var jwtToken = jwtService.generateToken(savedUser);
         var refreshToken = jwtService.generateRefreshToken(savedUser);
         saveUserToken(savedUser, jwtToken);
 
         return AuthenticationResponse.builder()
+                .status(200) // Created: Registration successful
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .message("Registration successful. Please verify your email.")
                 .build();
     }
+
     public boolean forgetPassword(String email){
         boolean found = userRepository.existsByEmail(email);
         if(!found)
@@ -135,6 +143,8 @@ public class AuthServiceImpl implements AuthService {
         verificationTokenRepository.delete(verificationToken);
     }
     public AuthenticationResponse login(UserDto request) {
+        AuthenticationResponse.AuthenticationResponseBuilder responseBuilder = AuthenticationResponse.builder();
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -142,26 +152,47 @@ public class AuthServiceImpl implements AuthService {
                             request.getPassword()
                     )
             );
-            var user = repository.findByEmail(request.getEmail())
-                    .orElseThrow();
-            if(!user.isEnabled()){
-                throw new RuntimeException("Account not verified. Please check your email.");
+            var userOpt = repository.findByEmail(request.getEmail());
+            if (userOpt.isEmpty()) {
+                return responseBuilder
+                        .status(404)
+                        .message("User not found.")
+                        .build();
+            }
+            var user = userOpt.get();
+            if (!user.isEnabled()) {
+                String verificationToken = UUID.randomUUID().toString();
+                saveVerificationToken(user, verificationToken);
+                String confirmationLink = "http://localhost:8080/api/auth/confirm?token=" + verificationToken;
+                String subject = "Confirm your email";
+                String emailText = buildVerifyEmail(user.getName(), confirmationLink);
+                emailService.send(request.getEmail(), subject, emailText);
+
+                return responseBuilder
+                        .status(403)
+                        .message("Account not verified. Please check your email.")
+                        .build();
             }
             UserDto retUser = userMapper.toDto(user);
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
             revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
-            return AuthenticationResponse.builder()
+            return responseBuilder
+                    .status(200)
+                    .message("Login successful.")
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
                     .user(retUser)
                     .build();
         } catch (AuthenticationException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Authentication failed: " + ex.getMessage());
+            return responseBuilder
+                    .status(401)
+                    .message("Authentication failed: " + ex.getMessage())
+                    .build();
         }
     }
+
 
     private void saveUserToken(com.summarai.summarai.model.User user, String jwtToken) {
         var token = Token.builder()
@@ -212,19 +243,103 @@ public class AuthServiceImpl implements AuthService {
             }
         }
     }
+
     public String buildVerifyEmail(String name, String link) {
         return """
-        <div style="font-family: Arial, sans-serif;">
-            <h2>Email Confirmation</h2>
-            <p>Hi %s,</p>
-            <p>Please click the button below to verify your email:</p>
-            <a href="%s" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none;">
-                Verify Email
-            </a>
-            <p>This link will expire in 15 minutes.</p>
+    <!DOCTYPE html>
+    <html lang="ar" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <title>تأكيد البريد الإلكتروني</title>
+        <style>
+            body {
+                font-family: 'Cairo', Arial, sans-serif;
+                background-color: #F4F6F9;
+                margin: 0;
+                padding: 0;
+                direction: rtl;
+            }
+            .container {
+                background-color: #ffffff;
+                max-width: 600px;
+                margin: 40px auto;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(42, 28, 99, 0.12);
+                border: 2px solid #C084FC;
+            }
+            .logo {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .logo img {
+                max-width: 120px;
+            }
+            .greeting {
+                font-size: 22px;
+                font-weight: bold;
+                color: #2A1C63;
+                margin-bottom: 20px;
+                letter-spacing: 1px;
+            }
+            .message {
+                font-size: 16px;
+                color: #471C53;
+                margin-bottom: 20px;
+                line-height: 1.7;
+            }
+            .verify-btn {
+                display: inline-block;
+                background: linear-gradient(90deg, #C084FC 0%%, #765CDE 100%%);
+                color: #fff;
+                padding: 15px 40px;
+                text-decoration: none;
+                font-size: 18px;
+                border-radius: 8px;
+                margin: 20px 0;
+                font-weight: bold;
+                box-shadow: 0 2px 8px rgba(118, 92, 222, 0.10);
+                transition: background 0.2s;
+            }
+            .verify-btn:hover {
+                background: linear-gradient(90deg, #765CDE 0%%, #C084FC 100%%);
+            }
+            .footer {
+                font-size: 13px;
+                color: #888888;
+                text-align: center;
+                margin-top: 30px;
+                border-top: 1px solid #E0E0E0;
+                padding-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="greeting">تأكيد البريد الإلكتروني</div>
+        <div class="message">
+            مرحباً <strong>%s</strong>،
+            <br><br>
+            نشكرك على التسجيل في منصتنا.<br>
+            يرجى الضغط على الزر أدناه لتفعيل بريدك الإلكتروني
         </div>
-        """.formatted(name, link);
+        <div style="text-align: center;">
+            <a href="%s" class="verify-btn">تفعيل البريد الإلكتروني</a>
+        </div>
+        <div class="message" style="color:#3E1E6C;">
+            هذا الرابط صالح لمدة 15 دقيقة فقط.<br>
+            إذا لم تطلب هذا البريد، يمكنك تجاهله بأمان.
+        </div>
+        <div class="footer">
+            &copy; 2025 فريق SummARai. جميع الحقوق محفوظة.
+        </div>
+    </div>
+    </body>
+    </html>
+    """.formatted(name, link);
     }
+
+
     public String buildOTPEmail(String email, String otp) {
         return """
         <!DOCTYPE html>
@@ -287,7 +402,7 @@ public class AuthServiceImpl implements AuthService {
 
         <div class="container">
             <div class="logo">
-                <img src="cid:gp-logo" alt="GP Logo">
+                <img src="Backend/SummARai/images/SummARai_website.png" alt="GP Logo">
             </div>
 
             <div class="greeting">Verify Your Email Address</div>

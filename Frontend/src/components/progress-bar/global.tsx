@@ -7,14 +7,17 @@ const GlobalProgressBar: React.FC = () => {
   if (!isProcessing) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-1 z-50 bg-gray-200">
+    <div
+      className="fixed top-4 left-4 w-[280px] max-w-[90vw] h-6 z-[9999] bg-gray-200 rounded shadow-lg flex items-center pointer-events-none"
+      style={{ direction: "ltr" }}
+    >
       <div
-        className="bg-[#765CDE] h-full transition-all duration-300"
+        className="bg-[#765CDE] h-full rounded transition-all duration-300"
         style={{ width: `${progress.percentage}%` }}
       />
-      <div className="absolute top-1 left-2 text-xs text-gray-800">
+      <span className="absolute left-6 top-1 text-xs text-gray-800 font-bold pointer-events-none">
         {progress.message} ({progress.percentage}%)
-      </div>
+      </span>
     </div>
   );
 };

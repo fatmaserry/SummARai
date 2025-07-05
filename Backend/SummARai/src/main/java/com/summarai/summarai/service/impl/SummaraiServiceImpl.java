@@ -72,12 +72,14 @@ public class SummaraiServiceImpl implements SummaraiService {
                     Integer pageNo = temp._2();
                     userSummary.setSummary_url(fileName);
                     userSummary.setIs_public(is_public == 1);
-
-                    if (title != null) userSummary.setTitle(title);
-                    else userSummary.setTitle(summaryName);
-
+                    if (title != null) {
+                        userSummary.setTitle(title);
+                        userSummary.setNormTitle(Normalizer.normalizeArabic(title));
+                    } else {
+                        userSummary.setTitle(summaryName);
+                        userSummary.setNormTitle(Normalizer.normalizeArabic(summaryName));
+                    }
                     userSummary.setSummaryType("USER");
-                    userSummary.setNormTitle(Normalizer.normalizeArabic(summaryName));
                     userSummary.setNumber_of_pages(Integer.toUnsignedLong(pageNo));
                     LocalDate localDate = LocalDate.now();  // or whatever date
                     Date nw = java.sql.Date.valueOf(localDate);

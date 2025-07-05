@@ -39,9 +39,11 @@ export default function Sidebar({
 
       {/* Sidebar with improved transitions */}
       <aside
-        className={`fixed right-0 h-full z-[900] bg-[#241740] transition-all duration-300 ease-in-out ${
-          isSidebarOpen ? "w-64" : "w-14 md:w-20"
-        }`}
+        className={`
+          fixed right-0 h-full z-[900] bg-[#241740] transition-all duration-300 ease-in-out
+          ${isSidebarOpen ? "w-64" : "w-0"}  /* Mobile: 0 or 64 */
+          md:${isSidebarOpen ? "w-64" : "w-20"} /* Desktop: 20 or 64 */
+        `}
       >
         {/* Glitter background decoration with smooth transition */}
         <div
@@ -82,15 +84,15 @@ export function SidebarItem({
     <li
       onClick={onClick}
       className={`
-        relative flex items-center py-3 px-3 my-1
+        relative flex items-center py-3 px-3 mt-2
         font-medium rounded-lg cursor-pointer
-        transition-all duration-200 ease-in-out group 
+        transition-all duration-200 ease-in-out group border border-primary-600
         ${
           active
             ? "bg-[#4E3693] bg-opacity-40 text-white"
             : "hover:bg-[#4E3693] hover:bg-opacity-20 text-[#6E7493]"
         }
-        ${isSidebarOpen ? "w-full" : "w-12 justify-center"}
+        ${isSidebarOpen ? "w-full" : "w-12 justify-center "}
       `}
     >
       <div className="flex items-center gap-3 relative">
@@ -120,7 +122,7 @@ export function SidebarItem({
       {!isSidebarOpen && (
         <div
           className={`
-            absolute right-full rounded-md px-2 py-1 mr-2
+            absolute z-[99999] right-full rounded-md px-2 py-1 mr-2
             bg-[#1C1F36] text-white text-sm border border-[#4C4F6A]
             invisible opacity-0 -translate-x-2 transition-all
             duration-200 ease-in-out

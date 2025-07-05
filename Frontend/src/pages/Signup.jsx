@@ -21,20 +21,22 @@ const Signup = () => {
             return;
         }
         try {
-            const response = await signup({
+            const userData = {
                 name,
                 email,
                 password,
                 role: "USER"
-            });
-            
-            if (response.message) { // Check for success message instead of token
+            };
+            const response = await signup(userData);
+            if (response.status === 200) {
                 toast.success("تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني للتأكيد.");
-                // Don't set token or user yet - they're not verified
-                navigate("/login", { replace: true }); // Redirect to login
+                setTimeout(() => { navigate("/login", { replace: true }) }, 2000)
+            } else if (response.status == 409) {
+                toast.error("الايميل موجود بالفعل!");
             }
         } catch (error) {
             toast.error("حدث خطأ أثناء إنشاء الحساب!");
+            console.log(error)
         }
     };
 

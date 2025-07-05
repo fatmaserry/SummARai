@@ -29,30 +29,37 @@ class SummarizationService:
 
 
 
+
+
+    SSEEvent.add_event(EventModel(message="الملخص جاهز! ", percentage=100))
+
     async def run(self, file : UploadFile) -> bytes:
         start_total = time.perf_counter()
-        SSEEvent.add_event(EventModel(message="OCR Begins",percentage=0))
+        SSEEvent.add_event(EventModel(message="جارٍ قراءة الملف...", percentage=0))
         await asyncio.sleep(1)
         fullText = await self.ocr_service.process_pdf(file)
-        SSEEvent.add_event(EventModel(message="OCR Done",percentage=10))
-        SSEEvent.add_event(EventModel(message="Chunking Begins",percentage=10))
+        SSEEvent.add_event(EventModel(message="تمت قراءة الملف بنجاح", percentage=10))
+        SSEEvent.add_event(EventModel(message="جارٍ تجهيز المحتوى للمعالجة...", percentage=10))
         await asyncio.sleep(1)
         chunks = await self.chunking_service.semantic_chunk_using_spacy(fullText)
-        SSEEvent.add_event(EventModel(message="Chunking Done",percentage=20))
-        SSEEvent.add_event(EventModel(message="Extractive Begins",percentage=20))
+        SSEEvent.add_event(EventModel(message="تم تجهيز المحتوى", percentage=20))
+        SSEEvent.add_event(EventModel(message="جارٍ تلخيص النصوص الأساسية...", percentage=20))
         await asyncio.sleep(1)
+
+        """
+             Extractive
+        """
         extractiveSummary = []
         for chunk in chunks:
             extractiveSummary.append(self.extractiveService.getSummary(chunk) + "\n")
-        SSEEvent.add_event(EventModel(message="Extractive Done",percentage=40))
-        SSEEvent.add_event(EventModel(message="Abstractive Begins",percentage=40))
+        SSEEvent.add_event(EventModel(message="تم تلخيص النصوص الأساسية", percentage=40))
+        SSEEvent.add_event(EventModel(message="جارٍ إنشاء ملخص نهائي...", percentage=40))
         await asyncio.sleep(1)
         cur = ""
         cnt = 1
         abstractiveSummary = []
 
         # For testing
-
         for chunk in extractiveSummary:
             if self.get_tokens(cur) + self.get_tokens(chunk) > 1024:
                 cnt += 1
@@ -64,9 +71,11 @@ class SummarizationService:
             abstractiveSummary.append(cur)
             cnt += 1
         print(cnt)
-
         # Until here
 
+        """
+             Abstractive
+        """
         finalSummary = []
         cnt = 1
         startTime = time.perf_counter()
@@ -84,19 +93,18 @@ class SummarizationService:
         if cur:
             finalSummary.append(cur)
         endTime = time.perf_counter()
-        SSEEvent.add_event(EventModel(message="Abstractive Done", percentage=90))
+        SSEEvent.add_event(EventModel(message="تم إنشاء الملخص النهائي", percentage=90))
         print("Abstractive Summary Time " + str(endTime - startTime))
 
         """
              Smoothing
         """
-        SSEEvent.add_event(EventModel(message="Smoothing Begins", percentage=90))
+        SSEEvent.add_event(EventModel(message="جارٍ تحسين النتائج النهائية...", percentage=90))
         await asyncio.sleep(1)
-
         ret = self.smoothingService.process_text_file(finalSummary)
-        SSEEvent.add_event(EventModel(message="Smoothing Done", percentage=100))
+        SSEEvent.add_event(EventModel(message="تم تحسين النتائج النهائية", percentage=90))
         await asyncio.sleep(1)
-        SSEEvent.add_event(EventModel(message="end", percentage=100))
+        SSEEvent.add_event(EventModel(message="الملخص جاهز! ", percentage=100))
         await asyncio.sleep(1)
         end_total = time.perf_counter()
         print("Total Time " + str(end_total - start_total))

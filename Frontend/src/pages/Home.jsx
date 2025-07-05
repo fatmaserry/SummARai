@@ -53,44 +53,44 @@ export default function HomePage() {
     navigate("/summary", { state: { book } });
   };
 
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const fetchData = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       const [books, genres] = await Promise.all([
-  //         fetchAllBooks(),
-  //         getAllGenres(),
-  //       ]);
+  useEffect(() => {
+    let isMounted = true;
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const [books, genres] = await Promise.all([
+          fetchAllBooks(),
+          getAllGenres(),
+        ]);
 
-  //       if (isMounted) {
-  //         const grouped = {};
-  //         books.forEach((book) => {
-  //           book.genres.forEach((genreObj) => {
-  //             const genreName = genreObj.description;
-  //             if (!grouped[genreName]) {
-  //               grouped[genreName] = [];
-  //             }
-  //             grouped[genreName].push(book);
-  //           });
-  //         });
-  //         setGroupedBooks(grouped);
-  //       }
-  //     } catch (err) {
-  //       console.error("Failed to fetch books or genres:", err);
-  //     } finally {
-  //       if (isMounted) {
-  //         setIsLoading(false);
-  //       }
-  //     }
-  //   };
+        if (isMounted) {
+          const grouped = {};
+          books.forEach((book) => {
+            book.genres.forEach((genreObj) => {
+              const genreName = genreObj.description;
+              if (!grouped[genreName]) {
+                grouped[genreName] = [];
+              }
+              grouped[genreName].push(book);
+            });
+          });
+          setGroupedBooks(grouped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch books or genres:", err);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
 
-  //   fetchData();
+    fetchData();
 
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, []);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const renderSummaries = useMemo(() => {
     if (isLoading) {
@@ -176,21 +176,44 @@ export default function HomePage() {
           }}
           effect="coverflow"
           grabCursor={true}
-          loop={true}
-          slidesPerView={"auto"}
+          initialSlide={11}
+          centeredSlides={true}
+          slidesPerView={6}
           spaceBetween={0}
+          loop={true}
+          coverflowEffect={{
+            rotate: 0,
+            stretch: 0,
+            depth: 100,
+            modifier: 2.5,
+            slideShadows: true,
+          }}
+          breakpoints={{
+            640: {
+              slidesPerView: 1, // 1 slide on small tablets
+            },
+            768: {
+              slidesPerView: 2, // 2 slides on tablets
+            },
+            1024: {
+              slidesPerView: 6, // 3 slides on laptops
+            },
+            1280: {
+              slidesPerView: 6, // 4 slides on desktops
+            }
+          }}
           modules={[EffectCoverflow, Navigation]}
           className="swiper_container"
         >
           {duplicatedSlides.map((img, idx) => (
             <SwiperSlide
               key={idx}
-              className="!w-[300px] !h-[300px] flex items-center justify-center"
+              className="flex items-center justify-center"
             >
               <img
                 src={img}
                 alt={`slide-${idx}`}
-                className="max-w-full max-h-full object-contain"
+                className="w-full h-full object-contain"
                 loading="lazy"
               />
             </SwiperSlide>
@@ -200,7 +223,7 @@ export default function HomePage() {
 
       {isLoggedIn && <UploadSummary />}
 
-      {/* {renderSummaries} */}
+      {renderSummaries}
     </div>
   );
 }

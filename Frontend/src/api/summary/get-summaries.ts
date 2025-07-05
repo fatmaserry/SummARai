@@ -66,3 +66,17 @@ export const getAllGenres = async () => {
     throw error;
   }
 };
+
+export const updateIsPublic = async (summaryData) => {
+  try {
+    const response = await api.put(
+      `api/books/status?summary_id=${summaryData.summary_id}&status=${summaryData.status}`
+    );
+    return response;
+  } catch (error) {
+    if (error.response?.status === 403) {
+      throw new Error("Unauthorized: Please login again");
+    }
+    throw error;
+  }
+};

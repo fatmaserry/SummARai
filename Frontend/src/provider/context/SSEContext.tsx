@@ -131,7 +131,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
 
       updateState({
         isProcessing: true,
-        progress: { percentage: 0, message: "Starting processing..." },
+        progress: { percentage: 0, message: "جارٍ قراءة الملف..." },
         summaryResult: null,
         showCompletion: false,
       });
@@ -169,14 +169,13 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
           onmessage: async (event) => {
             try {
               const rawData = event.data;
-              console.log(rawData);
               if (!rawData || rawData.trim() === "") return;
 
               if (rawData === "done") {
                 updateState({
                   progress: {
-                    percentage: 100,
-                    message: "Processing complete",
+                    percentage: 95,
+                    message: "يتم تخزين الملخص...",
                   },
                   isProcessing: false,
                   showCompletion: true,
@@ -206,7 +205,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
                       100,
                       Math.max(0, eventData.percentage)
                     ),
-                    message: eventData.message || "Processing...",
+                    message: eventData.message || "يتم المعالجة...",
                   },
                 });
               } else if (eventData.id) {
@@ -219,7 +218,7 @@ export const SSEProvider: React.FC<{ children: React.ReactNode }> = ({
                     showCompletion: true,
                     progress: {
                       percentage: 100,
-                      message: "Processing complete",
+                      message: "الملخص جاهز!",
                     },
                   });
                 } else {

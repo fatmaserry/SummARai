@@ -30,8 +30,6 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody UserDto request
     ) {
-//        bookSummaryService.normalizeExistingBooks();
-        //check if throws exception
         return ResponseEntity.ok(authServiceImpl.login(request));
     }
     @PostMapping("/forget-password")

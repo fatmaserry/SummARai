@@ -19,7 +19,7 @@ const Login = () => {
         email,
         password,
       });
-      if (response.access_token) {
+      if (response.status === 200 && response.access_token && response.user) {
         setToken(response.access_token);
         setUser(response.user);
         toast.success("تم تسجيل الدخول بنجاح!");
@@ -27,10 +27,19 @@ const Login = () => {
           navigate("/", { replace: true });
         }, 1500);
       }
+      else if (response.status === 403)
+        toast.error("الحساب غير مفعل. تم إرسال رابط التفعيل إلى بريدك الإلكتروني.");
+      else if (response.status === 404)
+        toast.error("المستخدم غير موجود.");
+      else if (response.status === 401)
+        toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة!");
+      else
+        toast.error(response.message || "حدث خطأ.");
     } catch (error) {
-      toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة!");
+      toast.error("تعذر الاتصال. حاول مرة أخرى لاحقاً.");
     }
   };
+
 
   return (
     <FormLayout>
@@ -58,9 +67,6 @@ const Login = () => {
         ]}
         footer={
           <>
-            {/* {error && <p className="text-red-500 text-sm">
-              {error}
-            </p>} */}
             <div
               className="text-sm text-primary-400 text-left mb-2 cursor-pointer hover:underline"
               onClick={() => navigate("/forgot-password")}

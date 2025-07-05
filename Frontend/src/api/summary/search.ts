@@ -1,6 +1,6 @@
 import { api } from "..";
 
-export const searchBooks = async (criteria, page = 0, size = 10) => {
+export const searchBooks = async (criteria: any, page = 0, size = 20) => {
   try {
     const response = await api.post(`/api/books/search`, criteria, {
       params: { page, size },
@@ -14,8 +14,7 @@ export const searchBooks = async (criteria, page = 0, size = 10) => {
   }
 };
 
-
-export const getBooksByTitle = async (title, page = 0, size = 10) => {
+export const getBooksByTitle = async (title: string, page = 0, size = 10) => {
   try {
     const response = await api.get("/api/books", {
       params: { title },
@@ -29,7 +28,7 @@ export const getBooksByTitle = async (title, page = 0, size = 10) => {
   }
 };
 
-export const getBooksByAuthor = async (author, page = 0, size = 10) => {
+export const getBooksByAuthor = async (author: string, page = 0, size = 10) => {
   try {
     const response = await api.get("/api/books", {
       params: { author, page, size },

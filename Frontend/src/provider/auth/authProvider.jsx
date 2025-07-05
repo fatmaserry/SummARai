@@ -20,7 +20,7 @@ const AuthProvider = ({ children }) => {
       localStorage.removeItem("user");
     }
   };
-
+  
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -28,9 +28,11 @@ const AuthProvider = ({ children }) => {
     } else {
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("token");
-      setUser(null);
+      // Only clear user if not already null
+      if (user) setUser(null);
     }
   }, [token]);
+
 
   // Function to check if user is logged in
   const isLoggedIn = useMemo(() => !!token, [token, user]);

@@ -30,24 +30,28 @@ const Layout = ({ children }) => {
   return (
     <div className="flex flex-col w-screen h-screen overflow-hidden" dir="rtl">
       {/* Global Components - Highest z-index */}
-      {(isProcessing || showCompletion) && (
+      {showCompletion && (
         <div className="fixed inset-0 z-[9999]">
-          {isProcessing && <GlobalProgressBar />}
           {showCompletion && <GlobalCompletionPopup />}
         </div>
       )}
 
+      {isProcessing && <GlobalProgressBar />}
+
       {/* Header */}
       <header
-        className="bg-[#241740] w-full text-white p-4 flex items-center justify-between sticky top-0 z-[999]"
+        className="bg-[#241740] w-full text-white p-4 flex items-center justify-between sticky top-0 z-[80]"
         dir="ltr"
       >
         {isLoggedIn ? (
-          <img
-            src="assets/images/samurai.png"
-            alt="Profile"
-            className="w-12 h-12 rounded-full transform scale-x-[-1] object-cover bg-gray-700 mx-4"
-          />
+          <button onClick={() => navigate("/Profile")}>
+            <img
+              src="assets/images/samurai.png"
+              alt="Profile"
+              className="w-12 h-12 rounded-full transform scale-x-[-1] object-cover bg-gray-700 mx-4"
+            />
+          </button>
+
         ) : (
           <Link
             to="/login"
@@ -85,34 +89,29 @@ const Layout = ({ children }) => {
           />
           {isLoggedIn ? (
             <>
-              <div>
-                <SidebarItem
-                  icon={<BookOpen />}
-                  text="القراءات السابقة"
-                  active={location.pathname === "/Readings"}
-                  onClick={() => navigate("/Readings")}
-                />
-                <SidebarItem
-                  icon={<Search />}
-                  text="بحث"
-                  active={location.pathname === "/Search"}
-                  onClick={() => navigate("/Search")}
-                />
-                <SidebarItem
-                  icon={<Profile />}
-                  text="الصفحة الشخصية"
-                  active={location.pathname === "/Profile"}
-                  onClick={() => navigate("/Profile")}
-                />
-              </div>
-
-              <div>
-                <SidebarItem
-                  icon={<Logout />}
-                  text="تسجيل خروج"
-                  onClick={handleLogout}
-                />
-              </div>
+              <SidebarItem
+                icon={<BookOpen />}
+                text="القراءات السابقة"
+                active={location.pathname === "/Readings"}
+                onClick={() => navigate("/Readings")}
+              />
+              <SidebarItem
+                icon={<Search />}
+                text="بحث"
+                active={location.pathname === "/Search"}
+                onClick={() => navigate("/Search")}
+              />
+              <SidebarItem
+                icon={<Profile />}
+                text="الصفحة الشخصية"
+                active={location.pathname === "/Profile"}
+                onClick={() => navigate("/Profile")}
+              />
+              <SidebarItem
+                icon={<Logout />}
+                text="تسجيل خروج"
+                onClick={handleLogout}
+              />
             </>
           ) : (
             <SidebarItem
