@@ -65,6 +65,7 @@ function UploadSummary() {
               <span>هل تريد جعل التلخيص عامًا؟</span>
               <label className="relative flex items-center cursor-pointer">
                 <input
+                  title="visiblity"
                   type="checkbox"
                   checked={isPublic}
                   onChange={(e) => setIsPublic(e.target.checked)}

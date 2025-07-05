@@ -24,11 +24,11 @@ const GlobalCompletionPopup = () => {
                         {summaryResult.number_of_pages}
                     </p>
                     <p className="text-gray-700">
-                        <span className="font-semibold">الحالة:</span>{" "}
+                        <span className="font-semibold">الظهور:</span>{" "}
                         {summaryResult.is_public ? "عام" : "خاص"}
                     </p>
                     <a
-                        className="block mt-4 bg-[#765CDE] text-white text-center py-2 rounded hover:bg-purple-600"
+                        className="block mt-4 bg-primary-600 cursor-pointer text-white text-base text-center py-2 rounded-xl hover:bg-primary-400"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => {
@@ -41,7 +41,7 @@ const GlobalCompletionPopup = () => {
                 </div>
                 <button
                     onClick={closeCompletion}
-                    className="mt-4 w-full bg-gray-300 text-gray-800 py-2 rounded"
+                    className="mt-4 w-full bg-gray-300 text-base text-gray-800 py-2 rounded-xl"
                 >
                     إغلاق
                 </button>
