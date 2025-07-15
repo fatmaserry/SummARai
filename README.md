@@ -98,7 +98,7 @@ TA. Amany Hesham
 
 ## 🌐 Live Demo
 
-Explore SummARai: [Demo Link](https://shorturl.at/Ec0ds)
+Explore SummARai: [Demo Link](https://drive.google.com/file/d/1iP6-nMclOFVXo3q0pj08i1GcW9DUxBhr/view?usp=sharing)
 
 
 ---
