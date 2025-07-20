@@ -60,14 +60,14 @@ Our hybrid approach outperforms traditional methods:
 
 ### Frontend Setup
 ```bash
-cd frontend
+cd Frontend
 npm install
 npm run dev
 ```
 
 ### Backend Setup
 ```bash
-cd backend
+cd Backend
 ./mvnw spring-boot:run
 ```
 
